@@ -1,13 +1,326 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>{{ title if title else "My Obsidian Blog" }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='obsidian.css') }}">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ title if title else "My Obsidian Blog" }}</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='obsidian.css') }}">
+
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='code.css') }}">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.9.0/highlightjs-line-numbers.min.js"></script>
+
 </head>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("pre code").forEach(block => {
+        hljs.highlightElement(block)
+    })
+})
+</script>
+
 <body>
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+
+<header>
+<h1><a href="/">My Obsidian Blog</a></h1>
+</header>
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<script>
+
+let galleryItems=[]
+let galleryIndex=0
+
+function openLightbox(items,startIndex){
+
+    galleryItems=items
+    galleryIndex=startIndex
+
+    const overlay = document.createElement("div")
+    overlay.className = "lightbox"
+
+    const inner = document.createElement("div")
+    inner.className = "lightbox-inner"
+
+    const mediaContainer = document.createElement("div")
+
+    const caption = document.createElement("div")
+    caption.className = "lightbox-caption"
+
+    inner.appendChild(mediaContainer)
+    inner.appendChild(caption)
+
+    overlay.appendChild(inner)
+
+
+    // --- CREATE X BUTTON ---
+    const closeBtn = document.createElement("div")
+    closeBtn.className = "lightbox-close-btn"
+    closeBtn.textContent = "✕"
+    overlay.appendChild(closeBtn)
+
+    closeBtn.onclick = e => {
+        e.stopPropagation()
+        close()
+    }
+
+    // Fade in/out logic
+    let fadeTimeout
+
+    function showCloseBtn(){
+        closeBtn.style.opacity = "1"
+        if(fadeTimeout) clearTimeout(fadeTimeout)
+        fadeTimeout = setTimeout(() => closeBtn.style.opacity = "0", 1000)
+    }
+
+    overlay.addEventListener("mousemove", showCloseBtn)
+
+    // Initial show
+    showCloseBtn()
+
+
+    function render(){
+
+        mediaContainer.innerHTML=""
+
+        const item=galleryItems[galleryIndex]
+
+        let el
+
+        if(item.type==="video"){
+
+            el=document.createElement("video")
+            el.src=item.src
+            el.controls=true
+            el.autoplay=true
+
+        }else{
+
+            el=document.createElement("img")
+            el.src=item.src
+
+        }
+
+        el.className="lightbox-media"
+
+        el.onclick = e => e.stopPropagation()
+
+        mediaContainer.appendChild(el)
+
+        caption.textContent=item.caption || ""
+
+    }
+
+    function close(){
+
+        document.body.removeChild(overlay)
+        document.removeEventListener("keydown",keyHandler)
+
+    }
+
+    function next(){
+
+        galleryIndex=(galleryIndex+1)%galleryItems.length
+        render()
+
+    }
+
+    function prev(){
+
+        galleryIndex=(galleryIndex-1+galleryItems.length)%galleryItems.length
+        render()
+
+    }
+
+    function keyHandler(e){
+
+        if(e.key==="Escape") close()
+        if(e.key==="ArrowRight") next()
+        if(e.key==="ArrowLeft") prev()
+
+    }
+
+    overlay.addEventListener("click", e => {
+
+    if(e.target === overlay){
+        close()
+    }
+
+})
+
+    document.addEventListener("keydown",keyHandler)
+
+    render()
+
+    document.body.appendChild(overlay)
+
+}
+
+document.addEventListener("click",function(e){
+
+    const media=e.target.closest("[data-gallery]")
+
+    if(!media) return
+
+    const galleryId=media.dataset.gallery
+
+    const elements=[...document.querySelectorAll(`[data-gallery="${galleryId}"]`)]
+
+    const items=elements.map(el=>({
+        src:el.dataset.src,
+        type:el.dataset.type,
+        caption:el.dataset.caption
+    }))
+
+    const index=elements.indexOf(media)
+
+    openLightbox(items,index)
+
+})
+
+</script>
+
+<script>
+
+document.querySelectorAll(".slider-gallery").forEach(gallery => {
+
+const slides = gallery.querySelector(".slides")
+const dotsContainer = gallery.querySelector(".slider-dots")
+
+const left = gallery.querySelector(".left")
+const right = gallery.querySelector(".right")
+
+const slideCount = slides.children.length
+
+let index = 0
+
+
+function updateDots() {
+
+    dotsContainer.querySelectorAll("span").forEach(
+    d => d.classList.remove("active")
+    )
+
+    dotsContainer.children[index].classList.add("active")
+
+}
+
+
+function goToSlide(i) {
+
+    index = Math.max(0, Math.min(slideCount - 1, i))
+
+    slides.scrollTo({
+        left: slides.clientWidth * index,
+        behavior: "smooth"
+    })
+
+    updateDots()
+
+}
+
+
+for (let i = 0; i < slideCount; i++) {
+
+    const dot = document.createElement("span")
+
+    if (i === 0) dot.classList.add("active") 
+
+    dotsContainer.appendChild(dot)
+
+}
+
+
+right.onclick = () => goToSlide(index + 1)
+
+left.onclick = () => goToSlide(index - 1)
+
+
+slides.addEventListener("scroll", () => {
+
+const newIndex = Math.round(
+    slides.scrollLeft / slides.clientWidth
+)
+
+if (newIndex !== index) {
+
+    index = newIndex
+    updateDots()
+
+}
+
+})
+
+})
+
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+
+document.querySelectorAll("pre code").forEach(block => {
+
+    const pre = block.parentElement
+
+    const wrapper = document.createElement("div")
+    wrapper.className = "code-wrapper"
+
+    pre.parentNode.insertBefore(wrapper, pre)
+    wrapper.appendChild(pre)
+
+    // language label
+    let lang = block.className.replace("language-","")
+
+    if(lang){
+        const label = document.createElement("div")
+        label.className = "code-lang"
+        label.textContent = lang
+        wrapper.appendChild(label)
+    }
+
+    // copy button
+    const btn = document.createElement("button")
+    btn.className = "copy-btn"
+    btn.textContent = "copy"
+
+    btn.onclick = () => {
+        navigator.clipboard.writeText(block.innerText)
+        btn.textContent = "copied"
+        setTimeout(()=>btn.textContent="copy",1500)
+    }
+
+    wrapper.appendChild(btn)
+
+})
+
+hljs.highlightAll()
+hljs.initLineNumbersOnLoad()
+
+})
+
+</script>
+
 </body>
 </html>

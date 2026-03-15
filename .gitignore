@@ -1,2 +1,28 @@
 .env
 /.vscode
+/old
+
+# Ignore all log files and temp files.
+*.log
+*.tmp
+# Ignore node_modules directory
+/node_modules
+# Ignore build output directories
+/dist
+/build
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+# Ignore IDE specific files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+# Ignore coverage reports
+/coverage
+# Ignore environment variable files.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

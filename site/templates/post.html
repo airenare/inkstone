@@ -1,7 +1,16 @@
+
 {% extends "base.html" %}
+
 {% block content %}
+
 <a href="/">← Back</a>
+
 <article>
-    {{ post.html | safe }}
+
+<h1>{{ post.title }}</h1>
+
+{{ post.html | safe }}
+
 </article>
+
 {% endblock %}
