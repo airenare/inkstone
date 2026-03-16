@@ -1,5 +1,6 @@
 import os
 import re
+from sys import path
 import yaml
 import markdown
 import dotenv
@@ -57,13 +58,10 @@ def parse_frontmatter(text):
             _, yaml_text, body = text.split("---", 2)
 
             metadata = yaml.safe_load(yaml_text) or {}
-            print("Parsed metadata:", metadata)
-            print("Parsed body:", body.strip())
             return metadata, body.strip()
 
-        except:
-            print("Failed to parse frontmatter. Returning raw text.")
-            print("Raw text:", text.strip())
+        except Exception as e:
+            print(f"Failed to parse frontmatter for {path}: {e}")
             return {}, text
 
     return {}, text
@@ -264,7 +262,8 @@ def load_posts():
 
                 try:
                     date = datetime.fromisoformat(date)
-                except:
+                except Exception as e:
+                    print(f"Error occurred while parsing date for {path}: {e}")
                     date = None
 
             html = render_markdown(md, path)
