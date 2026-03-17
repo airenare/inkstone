@@ -90,21 +90,81 @@ def convert_links(md):
 # CALLOUT PARSER
 # =========================================
 
+# def convert_callouts(md):
+#     pattern = r'> \[!(\w+)\]\n((?:>.*\n?)*)'
+#     def repl(match):
+#         callout = match.group(1).lower()
+#         body = match.group(2)
+#         body = re.sub(r'^> ?', '', body, flags=re.MULTILINE)
+#         return f'<div class="callout {callout}">\n{body}\n</div>'
+#     return re.sub(pattern, repl, md)
+
 def convert_callouts(md):
 
-    pattern = r'> \[!(\w+)\]\n((?:>.*\n?)*)'
+    lines = md.split("\n")
+    out = []
 
-    def repl(match):
+    callout_open = False
+    callout_type = ""
+    callout_title = ""
+    callout_content = []
 
-        callout = match.group(1).lower()
+    for line in lines:
 
-        body = match.group(2)
+        if line.lstrip().startswith("> [!"):
 
-        body = re.sub(r'^> ?', '', body, flags=re.MULTILINE)
+            if callout_open:
+                out.append(render_callout(callout_type, callout_title, callout_content))
+                callout_content = []
 
-        return f'<div class="callout {callout}">\n{body}\n</div>'
+            callout_open = True
 
-    return re.sub(pattern, repl, md)
+            # header = line[2:]  # remove "> "
+            
+            header = line.lstrip("> ").strip()
+
+            type_part = header.split("]")[0]
+            callout_type = type_part[2:].lower()
+
+            callout_title = header.split("]")[1].strip()
+
+        elif callout_open and line.startswith(">"):
+
+            callout_content.append(line[1:].strip())
+
+        else:
+
+            if callout_open:
+                out.append(render_callout(callout_type, callout_title, callout_content))
+                callout_open = False
+                callout_content = []
+
+            out.append(line)
+
+    if callout_open:
+        out.append(render_callout(callout_type, callout_title, callout_content))
+
+    return "\n".join(out)
+
+
+def render_callout(type_, title, content):
+
+    body = "\n".join(content)
+
+    return f"""
+<div class="callout callout-{type_}">
+
+<div class="callout-title">
+<span class="callout-icon"></span>
+<span class="callout-title-text">{title}</span>
+</div>
+
+<div class="callout-content">
+{body}
+</div>
+
+</div>
+"""
 
 
 # =========================================
@@ -200,6 +260,7 @@ def convert_media(md, md_path):
         output.append(flush_slider())
 
     return "\n".join(output)
+
 # =========================================
 # MARKDOWN PIPELINE
 # =========================================
