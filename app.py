@@ -15,10 +15,11 @@ from flask import Flask, render_template, abort, request, send_from_directory
 
 dotenv.load_dotenv()
 
-try:
-    VAULT_PATH = os.getenv("VAULT_PATH")
-except:
-    VAULT_PATH = "BlogPages"
+# Check that VAULT_PATH exists, if not, use the BlogPages in projects directory for testing
+VAULT_PATH = os.getenv("VAULT_PATH")
+if not VAULT_PATH or not os.path.exists(VAULT_PATH):
+    print(f"Warning: VAULT_PATH '{VAULT_PATH}' does not exist. Using './BlogPages' for testing.")
+    VAULT_PATH = "./BlogPages"
 
 BLOG_TAGS = {"blog", "website"}
 
