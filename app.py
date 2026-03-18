@@ -15,7 +15,11 @@ from flask import Flask, render_template, abort, request, send_from_directory
 
 dotenv.load_dotenv()
 
-VAULT_PATH = os.getenv("VAULT_PATH")
+try:
+    VAULT_PATH = os.getenv("VAULT_PATH")
+except:
+    VAULT_PATH = "BlogPages"
+
 BLOG_TAGS = {"blog", "website"}
 
 app = Flask(
