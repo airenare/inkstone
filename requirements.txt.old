@@ -1,0 +1,6 @@
+PyYAML==6.0.3
+Flask==3.0.3
+markdown==3.6
+pyyaml==6.0.3
+python-dotenv==1.0.1
+gunicorn==20.1.0
