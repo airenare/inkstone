@@ -443,4 +443,4 @@ if __name__ == "__main__":
 
     POSTS = load_posts()
 
-    app.run("127.0.0.1", 5050, debug=True)
+    app.run("127.0.0.1", 8000, debug=True)
