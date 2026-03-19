@@ -80,6 +80,57 @@ def convert_links(md):
 
 
 # =========================================
+# OBSIDIAN CHECKBOX PARSER
+# =========================================
+def parse_checkbox(md):
+    # Match indentation + checkbox
+    pattern = r"^(\s*)- \[([ xX])\] (.*)$"
+    match = re.match(pattern, md)
+    if not match:
+        return None
+    
+
+    indent, checked, text = match.groups()
+    indent = indent.replace("\t", "    ") # Convert tabs to spaces for consistent indentation
+
+    return {
+        "indent": len(indent),
+        "checked": checked.lower() == "x",
+        "text": text
+    }
+
+def render_checkbox(item):
+    indent_em = item["indent"] * 0.25 # matching the ul margin
+    checked_attr = "checked" if item["checked"] else ""
+
+    return f"""
+
+<div class="checkbox" style="margin-left: {indent_em}em;">
+    <label>
+        <input type="checkbox" disabled {checked_attr}>
+        {item["text"]}
+    </label>
+</div>
+
+"""
+
+
+def convert_checkboxes(md):
+    lines = md.split("\n")
+    out = []
+
+    for line in lines:
+        item = parse_checkbox(line)
+
+        if item:
+            out.append(render_checkbox(item))
+        else:
+            out.append(line)
+
+    return "\n".join(out)
+
+
+# =========================================
 # OBSIDIAN CALLOUT PARSER
 # =========================================
 
@@ -249,6 +300,7 @@ def render_markdown(md, path):
     md = convert_media(md, path)
     md = convert_links(md)
     md = convert_callouts(md)
+    md = convert_checkboxes(md)
 
     html = markdown.markdown(
         md,
