@@ -38,13 +38,9 @@ LAST_SCAN_TIME = 0
 # =========================================
 
 def slugify(text):
-
     text = text.strip()
-
     text = re.sub(r"[^\w\s-]", "", text)
-
     text = re.sub(r"\s+", "-", text)
-
     return text
 
 
@@ -53,15 +49,11 @@ def slugify(text):
 # =========================================
 
 def parse_frontmatter(text):
-
     metadata = {}
 
     if text.startswith("---"):
-
         try:
-
             _, yaml_text, body = text.split("---", 2)
-
             metadata = yaml.safe_load(yaml_text) or {}
             return metadata, body.strip()
 
@@ -77,32 +69,19 @@ def parse_frontmatter(text):
 # =========================================
 
 def convert_links(md):
-
     pattern = r"\[\[([^\]]+)\]\]"
-
+    
     def repl(match):
-
         target = match.group(1)
-
         slug = slugify(target)
-
         return f"[{target}](/post/{slug})"
 
     return re.sub(pattern, repl, md)
 
 
 # =========================================
-# CALLOUT PARSER
+# OBSIDIAN CALLOUT PARSER
 # =========================================
-
-# def convert_callouts(md):
-#     pattern = r'> \[!(\w+)\]\n((?:>.*\n?)*)'
-#     def repl(match):
-#         callout = match.group(1).lower()
-#         body = match.group(2)
-#         body = re.sub(r'^> ?', '', body, flags=re.MULTILINE)
-#         return f'<div class="callout {callout}">\n{body}\n</div>'
-#     return re.sub(pattern, repl, md)
 
 def convert_callouts(md):
 
@@ -123,18 +102,13 @@ def convert_callouts(md):
                 callout_content = []
 
             callout_open = True
-
-            # header = line[2:]  # remove "> "
             
             header = line.lstrip("> ").strip()
-
             type_part = header.split("]")[0]
             callout_type = type_part[2:].lower()
-
             callout_title = header.split("]")[1].strip()
 
         elif callout_open and line.startswith(">"):
-
             callout_content.append(line[1:].strip())
 
         else:
@@ -273,9 +247,7 @@ def convert_media(md, md_path):
 def render_markdown(md, path):
 
     md = convert_media(md, path)
-
     md = convert_links(md)
-
     md = convert_callouts(md)
 
     html = markdown.markdown(
@@ -319,10 +291,39 @@ def load_posts():
                 continue
 
             title = metadata.get("title", f[:-3])
-
             slug = metadata.get("slug") or slugify(title)
-
             date = metadata.get("date")
+            # Make sure all dates are parsed no matter the format
+            date_formats = [
+                "%Y-%m-%d",
+                "%Y-%m-%d %H:%M",
+                "%Y-%m-%d %H:%M:%S",
+                "%Y/%m/%d",
+                "%Y/%m/%d %H:%M",
+                "%Y/%m/%d %H:%M:%S",
+                "%d-%m-%Y",
+                "%d-%m-%Y %H:%M",
+                "%d-%m-%Y %H:%M:%S",
+                "%d/%m/%Y",
+                "%d/%m/%Y %H:%M",
+                "%d/%m/%Y %H:%M:%S"
+            ]
+
+            # Try parsing date with multiple formats
+            if isinstance(date, str):
+
+                for fmt in date_formats:
+                    try:
+                        date = datetime.strptime(date, fmt)
+                        break
+                    except ValueError:
+                        continue
+                else:
+                    print(f"Error: Unrecognized date format for {path}: {date}")
+                    date = None
+
+
+            print(f"Loaded post: {title} (slug: {slug}, date: {date})")
 
             if isinstance(date, str):
 
