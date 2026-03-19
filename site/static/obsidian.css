@@ -89,6 +89,7 @@ table th, table td {
 ul, ol {
     margin: 0.5em 0;
     padding-left: 1.2em;
+    list-style-position: inside;
 }
 
 .checkbox {
@@ -96,7 +97,7 @@ ul, ol {
 }
 
 .checkbox input {
-    margin-left: 0.4em;
+    margin-left: 1.3em;
 }
 
 .checkbox label {
