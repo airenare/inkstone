@@ -115,17 +115,62 @@ def render_checkbox(item):
 """
 
 
+# def convert_checkboxes(md):
+#     lines = md.split("\n")
+#     out = []
+
+#     for line in lines:
+#         item = parse_checkbox(line)
+
+#         if item:
+#             out.append(render_checkbox(item))
+#         else:
+#             out.append(line)
+
+#     return "\n".join(out)
+
 def convert_checkboxes(md):
     lines = md.split("\n")
     out = []
 
-    for line in lines:
-        item = parse_checkbox(line)
+    stack = []  # keeps track of open <ul>
+    
+    def close_lists(to_level=0):
+        while len(stack) > to_level:
+            out.append("</ul>")
+            stack.pop()
 
-        if item:
-            out.append(render_checkbox(item))
+    for line in lines:
+        match = re.match(r'^(\s*)- \[([ xX])\] (.*)', line)
+
+        if match:
+            indent, checked, text = match.groups()
+            indent = indent.replace("\t", "    ")
+            level = len(indent) // 4  # 4 spaces = 1 level
+
+            checked_attr = "checked" if checked.lower() == "x" else ""
+
+            # Open new lists if needed
+            while len(stack) < level + 1:
+                out.append('<ul class="checkbox-list">')
+                stack.append("<ul>")
+
+            # Close lists if needed
+            close_lists(level + 1)
+
+            out.append(
+                f'<li><input type="checkbox" disabled {checked_attr}> {text}</li>'
+            )
+
         else:
+            # If we hit a non-checkbox line → close all lists
+            if stack:
+                close_lists(0)
+
             out.append(line)
+
+    # Close any remaining lists
+    close_lists(0)
 
     return "\n".join(out)
 
