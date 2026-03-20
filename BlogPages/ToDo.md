@@ -49,3 +49,9 @@ def remove_inner_rectangle():
 	get_rid_of = "HLJS"
 ```
 
+## Homepage, etc.
+Homepage: A simple note
+Blog: A note with curated list and a list of all other notes
+
+## Notes posting
+Syncing Notes
