@@ -36,6 +36,7 @@ table {
     border-collapse: collapse;
     margin: 1em 0;
     width: 75%;
+    min-width: 320px;
 }
 
 table th, table td {
