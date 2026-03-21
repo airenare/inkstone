@@ -6,7 +6,7 @@ date: 03/11/2026
 
 # ToDo
 
-## Checkboxes
+## Checkboxes [Done]
 - [ ] Checkbox
 - [ ] List
 	- [ ] Indented layer 1
@@ -16,7 +16,7 @@ date: 03/11/2026
 - [ ] Continue
 
 
-## Ordered List
+## Ordered List [Done]
 1. One
 2. Two
 	1. Two and a Half
@@ -24,7 +24,7 @@ date: 03/11/2026
 	2. Two and a Third
 3. Three
 
-## Unordered List
+## Unordered List [Done]
 - One
 - Two
 	- Three
@@ -34,13 +34,14 @@ date: 03/11/2026
 - Seven
 
 ## Tables
+Table width [Done]
+
 | Make  | Sure | It     |
 | :---- | :--- | :----- |
 | Spans | Max  | Pixels |
 | Not   | Max  | %      |
-Because other wise it's bad on vertical screens
 
-Make sure next line is not added to table!
+Empty first row removed [Done]
 
 |       |      |        |
 | :---- | :--- | :----- |
@@ -57,6 +58,7 @@ def remove_inner_rectangle():
 
 ## Homepage, etc.
 Homepage: A simple note
+
 Blog: A note with curated list and a list of all other notes
 
 ## Notes posting

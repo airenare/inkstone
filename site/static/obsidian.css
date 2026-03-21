@@ -44,6 +44,28 @@ table th, table td {
     padding: 0.5em;
 }
 
+/* table.no-header td {
+    font-weight: normal;
+}
+
+table.no-header tr:first-child td {
+    font-weight: normal;
+} */
+
+
+/* Compress empty header row */
+table thead tr:first-child:has(th:empty) {
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+}
+
+table thead tr:first-child:has(th:empty) th {
+    padding: 0;
+    border: none;
+}
+
+
 ul {
     margin: 0.5em 0;
     padding-left: 1.2em;
