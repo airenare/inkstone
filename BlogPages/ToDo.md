@@ -42,6 +42,12 @@ Because other wise it's bad on vertical screens
 
 Make sure next line is not added to table!
 
+|       |      |        |
+| :---- | :--- | :----- |
+| If    | Table | Has   |
+| Empty | First | Row   |
+
+
 ## Code blocks
 ```python
 def remove_inner_rectangle():
