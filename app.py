@@ -63,6 +63,24 @@ def parse_frontmatter(text):
 
     return {}, text
 
+# =========================================
+# TITLE PARSER AND HANDLER
+# =========================================
+
+def extract_md_title(md):
+    for line in md.split("\n"):
+        if line.startswith("# "):
+            return line[2:].strip()
+    return None
+
+def remove_first_md_title(md):
+    lines = md.split("\n")
+    for i, line in enumerate(lines):
+        if line.startswith("# "):
+            del lines[i]
+            break
+    return "\n".join(lines)
+
 
 # =========================================
 # OBSIDIAN LINK PARSER
@@ -387,7 +405,8 @@ def load_posts():
             if BLOG_TAGS.isdisjoint(tags):
                 continue
 
-            title = metadata.get("title", f[:-3])
+            md_title = extract_md_title(md)
+            title = metadata.get("title") or md_title or f[:-3]
             slug = metadata.get("slug") or slugify(title)
             date = metadata.get("date")
             # Make sure all dates are parsed no matter the format
@@ -420,7 +439,7 @@ def load_posts():
                     date = None
 
 
-            print(f"Loaded post: {title} (slug: {slug}, date: {date})")
+            # print(f"Loaded post: {title} (slug: {slug}, date: {date})")
 
             if isinstance(date, str):
 
@@ -429,7 +448,10 @@ def load_posts():
                 except Exception as e:
                     print(f"Error occurred while parsing date for {path}: {e}")
                     date = None
-
+            
+            # Remove H1 so it doesn't duplicate
+            md = remove_first_md_title(md)
+            
             html = render_markdown(md, path)
 
             posts.append({
