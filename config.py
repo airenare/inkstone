@@ -15,3 +15,4 @@ if not VAULT_PATH or not os.path.exists(VAULT_PATH):
 BLOG_TAGS = {"blog", "website"}
 HOMEPAGE_TAG = "homepage"
 FEATURED_TAG = "featured"
+LISTING_TAG = "listing"

@@ -1,15 +1,17 @@
 import os
 import re
+from datetime import datetime, date as date_type
 
 import yaml
-from datetime import datetime
 
-from config import VAULT_PATH, BLOG_TAGS, HOMEPAGE_TAG, FEATURED_TAG
+from config import VAULT_PATH, BLOG_TAGS, HOMEPAGE_TAG, FEATURED_TAG, LISTING_TAG
 from converters import slugify, render_markdown, extract_h1
 
 
-POSTS = {}
-HOMEPAGE = {}
+# url_path → post dict (content posts only, not homepage/listing files)
+ALL_POSTS = {}
+# section root url → {"type": "homepage"|"listing", "post": post_dict, "section": str}
+SECTION_ROUTES = {}
 WEBSITE_NAME = "My Blog"
 LAST_SCAN_TIME = 0
 
@@ -48,7 +50,7 @@ def parse_frontmatter(text):
 
 
 # =========================================
-# SUMMARY HELPER
+# HELPERS
 # =========================================
 
 def _make_summary(html):
@@ -59,14 +61,47 @@ def _make_summary(html):
     return plain[:SUMMARY_LENGTH].rsplit(" ", 1)[0] + "\u2026"
 
 
+def _section_from_filepath(filepath):
+    """Return the section string for a file, e.g. '' for root, 'blog', 'gallery/arts'."""
+    folder = os.path.dirname(os.path.abspath(filepath))
+    vault = os.path.abspath(VAULT_PATH)
+    rel = os.path.relpath(folder, vault)
+    if rel == ".":
+        return ""
+    parts = rel.replace("\\", "/").split("/")
+    return "/".join(slugify(p) for p in parts)
+
+
+def _parse_date(date, filepath):
+    """Normalize a raw date value (str, date, datetime) to datetime or None."""
+    if isinstance(date, date_type) and not isinstance(date, datetime):
+        return datetime(date.year, date.month, date.day)
+    if isinstance(date, str):
+        for fmt in DATE_FORMATS:
+            try:
+                return datetime.strptime(date, fmt)
+            except ValueError:
+                continue
+        try:
+            return datetime.fromisoformat(date)
+        except Exception:
+            pass
+        print(f"Unrecognized date format for {filepath}: {date}")
+    return date if isinstance(date, datetime) else None
+
+
 # =========================================
 # LOAD POSTS
 # =========================================
 
 def load_posts():
-    posts = []
-    homepage = {}
+    all_posts = {}
+    section_routes = {}
     website_name = "My Blog"
+
+    # ---- Pass 1: collect metadata and build title → url_path index ----
+    candidates = []
+    url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
 
     for root, _, files in os.walk(VAULT_PATH):
         for f in files:
@@ -89,66 +124,71 @@ def load_posts():
             if BLOG_TAGS.isdisjoint(tags):
                 continue
 
-            # Title resolution: frontmatter > H1 in body > filename
             title = metadata.get("title") or extract_h1(md) or f[:-3]
             slug = metadata.get("slug") or slugify(title)
-            date = metadata.get("date")
+            section = _section_from_filepath(filepath)
 
-            if isinstance(date, str):
-                for fmt in DATE_FORMATS:
-                    try:
-                        date = datetime.strptime(date, fmt)
-                        break
-                    except ValueError:
-                        continue
-                else:
-                    print(f"Unrecognized date format for {filepath}: {date}")
-                    date = None
-
-            # PyYAML parses bare dates (2026-01-15) as datetime.date, not datetime
-            from datetime import date as date_type
-            if isinstance(date, date_type) and not isinstance(date, datetime):
-                date = datetime(date.year, date.month, date.day)
-            elif isinstance(date, str):
-                try:
-                    date = datetime.fromisoformat(date)
-                except Exception as e:
-                    print(f"Error parsing date for {filepath}: {e}")
-                    date = None
-
-            html = render_markdown(md, filepath)
-
-            summary = metadata.get("summary") or _make_summary(html)
-
-            priority_raw = metadata.get("priority")
-            priority = float("inf") if priority_raw is None else int(priority_raw)
-
-            is_homepage = HOMEPAGE_TAG in tags
-            is_featured = FEATURED_TAG in tags
-
-            print(f"Loaded: {title} (slug: {slug}, date: {date}, homepage: {is_homepage}, featured: {is_featured})")
-
-            post_data = {
-                "slug": slug,
-                "title": title,
-                "date": date,
-                "html": html,
-                "tags": tags,
-                "content": html.lower(),
-                "summary": summary,
-                "priority": priority,
-                "featured": is_featured,
-            }
-
-            if is_homepage:
-                homepage = post_data
-                website_name = title
+            if section:
+                url_path = "/" + section + "/" + slug
             else:
-                posts.append(post_data)
+                url_path = "/" + slug
 
-    posts.sort(key=lambda x: x["date"] or datetime.min, reverse=True)
+            url_index[slugify(title)] = url_path
+            candidates.append((filepath, f, metadata, md, tags, title, slug,
+                                section, url_path))
 
-    return {p["slug"]: p for p in posts}, homepage, website_name
+    # ---- Pass 2: render markdown with resolved wiki-links ----
+    for (filepath, f, metadata, md, tags, title, slug,
+         section, url_path) in candidates:
+
+        date = _parse_date(metadata.get("date"), filepath)
+        html = render_markdown(md, filepath, url_index)
+        summary = metadata.get("summary") or _make_summary(html)
+        priority_raw = metadata.get("priority")
+        priority = float("inf") if priority_raw is None else int(priority_raw)
+
+        section_url = ("/" + section) if section else "/"
+        is_homepage = HOMEPAGE_TAG in tags
+        is_listing = LISTING_TAG in tags
+        is_featured = FEATURED_TAG in tags
+
+        print(
+            f"Loaded: {title} | {url_path} | "
+            f"homepage={is_homepage} listing={is_listing} featured={is_featured}"
+        )
+
+        post_data = {
+            "url_path": url_path,
+            "section": section,
+            "section_url": section_url,
+            "slug": slug,
+            "title": title,
+            "date": date,
+            "html": html,
+            "tags": tags,
+            "content": html.lower(),
+            "summary": summary,
+            "priority": priority,
+            "featured": is_featured,
+        }
+
+        if is_listing:
+            section_routes[section_url] = {
+                "type": "listing",
+                "post": post_data,
+                "section": section,
+            }
+        elif is_homepage:
+            if section == "":
+                website_name = title
+            section_routes[section_url] = {
+                "type": "homepage",
+                "post": post_data,
+            }
+        else:
+            all_posts[url_path] = post_data
+
+    return all_posts, section_routes, website_name
 
 
 # =========================================
@@ -156,7 +196,7 @@ def load_posts():
 # =========================================
 
 def maybe_reload():
-    global POSTS, HOMEPAGE, WEBSITE_NAME, LAST_SCAN_TIME
+    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, LAST_SCAN_TIME
 
     newest = 0
     for root, _, files in os.walk(VAULT_PATH):
@@ -166,5 +206,5 @@ def maybe_reload():
 
     if newest > LAST_SCAN_TIME:
         print("Reloading vault...")
-        POSTS, HOMEPAGE, WEBSITE_NAME = load_posts()
+        ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME = load_posts()
         LAST_SCAN_TIME = newest

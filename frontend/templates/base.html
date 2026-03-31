@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <header>
 <div class="header-inner">
 <h1><a href="/">{{ website_name }}</a></h1>
-<nav><a href="/blog">Blog</a></nav>
+<nav>{% for url in nav_sections %}<a href="{{ url }}">{{ url.lstrip("/") | title }}</a>{% endfor %}</nav>
 </div>
 </header>
 

@@ -21,13 +21,19 @@ def slugify(text):
 # OBSIDIAN LINK PARSER
 # =========================================
 
-def convert_links(md):
+def convert_links(md, url_index=None):
+    """Convert [[Wiki Links]] to markdown links.
+
+    url_index: dict of {slugify(title): url_path} built during two-pass loading.
+    Falls back to /slugified-title if the title is not found in the index.
+    """
     pattern = r"\[\[([^\]]+)\]\]"
 
     def repl(match):
         target = match.group(1)
         slug = slugify(target)
-        return f"[{target}](/blog/{slug})"
+        url = url_index.get(slug) if url_index else None
+        return f"[{target}]({url or '/' + slug})"
 
     return re.sub(pattern, repl, md)
 
@@ -254,10 +260,10 @@ def strip_leading_h1(md):
     return "\n".join(lines)
 
 
-def render_markdown(md, path):
+def render_markdown(md, path, url_index=None):
     md = strip_leading_h1(md)
     md = convert_media(md, path)
-    md = convert_links(md)
+    md = convert_links(md, url_index)
     md = convert_callouts(md)
     md = convert_checkboxes(md)
 
