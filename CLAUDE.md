@@ -137,3 +137,4 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 - **Commits:** Keep commit messages short and informative — one tight subject line, no verbose body.
 - **Blog posts:** Never delete files in `BlogPages/`. New `.md` files may be created there for testing purposes.
 - **Memory sync:** Whenever something valuable is saved to the local `~/.claude` memory store, also distill it into this file under the relevant section. This keeps preferences and context in sync across machines.
+- **TODO.md:** Project backlog lives in `TODO.md` at the repo root. Check it when the user asks to implement todos. Move completed items to the Done section after finishing them.
