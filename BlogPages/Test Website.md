@@ -46,9 +46,9 @@ No build step, no static site generator, no CMS. Just markdown files and a Pytho
 
 ## Explore the demo
 
-- [[Blog Index]] — blog posts with callouts, code, images, and checkboxes
-- [[Gallery Index]] — an image gallery with lightbox and slider
-- [[Books Index]] — a Dataview-powered bookshelf pulled from individual book notes
+- [Blog](/blog) — blog posts with callouts, code, images, and checkboxes
+- [Gallery](/gallery) — an image gallery with lightbox and slider
+- [Books](/books) — a Dataview-powered bookshelf pulled from individual book notes
 
 ---
 
