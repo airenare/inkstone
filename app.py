@@ -104,7 +104,9 @@ def serve(path):
     # 3. Private note placeholder
     if url_path in post_store.PRIVATE_ROUTES:
         entry = post_store.PRIVATE_ROUTES[url_path]
-        return render_template("private.html", entry=entry)
+        parent = url_path.rsplit("/", 1)[0]
+        back_url = parent if parent else "/"
+        return render_template("private.html", entry=entry, back_url=back_url)
 
     abort(404)
 
