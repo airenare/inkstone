@@ -4,6 +4,9 @@ import dotenv
 
 dotenv.load_dotenv()
 
+with open(os.path.join(os.path.dirname(__file__), "VERSION")) as _vf:
+    VERSION = _vf.read().strip()
+
 VAULT_PATH = os.getenv("VAULT_PATH")
 if not VAULT_PATH or not os.path.exists(VAULT_PATH):
     print(

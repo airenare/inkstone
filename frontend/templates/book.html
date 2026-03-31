@@ -1,6 +1,18 @@
 
 {% extends "base.html" %}
 
+{% block meta %}
+<meta property="og:title" content="{{ post.title }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ current_url }}">
+<meta property="og:description" content="{{ post.summary }}">
+{% if post.metadata.cover %}<meta property="og:image" content="{{ post.metadata.cover }}">{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if post.metadata.cover else 'summary' }}">
+<meta name="twitter:title" content="{{ post.title }}">
+<meta name="twitter:description" content="{{ post.summary }}">
+{% if post.metadata.cover %}<meta name="twitter:image" content="{{ post.metadata.cover }}">{% endif %}
+{% endblock %}
+
 {% block content %}
 
 <a href="{{ back_url }}">← Back</a>

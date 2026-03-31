@@ -1,6 +1,18 @@
 
 {% extends "base.html" %}
 
+{% block meta %}
+<meta property="og:title" content="{{ homepage.title }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ current_url }}">
+<meta property="og:description" content="{{ homepage.summary }}">
+{% if homepage.banner %}<meta property="og:image" content="{{ homepage.banner }}">{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if homepage.banner else 'summary' }}">
+<meta name="twitter:title" content="{{ homepage.title }}">
+<meta name="twitter:description" content="{{ homepage.summary }}">
+{% if homepage.banner %}<meta name="twitter:image" content="{{ homepage.banner }}">{% endif %}
+{% endblock %}
+
 {% block content %}
 
 {% if homepage.banner %}

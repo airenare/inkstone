@@ -4,10 +4,6 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 ## High Priority
 
-- **RSS feed** (`/feed.xml`) — most requested blog feature; ~50 lines using feedgen or hand-rolled XML
-- **OpenGraph / Twitter Card meta tags** — add `og:title`, `og:description`, `og:image` to `base.html <head>`; enables rich link previews
-- **Custom 404 page** — create `frontend/templates/404.html`, register Flask `@app.errorhandler(404)`
-- **Sitemap** (`/sitemap.xml`) — auto-generated from `ALL_POSTS` + `SECTION_ROUTES`
 
 ## Medium Priority
 
@@ -37,3 +33,8 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 ## Done
 
 - Write a README.md
+- RSS feed (`/feed.xml`)
+- OpenGraph / Twitter Card meta tags
+- Custom 404 page
+- Sitemap (`/sitemap.xml`)
+- `menu_order` frontmatter for pinning pages to the top nav

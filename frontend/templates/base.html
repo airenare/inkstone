@@ -1,5 +1,6 @@
 
 <!DOCTYPE html>
+<!-- obsidian-blog-engine v{{ app_version }} -->
 <html lang="en">
 <head>
 
@@ -7,6 +8,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>{{ title if title else website_name }}</title>
+
+{% block meta %}
+<meta property="og:title" content="{{ website_name }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ current_url }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ website_name }}">
+{% endblock %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='obsidian.css') }}">
 

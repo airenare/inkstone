@@ -58,6 +58,8 @@ New features should follow this chain — `app.py` imports from `posts.py`, neve
 | `/blog/my-post` | `ALL_POSTS["/blog/my-post"]` — regular post in `blog/` folder |
 | `/gallery/arts/post` | `ALL_POSTS["/gallery/arts/post"]` — post in nested subfolder |
 | `/search` | Full-text search across `ALL_POSTS` |
+| `/feed.xml` | RSS feed — latest 20 posts sorted by date |
+| `/sitemap.xml` | Auto-generated sitemap of all routes |
 | `/attachments/<path>` | Media served directly from vault |
 
 Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct children of `/`). Posts with `menu_order` in frontmatter are additionally pinned to the nav (sorted by value, appended after section links). This is the intended mechanism for standalone pages like About or Contact.
@@ -77,10 +79,11 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 
 ### Frontend
 
-- `frontend/templates/base.html` — master template; all JS (lightbox, sliders, copy-to-clipboard); dynamic nav
+- `frontend/templates/base.html` — master template; all JS (lightbox, sliders, copy-to-clipboard); dynamic nav; `{% block meta %}` for per-page OG/Twitter tags
 - `frontend/templates/index.html` — site homepage (custom content)
 - `frontend/templates/listing.html` — section listing page (featured + regular posts)
 - `frontend/templates/post.html` — individual post; `back_url` points to parent section
+- `frontend/templates/404.html` — custom 404 page
 - `frontend/static/obsidian.css` — dark theme (Catppuccin-inspired) + header/listing styles
 - `frontend/static/callouts.css` — per-type callout styles
 - `frontend/static/code.css` — code block styling with language labels

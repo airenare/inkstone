@@ -32,6 +32,10 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Search** — full-text search across all published posts at `/search`
 - **Auto-listings** — sections with no explicit index file get an auto-generated listing page
 - **Nav pinning** — add `menu_order: N` to any note's frontmatter to pin it to the top nav (About, Contact, etc.)
+- **RSS feed** — latest 20 posts served at `/feed.xml`
+- **Sitemap** — auto-generated from all published routes at `/sitemap.xml`
+- **OpenGraph / Twitter Card** — per-page meta tags for rich link previews; uses banner image if set
+- **Custom 404** — styled 404 page consistent with the rest of the site
 
 ---
 

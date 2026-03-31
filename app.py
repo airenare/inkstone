@@ -1,9 +1,11 @@
-from datetime import datetime
+import html
+from datetime import datetime, timezone
 
-from flask import Flask, render_template, abort, request, send_from_directory
+from flask import Flask, render_template, abort, request, send_from_directory, \
+    Response
 
 import posts as post_store
-from config import VAULT_PATH
+from config import VAULT_PATH, VERSION
 
 
 # =========================================
@@ -28,6 +30,8 @@ def inject_globals():
         "website_name": post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
         "menu_posts": post_store.MENU_POSTS,
+        "current_url": request.url,
+        "app_version": VERSION,
     }
 
 
@@ -38,6 +42,76 @@ def inject_globals():
 @app.route("/attachments/<path:path>")
 def attachments(path):
     return send_from_directory(VAULT_PATH, path)
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("404.html"), 404
+
+
+@app.route("/feed.xml")
+def rss_feed():
+    post_store.maybe_reload()
+    posts = sorted(
+        post_store.ALL_POSTS.values(),
+        key=lambda p: p["date"] or datetime.min,
+        reverse=True,
+    )[:20]
+    base = request.url_root.rstrip("/")
+    now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    items = []
+    for p in posts:
+        pub = ""
+        if p["date"]:
+            pub = p["date"].strftime("%a, %d %b %Y %H:%M:%S +0000")
+        link = base + p["url_path"]
+        items.append(
+            f"    <item>\n"
+            f"      <title>{html.escape(p['title'])}</title>\n"
+            f"      <link>{link}</link>\n"
+            f"      <guid>{link}</guid>\n"
+            f"      <pubDate>{pub}</pubDate>\n"
+            f"      <description>"
+            f"{html.escape(p['summary'])}"
+            f"</description>\n"
+            f"    </item>"
+        )
+    site_title = html.escape(post_store.WEBSITE_NAME)
+    site_link = base + "/"
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0">\n'
+        "  <channel>\n"
+        f"    <title>{site_title}</title>\n"
+        f"    <link>{site_link}</link>\n"
+        f"    <description>{site_title}</description>\n"
+        f"    <lastBuildDate>{now}</lastBuildDate>\n"
+        + "\n".join(items)
+        + "\n  </channel>\n</rss>"
+    )
+    return Response(xml, mimetype="application/rss+xml")
+
+
+@app.route("/sitemap.xml")
+def sitemap():
+    post_store.maybe_reload()
+    base = request.url_root.rstrip("/")
+    locs = [base + "/"]
+    for url in sorted(post_store.SECTION_ROUTES):
+        if url != "/":
+            locs.append(base + url)
+    for url in sorted(post_store.ALL_POSTS):
+        locs.append(base + url)
+    url_tags = "\n".join(
+        f"  <url><loc>{loc}</loc></url>" for loc in locs
+    )
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + url_tags
+        + "\n</urlset>"
+    )
+    return Response(xml, mimetype="application/xml")
 
 
 @app.route("/search")
