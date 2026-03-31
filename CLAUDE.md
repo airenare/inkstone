@@ -45,7 +45,13 @@ Data flow:
 
 1. `posts.load_posts()` scans `VAULT_PATH` for `.md` files, parses YAML frontmatter, filters by `BLOG_TAGS = {"blog", "website"}`, runs the markdown pipeline, and stores results in `posts.POSTS` keyed by slug.
 2. `posts.maybe_reload()` checks file modification times on each request and reloads if anything changed.
-3. Flask routes (`/`, `/post/<slug>`, `/search`, `/attachments/<path>`) render Jinja2 templates from `frontend/templates/` using `post_store.POSTS`.
+3. Flask routes render Jinja2 templates from `frontend/templates/`:
+   - `/` → homepage (from the `homepage`-tagged file); redirects to `/blog` if none exists
+   - `/blog` → blog index with featured + regular posts
+   - `/blog/<slug>` → individual post
+   - `/post/<slug>` → 301 redirect to `/blog/<slug>`
+   - `/search` → full-text search
+   - `/attachments/<path>` → serves media from vault
 
 ### Markdown Pipeline (order matters)
 
@@ -69,12 +75,20 @@ Data flow:
 ```yaml
 ---
 tags:
-  - blog       # "blog" or "website" required to publish
+  - blog        # "blog" or "website" required to publish
+  - homepage    # makes this file the site homepage (rendered at /)
+  - featured    # shows post in the Featured section on /blog
 date: 2026-03-21
-title: My Post
-slug: my-post  # auto-generated from title if omitted
+title: My Post  # optional; overrides H1 in body and filename
+slug: my-post   # optional; auto-generated from title if omitted
+priority: 0     # featured posts only; 0 = top, then 1, 2… (date breaks ties)
+summary: "A short description shown on the blog index."  # auto-derived if omitted
 ---
 ```
+
+**Title resolution order:** frontmatter `title` → first `# H1` in body → filename (without `.md`).
+
+**`posts.py` globals:** `POSTS` (slug → post dict), `HOMEPAGE` (the homepage post), `WEBSITE_NAME` (derived from homepage title). All three are updated together by `load_posts()` / `maybe_reload()`.
 
 ### Media
 

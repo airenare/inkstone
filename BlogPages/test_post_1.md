@@ -1,8 +1,11 @@
 ---
 tags:
   - blog
+  - featured
 date: 2026-01-15
 title: Test Post One
+priority: 1
+summary: A comprehensive test of text formatting, tables, code blocks, callouts, and nested task checkboxes.
 ---
 
 # Test Post One

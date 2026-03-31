@@ -234,3 +234,101 @@ img{
 .slider-arrow:hover {
     background: rgba(0,0,0,0.8);
 }
+
+/* =========================================
+   HEADER + NAV
+   ========================================= */
+
+header {
+    margin-bottom: 2.5rem;
+}
+
+.header-inner {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+}
+
+.header-inner h1 {
+    margin: 0;
+}
+
+nav a {
+    color: #a9a9b7;
+    font-size: 0.95rem;
+}
+
+nav a:hover {
+    color: #dcdfe4;
+    text-decoration: none;
+}
+
+/* =========================================
+   BLOG INDEX
+   ========================================= */
+
+.featured-posts {
+    margin-bottom: 3rem;
+}
+
+.featured-post {
+    background: #252537;
+    border: 1px solid #3d3d5c;
+    border-left: 4px solid #8ab4f8;
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.featured-post h3 {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.1rem;
+}
+
+.featured-post h3 a {
+    color: #dcdfe4;
+}
+
+.featured-post h3 a:hover {
+    color: #8ab4f8;
+}
+
+.post-meta {
+    font-size: 0.8rem;
+    color: #6e6e8e;
+    margin-bottom: 0.5rem;
+}
+
+.post-summary {
+    color: #a9a9b7;
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.55;
+}
+
+.regular-posts {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-entry {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #2e2e42;
+}
+
+.post-entry:last-child {
+    border-bottom: none;
+}
+
+.post-entry h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+}
+
+.post-entry h3 a {
+    color: #dcdfe4;
+}
+
+.post-entry h3 a:hover {
+    color: #8ab4f8;
+}

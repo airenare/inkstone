@@ -13,3 +13,5 @@ if not VAULT_PATH or not os.path.exists(VAULT_PATH):
     VAULT_PATH = "./BlogPages"
 
 BLOG_TAGS = {"blog", "website"}
+HOMEPAGE_TAG = "homepage"
+FEATURED_TAG = "featured"

@@ -1,8 +1,11 @@
 ---
 tags:
   - blog
+  - featured
 date: 2026-01-16
 title: Test Post Two
+priority: 0
+summary: Showcasing image sliders, all callout types, and deeply nested task lists.
 ---
 
 # Test Post Two

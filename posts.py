@@ -1,13 +1,16 @@
 import os
+import re
 
 import yaml
 from datetime import datetime
 
-from config import VAULT_PATH, BLOG_TAGS
-from converters import slugify, render_markdown
+from config import VAULT_PATH, BLOG_TAGS, HOMEPAGE_TAG, FEATURED_TAG
+from converters import slugify, render_markdown, extract_h1
 
 
 POSTS = {}
+HOMEPAGE = {}
+WEBSITE_NAME = "My Blog"
 LAST_SCAN_TIME = 0
 
 DATE_FORMATS = [
@@ -24,6 +27,8 @@ DATE_FORMATS = [
     "%d/%m/%Y %H:%M",
     "%d/%m/%Y %H:%M:%S",
 ]
+
+SUMMARY_LENGTH = 200
 
 
 # =========================================
@@ -43,11 +48,25 @@ def parse_frontmatter(text):
 
 
 # =========================================
+# SUMMARY HELPER
+# =========================================
+
+def _make_summary(html):
+    plain = re.sub(r"<[^>]+>", "", html).strip()
+    plain = re.sub(r"\s+", " ", plain)
+    if len(plain) <= SUMMARY_LENGTH:
+        return plain
+    return plain[:SUMMARY_LENGTH].rsplit(" ", 1)[0] + "\u2026"
+
+
+# =========================================
 # LOAD POSTS
 # =========================================
 
 def load_posts():
     posts = []
+    homepage = {}
+    website_name = "My Blog"
 
     for root, _, files in os.walk(VAULT_PATH):
         for f in files:
@@ -70,7 +89,8 @@ def load_posts():
             if BLOG_TAGS.isdisjoint(tags):
                 continue
 
-            title = metadata.get("title", f[:-3])
+            # Title resolution: frontmatter > H1 in body > filename
+            title = metadata.get("title") or extract_h1(md) or f[:-3]
             slug = metadata.get("slug") or slugify(title)
             date = metadata.get("date")
 
@@ -93,22 +113,39 @@ def load_posts():
                     print(f"Error parsing date for {filepath}: {e}")
                     date = None
 
-            print(f"Loaded post: {title} (slug: {slug}, date: {date})")
-
             html = render_markdown(md, filepath)
 
-            posts.append({
+            summary = metadata.get("summary") or _make_summary(html)
+
+            priority_raw = metadata.get("priority")
+            priority = float("inf") if priority_raw is None else int(priority_raw)
+
+            is_homepage = HOMEPAGE_TAG in tags
+            is_featured = FEATURED_TAG in tags
+
+            print(f"Loaded: {title} (slug: {slug}, date: {date}, homepage: {is_homepage}, featured: {is_featured})")
+
+            post_data = {
                 "slug": slug,
                 "title": title,
                 "date": date,
                 "html": html,
                 "tags": tags,
                 "content": html.lower(),
-            })
+                "summary": summary,
+                "priority": priority,
+                "featured": is_featured,
+            }
+
+            if is_homepage:
+                homepage = post_data
+                website_name = title
+            else:
+                posts.append(post_data)
 
     posts.sort(key=lambda x: x["date"] or datetime.min, reverse=True)
 
-    return {p["slug"]: p for p in posts}
+    return {p["slug"]: p for p in posts}, homepage, website_name
 
 
 # =========================================
@@ -116,7 +153,7 @@ def load_posts():
 # =========================================
 
 def maybe_reload():
-    global POSTS, LAST_SCAN_TIME
+    global POSTS, HOMEPAGE, WEBSITE_NAME, LAST_SCAN_TIME
 
     newest = 0
     for root, _, files in os.walk(VAULT_PATH):
@@ -126,5 +163,5 @@ def maybe_reload():
 
     if newest > LAST_SCAN_TIME:
         print("Reloading vault...")
-        POSTS = load_posts()
+        POSTS, HOMEPAGE, WEBSITE_NAME = load_posts()
         LAST_SCAN_TIME = newest

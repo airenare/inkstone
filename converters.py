@@ -236,6 +236,14 @@ def convert_media(md, md_path):
 # MARKDOWN PIPELINE
 # =========================================
 
+def extract_h1(md):
+    """Return the text of the first H1 line in raw markdown, or None."""
+    for line in md.split("\n"):
+        if line.startswith("# "):
+            return line[2:].strip()
+    return None
+
+
 def strip_leading_h1(md):
     """Remove the first H1 line from markdown — the template renders the title."""
     lines = md.split("\n")
