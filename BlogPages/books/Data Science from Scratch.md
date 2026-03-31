@@ -11,13 +11,13 @@ publisher: O'Reilly Media
 publish: 2019-04-23
 total: 406
 isbn: 9781492041139
-cover: https://covers.openlibrary.org/b/isbn/9781492041139-M.jpg
+cover: https://covers.openlibrary.org/b/id/12672936-M.jpg
 status: read
 created: 2022-06-01 08:00:00
 updated: 2022-06-01 08:00:00
 ---
 
-![cover|150](https://covers.openlibrary.org/b/isbn/9781492041139-M.jpg)
+![cover|150](https://covers.openlibrary.org/b/id/12672936-M.jpg)
 
 # Data Science from Scratch
 

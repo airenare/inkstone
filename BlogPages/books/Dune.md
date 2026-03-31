@@ -10,13 +10,13 @@ publisher: Ace Books
 publish: 1990-09-01
 total: 896
 isbn: 9780441013593
-cover: https://covers.openlibrary.org/b/isbn/9780441013593-M.jpg
+cover: https://covers.openlibrary.org/b/id/11481354-M.jpg
 status: read
 created: 2022-04-01 10:00:00
 updated: 2022-04-01 10:00:00
 ---
 
-![cover|150](https://covers.openlibrary.org/b/isbn/9780441013593-M.jpg)
+![cover|150](https://covers.openlibrary.org/b/id/11481354-M.jpg)
 
 # Dune
 

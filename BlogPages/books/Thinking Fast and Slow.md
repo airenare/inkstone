@@ -10,13 +10,13 @@ publisher: Farrar, Straus and Giroux
 publish: 2011-10-25
 total: 499
 isbn: 9780374533557
-cover: https://covers.openlibrary.org/b/isbn/9780374533557-M.jpg
+cover: https://covers.openlibrary.org/b/id/13290711-M.jpg
 status: reading
 created: 2024-01-10 14:00:00
 updated: 2024-03-20 18:45:00
 ---
 
-![cover|150](https://covers.openlibrary.org/b/isbn/9780374533557-M.jpg)
+![cover|150](https://covers.openlibrary.org/b/id/13290711-M.jpg)
 
 # Thinking, Fast and Slow
 

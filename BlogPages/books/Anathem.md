@@ -10,13 +10,13 @@ publisher: Atlantic Books Ltd
 publish: 2010-08-01
 total: 721
 isbn: 0857890484 9780857890481
-cover: https://covers.openlibrary.org/b/isbn/9780857890481-M.jpg
+cover: https://covers.openlibrary.org/b/id/6304233-M.jpg
 status: read
 created: 2023-09-13 19:59:05
 updated: 2023-09-13 19:59:05
 ---
 
-![cover|150](https://covers.openlibrary.org/b/isbn/9780857890481-M.jpg)
+![cover|150](https://covers.openlibrary.org/b/id/6304233-M.jpg)
 
 # Anathem
 

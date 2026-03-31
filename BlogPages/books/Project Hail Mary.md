@@ -9,13 +9,13 @@ publisher: Ballantine Books
 publish: 2021-05-04
 total: 476
 isbn: 9780593135204
-cover: https://covers.openlibrary.org/b/isbn/9780593135204-M.jpg
+cover: https://covers.openlibrary.org/b/id/11200092-M.jpg
 status: reading
 created: 2024-06-01 20:00:00
 updated: 2024-06-01 20:00:00
 ---
 
-![cover|150](https://covers.openlibrary.org/b/isbn/9780593135204-M.jpg)
+![cover|150](https://covers.openlibrary.org/b/id/11200092-M.jpg)
 
 # Project Hail Mary
 
