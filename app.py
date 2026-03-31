@@ -1,4 +1,5 @@
 import html
+import re
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
@@ -31,6 +32,7 @@ def inject_globals():
         "nav_sections": top_sections,
         "menu_posts": post_store.MENU_POSTS,
         "current_url": request.url,
+        "canonical_url": request.base_url,
         "app_version": VERSION,
     }
 
@@ -114,16 +116,50 @@ def sitemap():
     return Response(xml, mimetype="application/xml")
 
 
+def _highlight(text, query):
+    """HTML-escape text, then wrap query matches in <mark>."""
+    if not text:
+        return ""
+    escaped = html.escape(text)
+    if not query:
+        return escaped
+    return re.sub(
+        "(" + re.escape(html.escape(query)) + ")",
+        r"<mark>\1</mark>",
+        escaped,
+        flags=re.IGNORECASE,
+    )
+
+
+@app.route("/tag/<tag>")
+def tag_archive(tag):
+    post_store.maybe_reload()
+    tag_lower = tag.lower()
+    posts = sorted(
+        (p for p in post_store.ALL_POSTS.values()
+         if tag_lower in p.get("tags", set())),
+        key=lambda p: p["date"] or datetime.min,
+        reverse=True,
+    )
+    if not posts:
+        abort(404)
+    return render_template("tag.html", tag=tag, posts=posts)
+
+
 @app.route("/search")
 def search():
     post_store.maybe_reload()
-    q = request.args.get("q", "").lower()
+    q = request.args.get("q", "").strip()
     results = []
     if q:
-        results = [
-            p for p in post_store.ALL_POSTS.values()
-            if q in p["title"].lower() or q in p["content"]
-        ]
+        q_lower = q.lower()
+        for p in post_store.ALL_POSTS.values():
+            if q_lower in p["title"].lower() or q_lower in p["content"]:
+                results.append({
+                    **p,
+                    "highlighted_title": _highlight(p["title"], q),
+                    "highlighted_summary": _highlight(p["summary"], q),
+                })
     return render_template("search.html", posts=results, query=q)
 
 
@@ -160,11 +196,20 @@ def serve(path):
                 ),
             )
             regular = [p for p in section_posts if not p["featured"]]
+
+            page_size = 20
+            page = max(1, request.args.get("page", 1, type=int))
+            total_pages = max(1, (len(regular) + page_size - 1) // page_size)
+            page = min(page, total_pages)
+            regular_page = regular[(page - 1) * page_size: page * page_size]
+
             return render_template(
                 "listing.html",
                 featured=featured,
-                regular=regular,
+                regular=regular_page,
                 listing=route["post"],
+                page=page,
+                total_pages=total_pages,
             )
 
         else:  # homepage

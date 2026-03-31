@@ -7,12 +7,6 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 ## Medium Priority
 
-- **Table of contents sidebar** — `toc` extension already loaded in `converters.py` but output is never surfaced; render it in `post.html`
-- **Reading time estimate** — `len(content.split()) // 200` wpm; show on post pages and listing cards
-- **Pagination on listing pages** — all posts dump at once; will break at scale
-- **Search result highlighting** — highlight query matches in result summaries (currently shows unmodified text)
-- **Tag archive pages** — `/tag/<tag>` listing all posts with that tag; link from post pages
-- **Canonical URL tags** — `<link rel="canonical">` in `<head>` to prevent duplicate-content issues
 
 ## Ideas & Features
 
@@ -38,3 +32,10 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 - Custom 404 page
 - Sitemap (`/sitemap.xml`)
 - `menu_order` frontmatter for pinning pages to the top nav
+- MIT license
+- Canonical URL tags (`<link rel="canonical">`)
+- Table of contents (collapsible block at top of post)
+- Reading time estimate (on post pages and listing cards)
+- Pagination on listing pages (20 posts per page)
+- Search result highlighting (matches highlighted in title + summary)
+- Tag archive pages (`/tag/<tag>`) with links from post pages

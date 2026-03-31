@@ -600,3 +600,165 @@ nav a:hover {
         margin-right: auto;
     }
 }
+
+/* =========================================
+   TABLE OF CONTENTS
+   ========================================= */
+
+.toc-block {
+    background: #252537;
+    border: 1px solid #3d3d5c;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0;
+    font-size: 0.875rem;
+    max-width: 380px;
+}
+
+.toc-block summary {
+    cursor: pointer;
+    color: #8ab4f8;
+    font-weight: 600;
+    user-select: none;
+    padding: 0.2rem 0;
+    list-style: none;
+}
+
+.toc-block summary::-webkit-details-marker { display: none; }
+
+.toc-block summary::before {
+    content: "▸ ";
+    font-size: 0.75em;
+    transition: transform 0.15s;
+}
+
+details[open].toc-block summary::before {
+    content: "▾ ";
+}
+
+.toc-block summary:hover {
+    text-decoration: underline;
+}
+
+.toc-block .toc {
+    margin-top: 0.5rem;
+}
+
+.toc-block .toc ul {
+    margin: 0.2rem 0;
+    padding-left: 1.1rem;
+}
+
+.toc-block .toc li {
+    margin: 0.2rem 0;
+    list-style: none;
+}
+
+.toc-block .toc a {
+    color: #a9a9b7;
+}
+
+.toc-block .toc a:hover {
+    color: #dcdfe4;
+    text-decoration: underline;
+}
+
+/* =========================================
+   TAG BADGES
+   ========================================= */
+
+.tag-badge {
+    display: inline-block;
+    background: #2a2a3e;
+    border: 1px solid #3d3d5c;
+    border-radius: 12px;
+    padding: 0.1em 0.65em;
+    font-size: 0.78rem;
+    color: #a9a9b7;
+    text-decoration: none;
+    margin: 0.1em 0.15em;
+}
+
+.tag-badge:hover {
+    background: #313148;
+    color: #dcdfe4;
+    text-decoration: none;
+}
+
+.tag-badge--heading {
+    font-size: 1rem;
+    padding: 0.15em 0.75em;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+    margin: 0.3rem 0 1.25rem;
+    min-height: 0;
+}
+
+/* =========================================
+   SEARCH RESULTS
+   ========================================= */
+
+.search-results {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.search-result {
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #2e2e42;
+}
+
+.search-result:last-child {
+    border-bottom: none;
+}
+
+.search-result h4 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+}
+
+.search-result h4 a {
+    color: #dcdfe4;
+}
+
+.search-result h4 a:hover {
+    color: #8ab4f8;
+}
+
+.search-empty {
+    color: #6e6e8e;
+    margin-top: 1rem;
+}
+
+mark {
+    background: #3d3520;
+    color: #f9e2af;
+    padding: 0 0.1em;
+    border-radius: 2px;
+}
+
+/* =========================================
+   PAGINATION
+   ========================================= */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 2.5rem 0 1rem;
+    font-size: 0.9rem;
+}
+
+.pagination a {
+    color: #8ab4f8;
+}
+
+.pagination-info {
+    color: #6e6e8e;
+}

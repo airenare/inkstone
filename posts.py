@@ -185,7 +185,7 @@ def load_posts():
          section, url_path) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
-        html = render_markdown(md, filepath, url_index, dataview_index)
+        html, toc = render_markdown(md, filepath, url_index, dataview_index)
         summary = metadata.get("summary") or _make_summary(html)
         priority_raw = metadata.get("priority")
         priority = float("inf") if priority_raw is None else int(priority_raw)
@@ -212,6 +212,9 @@ def load_posts():
                 r"^\s*<p>\s*<img[^>]+>\s*</p>", "", html.strip()
             ).strip()
 
+        word_count = len(re.sub(r"<[^>]+>", "", body_html).split())
+        reading_time = max(1, word_count // 200)
+
         post_data = {
             "url_path": url_path,
             "section": section,
@@ -220,6 +223,8 @@ def load_posts():
             "title": title,
             "date": date,
             "html": body_html,
+            "toc": toc,
+            "reading_time": reading_time,
             "tags": tags,
             "content": html.lower(),
             "summary": summary,

@@ -269,13 +269,14 @@ def render_markdown(md, path, url_index=None, dataview_index=None):
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
 
-    html = markdown.markdown(
-        md,
+    md_obj = markdown.Markdown(
         extensions=["fenced_code", "tables", "toc", "md_in_html", "codehilite"],
         output_format="html5",
     )
+    html_str = md_obj.convert(md)
+    toc = md_obj.toc if md_obj.toc_tokens else ""
 
-    return html
+    return html_str, toc
 
 
 # =========================================

@@ -9,10 +9,12 @@
 
 <title>{{ title if title else website_name }}</title>
 
+<link rel="canonical" href="{{ canonical_url }}">
+
 {% block meta %}
 <meta property="og:title" content="{{ website_name }}">
 <meta property="og:type" content="website">
-<meta property="og:url" content="{{ current_url }}">
+<meta property="og:url" content="{{ canonical_url }}">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="{{ website_name }}">
 {% endblock %}

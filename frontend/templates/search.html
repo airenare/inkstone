@@ -13,16 +13,25 @@
 
 </form>
 
+{% if query and not posts %}
+<p class="search-empty">No results for <strong>{{ query }}</strong>.</p>
+{% endif %}
+
 {% if posts %}
 
-<h3>Results</h3>
+<h3>{{ posts | length }} result{{ 's' if posts | length != 1 }}</h3>
 
-<ul>
+<ul class="search-results">
 
 {% for post in posts %}
 
-<li>
-<a href="{{ post.url_path }}">{{ post.title }}</a>
+<li class="search-result">
+<h4><a href="{{ post.url_path }}">{{ post.highlighted_title | safe }}</a></h4>
+<div class="post-meta">
+{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}
+{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}
+</div>
+<p class="post-summary">{{ post.highlighted_summary | safe }}</p>
 </li>
 
 {% endfor %}

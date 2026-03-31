@@ -4,7 +4,7 @@
 {% block meta %}
 <meta property="og:title" content="{{ post.title }}">
 <meta property="og:type" content="article">
-<meta property="og:url" content="{{ current_url }}">
+<meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:description" content="{{ post.summary }}">
 {% if post.banner %}<meta property="og:image" content="{{ post.banner }}">{% endif %}
 <meta name="twitter:card" content="{{ 'summary_large_image' if post.banner else 'summary' }}">
@@ -24,6 +24,25 @@
 <article>
 
 <h1>{{ post.title }}</h1>
+
+<div class="post-meta">
+{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}
+{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}
+</div>
+
+{%- set system_tags = ["blog", "website", "homepage", "listing", "featured", "📚book"] -%}
+<div class="post-tags">
+{%- for tag in post.tags | sort -%}
+{%- if tag not in system_tags -%}<a href="/tag/{{ tag }}" class="tag-badge">{{ tag }}</a>{% endif %}
+{%- endfor -%}
+</div>
+
+{% if post.toc %}
+<details class="toc-block" open>
+<summary>Contents</summary>
+{{ post.toc | safe }}
+</details>
+{% endif %}
 
 {{ post.html | safe }}
 
