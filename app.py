@@ -31,6 +31,7 @@ def inject_globals():
         "website_name": post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
         "menu_posts": post_store.MENU_POSTS,
+        "show_search": post_store.SHOW_SEARCH,
         "current_url": request.url,
         "canonical_url": request.base_url,
         "app_version": VERSION,
@@ -146,21 +147,45 @@ def tag_archive(tag):
     return render_template("tag.html", tag=tag, posts=posts)
 
 
+_SYSTEM_TAGS = {"blog", "website", "homepage", "listing", "featured",
+                "📚book", "search"}
+
+
 @app.route("/search")
 def search():
     post_store.maybe_reload()
     q = request.args.get("q", "").strip()
+    tag_filter = request.args.get("tag", "").strip().lower()
+
+    all_tags = sorted(
+        tag for tag in set().union(
+            *(p["tags"] for p in post_store.ALL_POSTS.values())
+        )
+        if tag not in _SYSTEM_TAGS
+    )
+
     results = []
-    if q:
+    if q or tag_filter:
         q_lower = q.lower()
         for p in post_store.ALL_POSTS.values():
-            if q_lower in p["title"].lower() or q_lower in p["content"]:
-                results.append({
-                    **p,
-                    "highlighted_title": _highlight(p["title"], q),
-                    "highlighted_summary": _highlight(p["summary"], q),
-                })
-    return render_template("search.html", posts=results, query=q)
+            if tag_filter and tag_filter not in p.get("tags", set()):
+                continue
+            if q_lower and q_lower not in p["title"].lower() \
+                    and q_lower not in p["content"]:
+                continue
+            results.append({
+                **p,
+                "highlighted_title": _highlight(p["title"], q),
+                "highlighted_summary": _highlight(p["summary"], q),
+            })
+
+    return render_template(
+        "search.html",
+        posts=results,
+        query=q,
+        selected_tag=tag_filter,
+        all_tags=all_tags,
+    )
 
 
 @app.route("/", defaults={"path": ""})
@@ -246,5 +271,6 @@ if __name__ == "__main__":
         post_store.DATAVIEW_INDEX,
         post_store.PRIVATE_ROUTES,
         post_store.MENU_POSTS,
+        post_store.SHOW_SEARCH,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

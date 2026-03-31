@@ -7,14 +7,12 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 ## Medium Priority
 
-
 ## Ideas & Features
 
 - **Related posts** — "See also" section at post bottom based on shared tags or section
 - **Breadcrumb navigation** — for nested posts like `/gallery/arts/post`
 - **JSON-LD structured data** — rich Google results; especially useful for book pages (Book schema)
 - **Dark/light mode toggle** — CSS variable swap; remember preference in localStorage
-- **Tag filter on search** — add tag facets or a dropdown to the `/search` page
 
 ## Bugs & Findings
 
@@ -39,3 +37,5 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 - Pagination on listing pages (20 posts per page)
 - Search result highlighting (matches highlighted in title + summary)
 - Tag archive pages (`/tag/<tag>`) with links from post pages
+- Search link in top nav (opt-in via `search` tag on root homepage)
+- Tag filter dropdown on search page

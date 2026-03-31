@@ -2,6 +2,7 @@
 tags:
   - blog
   - homepage
+  - search
 title: Obsidian Blog Engine
 ---
 

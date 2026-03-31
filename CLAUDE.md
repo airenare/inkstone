@@ -97,6 +97,7 @@ tags:
   - homepage    # serves this file's content at the section root URL (e.g. / or /gallery)
   - listing     # auto-generates a post listing at the section root URL
   - featured    # shows post in the Featured section of the parent listing
+  - search      # root homepage only: shows a Search link in the top nav
 date: 2026-03-21
 title: My Post  # optional; overrides H1 in body and filename
 slug: my-post   # optional; auto-generated from title if omitted

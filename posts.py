@@ -19,6 +19,8 @@ DATAVIEW_INDEX = {}
 PRIVATE_ROUTES = {}
 # posts pinned to the top nav via menu_order frontmatter, sorted by menu_order
 MENU_POSTS = []
+# True when the root homepage has the "search" tag — controls nav search link
+SHOW_SEARCH = False
 LAST_SCAN_TIME = 0
 
 DATE_FORMATS = [
@@ -105,6 +107,7 @@ def load_posts():
     section_routes = {}
     website_name = "My Blog"
     menu_posts = []
+    show_search = False
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
@@ -253,6 +256,7 @@ def load_posts():
         elif is_homepage:
             if section == "":
                 website_name = title
+                show_search = "search" in tags
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,
@@ -301,7 +305,7 @@ def load_posts():
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, dataview_index,
-            private_routes, menu_posts)
+            private_routes, menu_posts, show_search)
 
 
 # =========================================
@@ -310,7 +314,7 @@ def load_posts():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, LAST_SCAN_TIME
+        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, LAST_SCAN_TIME
 
     newest = 0
     for root, _, files in os.walk(VAULT_PATH):
@@ -321,5 +325,5 @@ def maybe_reload():
     if newest > LAST_SCAN_TIME:
         print("Reloading vault...")
         (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
-         DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS) = load_posts()
+         DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH) = load_posts()
         LAST_SCAN_TIME = newest
