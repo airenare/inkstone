@@ -60,7 +60,9 @@ New features should follow this chain — `app.py` imports from `posts.py`, neve
 | `/search` | Full-text search across `ALL_POSTS` |
 | `/attachments/<path>` | Media served directly from vault |
 
-Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct children of `/`).
+Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct children of `/`). Posts with `menu_order` in frontmatter are additionally pinned to the nav (sorted by value, appended after section links). This is the intended mechanism for standalone pages like About or Contact.
+
+**Root-level standalone pages:** Files in the vault root that are not tagged `homepage` or `listing` are served at `/slug` with no section prefix. They are intentionally unlisted — they don't appear in any auto-generated listing. The expected usage is to link to them via wiki-links from other content, or pin them to the nav via `menu_order`. Do not add special logic to surface them automatically in listings.
 
 ### Markdown Pipeline (order matters)
 
@@ -97,6 +99,7 @@ title: My Post  # optional; overrides H1 in body and filename
 slug: my-post   # optional; auto-generated from title if omitted
 priority: 0     # featured posts only; 0 = top, then 1, 2… (date breaks ties)
 summary: "..."  # shown on listing pages; auto-derived from content if omitted
+menu_order: 1   # pin this post to the top nav; lower = further left; appended after section links
 ---
 ```
 
@@ -117,7 +120,7 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 | Path | URL | Purpose |
 |------|-----|---------|
 | `Test Website.md` | `/` (homepage) | Site homepage |
-| `The Accidental Existentialist.md` | `/test_post` | Root-level post test |
+| `The Accidental Existentialist.md` | `/test_post` | Root-level standalone page; pinned to nav via `menu_order: 1` |
 | `blog/Blog Index.md` | `/blog` (listing) | Blog section index |
 | `blog/test_post_1.md` | `/blog/Test-Post-One` | Featured post with images/callouts/checkboxes |
 | `blog/test_post_2.md` | `/blog/Test-Post-Two` | Featured post with slider/callouts |

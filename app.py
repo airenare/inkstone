@@ -27,6 +27,7 @@ def inject_globals():
     return {
         "website_name": post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
+        "menu_posts": post_store.MENU_POSTS,
     }
 
 
@@ -125,5 +126,6 @@ if __name__ == "__main__":
         post_store.WEBSITE_NAME,
         post_store.DATAVIEW_INDEX,
         post_store.PRIVATE_ROUTES,
+        post_store.MENU_POSTS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

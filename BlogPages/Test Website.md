@@ -49,6 +49,22 @@ No build step, no static site generator, no CMS. Just markdown files and a Pytho
 - [Blog](/blog) — blog posts with callouts, code, images, and checkboxes
 - [Gallery](/gallery) — an image gallery with lightbox and slider
 - [Books](/books) — a Dataview-powered bookshelf pulled from individual book notes
+- [[The Accidental Existentialist]] — a root-level standalone page pinned to the nav via `menu_order`
+
+---
+
+## Standalone pages
+
+Notes placed directly in the vault root (not in any subfolder) get a URL with no section prefix — `/slug`. They don't appear in any listing, making them ideal for standalone pages like About, Contact, or Uses. Link to them via wiki-links from your content, or pin them to the top nav with `menu_order` in frontmatter:
+
+```yaml
+---
+tags:
+  - website
+title: About
+menu_order: 1   # lower = further left in the nav
+---
+```
 
 ---
 

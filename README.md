@@ -16,6 +16,8 @@ Your vault's folder structure maps directly to URL paths:
 
 A note tagged `homepage` serves its content at the section root (`/`, `/blog`, `/gallery`). A note tagged `listing` renders an auto-generated post index at the section root instead.
 
+Notes placed in the **vault root** (no subfolder) are served at `/slug` with no section prefix. They don't appear in any auto-generated listing — ideal for standalone pages like About, Contact, or Uses. Link to them via `[[wiki-links]]` from your content, or pin them to the top nav with `menu_order` in frontmatter.
+
 ---
 
 ## Features
@@ -29,6 +31,7 @@ A note tagged `homepage` serves its content at the section root (`/`, `/blog`, `
 - **Hot-reload** — the server watches file modification times and reloads the vault on any change, no restart needed
 - **Search** — full-text search across all published posts at `/search`
 - **Auto-listings** — sections with no explicit index file get an auto-generated listing page
+- **Nav pinning** — add `menu_order: N` to any note's frontmatter to pin it to the top nav (About, Contact, etc.)
 
 ---
 
@@ -46,6 +49,7 @@ title: My Post   # optional; overrides H1 and filename
 slug: my-post    # optional; auto-generated from title if omitted
 priority: 0      # featured posts only; lower = higher (date breaks ties)
 summary: "..."   # shown on listing pages; auto-derived from content if omitted
+menu_order: 1    # pin to top nav; lower number = further left; appended after section links
 banner: "https://example.com/image.jpg"
 banner_x: 0.5   # horizontal focal point (0–1)
 banner_y: 0.4   # vertical focal point (0–1)

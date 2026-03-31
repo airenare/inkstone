@@ -17,6 +17,8 @@ WEBSITE_NAME = "My Blog"
 DATAVIEW_INDEX = {}
 # url_path → dataview entry for notes that exist but are NOT published as web pages
 PRIVATE_ROUTES = {}
+# posts pinned to the top nav via menu_order frontmatter, sorted by menu_order
+MENU_POSTS = []
 LAST_SCAN_TIME = 0
 
 DATE_FORMATS = [
@@ -102,6 +104,7 @@ def load_posts():
     all_posts = {}
     section_routes = {}
     website_name = "My Blog"
+    menu_posts = []
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
@@ -228,6 +231,14 @@ def load_posts():
             "metadata": metadata,
         }
 
+        menu_order_raw = metadata.get("menu_order")
+        if menu_order_raw is not None:
+            menu_posts.append({
+                "title": title,
+                "url_path": url_path,
+                "menu_order": int(menu_order_raw),
+            })
+
         if is_listing:
             section_routes[section_url] = {
                 "type": "listing",
@@ -283,7 +294,9 @@ def load_posts():
         and LISTING_TAG not in entry.get("tags", set())
     }
 
-    return all_posts, section_routes, website_name, dataview_index, private_routes
+    menu_posts.sort(key=lambda x: x["menu_order"])
+    return (all_posts, section_routes, website_name, dataview_index,
+            private_routes, menu_posts)
 
 
 # =========================================
@@ -292,7 +305,7 @@ def load_posts():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, LAST_SCAN_TIME
+        PRIVATE_ROUTES, MENU_POSTS, LAST_SCAN_TIME
 
     newest = 0
     for root, _, files in os.walk(VAULT_PATH):
@@ -303,5 +316,5 @@ def maybe_reload():
     if newest > LAST_SCAN_TIME:
         print("Reloading vault...")
         (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
-         DATAVIEW_INDEX, PRIVATE_ROUTES) = load_posts()
+         DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS) = load_posts()
         LAST_SCAN_TIME = newest
