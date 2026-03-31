@@ -161,4 +161,4 @@ The import chain is strictly one-way: `config ← converters ← posts ← app`.
 
 ## License
 
-MIT
+[PolyForm Noncommercial 1.0.0](LICENSE) — free for personal and non-commercial use; commercial use requires permission from the author.

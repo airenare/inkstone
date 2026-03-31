@@ -30,7 +30,7 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 - Custom 404 page
 - Sitemap (`/sitemap.xml`)
 - `menu_order` frontmatter for pinning pages to the top nav
-- MIT license
+- PolyForm Noncommercial 1.0.0 license
 - Canonical URL tags (`<link rel="canonical">`)
 - Table of contents (collapsible block at top of post)
 - Reading time estimate (on post pages and listing cards)
