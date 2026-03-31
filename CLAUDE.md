@@ -132,8 +132,8 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 ## Workflow Rules
 
 - **Code style:** Follow PEP 8 — snake_case for variables/functions, 4-space indentation, double quotes for strings, max line length 79 characters.
-- **Before editing:** Always read a file before modifying it. Unless explicitly told to work autonomously, ask before making changes.
-- **Shell/git autonomy:** Execute shell commands needed for testing and all git operations (including `git push`) without asking for confirmation. Always report exactly what was executed after the fact.
+- **Before editing:** Always read a file before modifying it.
+- **Autonomy:** Work autonomously — execute shell commands needed for testing and all git operations (including `git push`) without asking for confirmation. Always report what was executed after the fact. Do not ask for permission before making code changes.
 - **Commits:** Keep commit messages short and informative — one tight subject line, no verbose body.
 - **Blog posts:** Never delete files in `BlogPages/`. New `.md` files may be created there for testing purposes.
 - **Memory sync:** Whenever something valuable is saved to the local `~/.claude` memory store, also distill it into this file under the relevant section. This keeps preferences and context in sync across machines.

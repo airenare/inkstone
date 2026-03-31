@@ -129,18 +129,25 @@ def load_posts():
                 metadata.get("date") or metadata.get("created"), filepath
             )
 
-            # Every note goes into the dataview index (URL updated below for
-            # web posts)
+            # Every note gets a slugified URL — web posts will override below
+            dv_slug = metadata.get("slug") or slugify(dv_title)
+            dv_section = _section_from_filepath(filepath)
+            dv_url = (
+                ("/" + dv_section + "/" + dv_slug)
+                if dv_section
+                else ("/" + dv_slug)
+            )
+
             dataview_index[filepath] = {
                 "filepath": filepath,
                 "title": dv_title,
                 "metadata": metadata,
                 "tags": tags,
-                "url_path": None,
+                "url_path": dv_url,
                 "file": {
                     "path": filepath,
                     "name": dv_title,
-                    "link": dv_title,
+                    "link": f'<a href="{dv_url}">{dv_title}</a>',
                     "ctime": dv_date,
                 },
             }
