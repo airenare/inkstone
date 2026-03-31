@@ -133,5 +133,7 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 
 - **Code style:** Follow PEP 8 — snake_case for variables/functions, 4-space indentation, double quotes for strings, max line length 79 characters.
 - **Before editing:** Always read a file before modifying it. Unless explicitly told to work autonomously, ask before making changes.
-- **Commits:** Always ask the user before committing. Never commit automatically.
+- **Shell/git autonomy:** Execute shell commands needed for testing and all git operations (including `git push`) without asking for confirmation. Always report exactly what was executed after the fact.
+- **Commits:** Keep commit messages short and informative — one tight subject line, no verbose body.
 - **Blog posts:** Never delete files in `BlogPages/`. New `.md` files may be created there for testing purposes.
+- **Memory sync:** Whenever something valuable is saved to the local `~/.claude` memory store, also distill it into this file under the relevant section. This keeps preferences and context in sync across machines.
