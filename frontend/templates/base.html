@@ -289,7 +289,8 @@ document.querySelectorAll("pre code").forEach(block => {
     wrapper.appendChild(pre)
 
     // language label
-    let lang = block.className.replace("language-","")
+    let langMatch = block.className.match(/language-(\S+)/)
+    let lang = langMatch ? langMatch[1] : ""
 
     if(lang){
         const label = document.createElement("div")
