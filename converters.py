@@ -236,7 +236,18 @@ def convert_media(md, md_path):
 # MARKDOWN PIPELINE
 # =========================================
 
+def strip_leading_h1(md):
+    """Remove the first H1 line from markdown — the template renders the title."""
+    lines = md.split("\n")
+    for i, line in enumerate(lines):
+        if line.startswith("# "):
+            del lines[i]
+            break
+    return "\n".join(lines)
+
+
 def render_markdown(md, path):
+    md = strip_leading_h1(md)
     md = convert_media(md, path)
     md = convert_links(md)
     md = convert_callouts(md)
