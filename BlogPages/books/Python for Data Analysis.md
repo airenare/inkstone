@@ -1,6 +1,7 @@
 ---
 tags:
   - 📚Book
+  - website
   - books
   - datascience
 title: Python for Data Analysis

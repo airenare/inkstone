@@ -1,6 +1,7 @@
 ---
 tags:
   - 📚Book
+  - website
   - books
   - datascience
 title: Data Science from Scratch
