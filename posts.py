@@ -105,8 +105,11 @@ def load_posts():
                     print(f"Unrecognized date format for {filepath}: {date}")
                     date = None
 
-            # PyYAML may parse dates as datetime.date objects
-            if isinstance(date, str):
+            # PyYAML parses bare dates (2026-01-15) as datetime.date, not datetime
+            from datetime import date as date_type
+            if isinstance(date, date_type) and not isinstance(date, datetime):
+                date = datetime(date.year, date.month, date.day)
+            elif isinstance(date, str):
                 try:
                     date = datetime.fromisoformat(date)
                 except Exception as e:

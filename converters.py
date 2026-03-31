@@ -27,7 +27,7 @@ def convert_links(md):
     def repl(match):
         target = match.group(1)
         slug = slugify(target)
-        return f"[{target}](/post/{slug})"
+        return f"[{target}](/blog/{slug})"
 
     return re.sub(pattern, repl, md)
 

@@ -18,6 +18,7 @@
 </section>
 {% endif %}
 
+{% if regular %}
 <section class="regular-posts">
 <h2>All Posts</h2>
 
@@ -29,10 +30,11 @@
 </article>
 {% endfor %}
 
+</section>
+{% endif %}
+
 {% if not regular and not featured %}
 <p>No posts yet.</p>
 {% endif %}
-
-</section>
 
 {% endblock %}
