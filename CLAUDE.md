@@ -8,23 +8,29 @@ Obsidian Blog Engine converts Obsidian vault markdown notes into a web-accessibl
 
 ## Running the Server
 
+The project dependencies live in `/home/air/venv/3.14/`. Use that Python when running locally:
+
 ```bash
 # Development (hot-reload enabled)
-python app.py
+/home/air/venv/3.14/bin/python3 app.py
 
 # Production
-gunicorn -b 0.0.0.0:8000 app:app
+/home/air/venv/3.14/bin/gunicorn -b 0.0.0.0:8000 app:app
 
 # Docker
 docker build -t obsidian-blog .
 docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault obsidian-blog
 ```
 
-Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory.
+Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory. If `VAULT_PATH` is unset or missing, the app falls back to `./BlogPages` automatically — useful for local testing without a real vault.
 
 ## Architecture
 
-The app is split across four modules:
+The app is split across four modules with a strict one-way import chain:
+
+```
+config.py  ←  converters.py  ←  posts.py  ←  app.py
+```
 
 | File | Responsibility |
 |------|---------------|
@@ -32,6 +38,8 @@ The app is split across four modules:
 | `converters.py` | All markdown conversion functions + `render_markdown()` pipeline |
 | `posts.py` | `load_posts()`, `maybe_reload()`, `parse_frontmatter()`, `POSTS` dict |
 | `app.py` | Flask app init and routes only |
+
+New features should follow this chain — `app.py` imports from `posts.py`, never the reverse.
 
 Data flow:
 
@@ -71,6 +79,10 @@ slug: my-post  # auto-generated from title if omitted
 ### Media
 
 Images/videos must be in an `_attachments/` subfolder relative to the `.md` file. They are served via `/attachments/<relative-path>`. Multiple `![[...]]` embeds on the same line become a slider gallery; separate lines produce individual lightbox images.
+
+### Test Fixtures
+
+`BlogPages/` is the dev fallback vault — it is committed to the repo. It contains two test posts (`test_post_1.md`, `test_post_2.md`) that exercise every implemented feature, and three solid-color PNGs in `_attachments/` for media testing. Do not delete these; create new files for additional tests.
 
 ## Workflow Rules
 
