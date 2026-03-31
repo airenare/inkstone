@@ -4,8 +4,6 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 ## High Priority
 
-- Write a README.md
-
 
 ## Ideas & Features
 
@@ -14,3 +12,5 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 
 ## Done
+
+- Write a README.md
