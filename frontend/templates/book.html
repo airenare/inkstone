@@ -1,0 +1,82 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="{{ back_url }}">← Back</a>
+
+<article class="book-page">
+
+  <div class="book-header">
+
+    {% if post.metadata.cover %}
+    <div class="book-cover-wrap">
+      <img class="book-cover-img" src="{{ post.metadata.cover }}" alt="{{ post.title }}">
+    </div>
+    {% endif %}
+
+    <div class="book-meta">
+
+      <h1 class="book-title">{{ post.title }}</h1>
+
+      {% set status = post.metadata.status %}
+      {% if status %}
+      <span class="book-status book-status--{{ status | replace(' ', '-') | lower }}">
+        {% if status == 'read' %}✓ Read
+        {% elif status == 'reading' %}📖 Reading
+        {% elif status == 'want-to-read' %}☆ Want to read
+        {% else %}{{ status }}
+        {% endif %}
+      </span>
+      {% endif %}
+
+      {% set author = post.metadata.author %}
+      {% if author %}
+      <div class="book-author">
+        by
+        {% if author is string %}{{ author }}
+        {% else %}{{ author | join(', ') }}
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <dl class="book-details">
+        {% if post.metadata.publisher %}
+        <div class="book-detail">
+          <dt>Publisher</dt>
+          <dd>{{ post.metadata.publisher }}</dd>
+        </div>
+        {% endif %}
+        {% if post.metadata.publish %}
+        <div class="book-detail">
+          <dt>Published</dt>
+          <dd>{{ post.metadata.publish }}</dd>
+        </div>
+        {% endif %}
+        {% if post.metadata.total %}
+        <div class="book-detail">
+          <dt>Pages</dt>
+          <dd>{{ post.metadata.total }}</dd>
+        </div>
+        {% endif %}
+        {% if post.metadata.isbn %}
+        <div class="book-detail">
+          <dt>ISBN</dt>
+          <dd>{{ post.metadata.isbn }}</dd>
+        </div>
+        {% endif %}
+      </dl>
+
+    </div>
+
+  </div>
+
+  {% if post.html %}
+  <div class="book-body">
+    {{ post.html | safe }}
+  </div>
+  {% endif %}
+
+</article>
+
+{% endblock %}

@@ -99,7 +99,10 @@ def serve(path):
     if url_path in post_store.ALL_POSTS:
         post = post_store.ALL_POSTS[url_path]
         back_url = "/" + post["section"] if post["section"] else "/"
-        return render_template("post.html", post=post, back_url=back_url)
+        template = (
+            "book.html" if "📚book" in post.get("tags", set()) else "post.html"
+        )
+        return render_template(template, post=post, back_url=back_url)
 
     # 3. Private note placeholder
     if url_path in post_store.PRIVATE_ROUTES:

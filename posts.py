@@ -201,6 +201,14 @@ def load_posts():
             f"homepage={is_homepage} listing={is_listing} featured={is_featured}"
         )
 
+        # For book posts, strip the leading cover <img> paragraph — it renders
+        # in the book template header instead of the body.
+        body_html = html
+        if "📚book" in tags:
+            body_html = re.sub(
+                r"^\s*<p>\s*<img[^>]+>\s*</p>", "", html.strip()
+            ).strip()
+
         post_data = {
             "url_path": url_path,
             "section": section,
@@ -208,7 +216,7 @@ def load_posts():
             "slug": slug,
             "title": title,
             "date": date,
-            "html": html,
+            "html": body_html,
             "tags": tags,
             "content": html.lower(),
             "summary": summary,
@@ -217,6 +225,7 @@ def load_posts():
             "banner": banner,
             "banner_x": banner_x,
             "banner_y": banner_y,
+            "metadata": metadata,
         }
 
         if is_listing:

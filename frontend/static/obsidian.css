@@ -481,3 +481,122 @@ nav a:hover {
     padding: 0.1em 0.35em;
     border-radius: 3px;
 }
+
+/* =========================================
+   BOOK PAGE
+   ========================================= */
+
+.book-header {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin: 1.75rem 0 2rem;
+}
+
+.book-cover-wrap {
+    flex-shrink: 0;
+}
+
+.book-cover-img {
+    width: 160px;
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 4px 6px 20px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
+.book-meta {
+    flex: 1;
+    min-width: 0;
+}
+
+.book-title {
+    margin: 0 0 0.6rem;
+    font-size: 1.6rem;
+    line-height: 1.25;
+    color: #fff;
+}
+
+.book-status {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.2em 0.7em;
+    border-radius: 20px;
+    margin-bottom: 0.9rem;
+}
+
+.book-status--read {
+    background: #1e3a2a;
+    color: #a6e3a1;
+    border: 1px solid #2d5c3e;
+}
+
+.book-status--reading {
+    background: #1a2d42;
+    color: #89dceb;
+    border: 1px solid #2a4a6a;
+}
+
+.book-status--want-to-read {
+    background: #2a2a3e;
+    color: #a9a9b7;
+    border: 1px solid #3d3d5c;
+}
+
+.book-author {
+    font-size: 1rem;
+    color: #a9a9b7;
+    margin-bottom: 1.1rem;
+}
+
+.book-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+}
+
+.book-detail {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.book-detail dt {
+    color: #6e6e8e;
+    min-width: 5.5rem;
+    flex-shrink: 0;
+}
+
+.book-detail dd {
+    color: #dcdfe4;
+    margin: 0;
+}
+
+.book-body {
+    border-top: 1px solid #2e2e42;
+    padding-top: 1.5rem;
+    margin-top: 0.25rem;
+    color: #a9a9b7;
+    line-height: 1.7;
+}
+
+@media (max-width: 520px) {
+    .book-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .book-detail {
+        justify-content: center;
+    }
+    .book-status {
+        display: block;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
