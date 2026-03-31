@@ -1,0 +1,34 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<article class="private-note">
+
+<div class="private-badge">
+<span class="private-lock">🔒</span>
+<span>Private Note</span>
+</div>
+
+<h1>{{ entry.title }}</h1>
+
+<p class="private-message">
+This note exists in the vault but hasn't been published yet.
+</p>
+
+<details class="private-hint">
+<summary>How to publish this note</summary>
+<p>Add <code>website</code> to the note's frontmatter tags:</p>
+<pre><code>---
+tags:
+  - website
+---</code></pre>
+<p>
+Then push your vault — the page will appear at
+<code>{{ entry.url_path }}</code>.
+</p>
+</details>
+
+</article>
+
+{% endblock %}

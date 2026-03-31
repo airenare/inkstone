@@ -101,6 +101,11 @@ def serve(path):
         back_url = "/" + post["section"] if post["section"] else "/"
         return render_template("post.html", post=post, back_url=back_url)
 
+    # 3. Private note placeholder
+    if url_path in post_store.PRIVATE_ROUTES:
+        entry = post_store.PRIVATE_ROUTES[url_path]
+        return render_template("private.html", entry=entry)
+
     abort(404)
 
 
@@ -114,5 +119,6 @@ if __name__ == "__main__":
         post_store.SECTION_ROUTES,
         post_store.WEBSITE_NAME,
         post_store.DATAVIEW_INDEX,
+        post_store.PRIVATE_ROUTES,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

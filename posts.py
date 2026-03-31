@@ -15,6 +15,8 @@ SECTION_ROUTES = {}
 WEBSITE_NAME = "My Blog"
 # filepath → {metadata, tags, file} for ALL vault notes (feeds Dataview queries)
 DATAVIEW_INDEX = {}
+# url_path → dataview entry for notes that exist but are NOT published as web pages
+PRIVATE_ROUTES = {}
 LAST_SCAN_TIME = 0
 
 DATE_FORMATS = [
@@ -260,7 +262,19 @@ def load_posts():
             }
             print(f"Auto-listing: {section_url} ('{title}')")
 
-    return all_posts, section_routes, website_name, dataview_index
+    # ---- Build private routes: vault notes that have a URL but are not published ----
+    # Exclude homepage/listing files (served at section URLs, not their slug URL)
+    private_routes = {
+        entry["url_path"]: entry
+        for entry in dataview_index.values()
+        if entry.get("url_path")
+        and entry["url_path"] not in all_posts
+        and entry["url_path"] not in section_routes
+        and HOMEPAGE_TAG not in entry.get("tags", set())
+        and LISTING_TAG not in entry.get("tags", set())
+    }
+
+    return all_posts, section_routes, website_name, dataview_index, private_routes
 
 
 # =========================================
@@ -268,7 +282,8 @@ def load_posts():
 # =========================================
 
 def maybe_reload():
-    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, LAST_SCAN_TIME
+    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
+        PRIVATE_ROUTES, LAST_SCAN_TIME
 
     newest = 0
     for root, _, files in os.walk(VAULT_PATH):
@@ -278,5 +293,6 @@ def maybe_reload():
 
     if newest > LAST_SCAN_TIME:
         print("Reloading vault...")
-        ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX = load_posts()
+        (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
+         DATAVIEW_INDEX, PRIVATE_ROUTES) = load_posts()
         LAST_SCAN_TIME = newest
