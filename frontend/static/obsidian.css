@@ -253,6 +253,11 @@ header {
     margin: 0;
 }
 
+nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
 nav a {
     color: #a9a9b7;
     font-size: 0.95rem;

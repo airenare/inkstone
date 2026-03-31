@@ -188,6 +188,33 @@ def load_posts():
         else:
             all_posts[url_path] = post_data
 
+    # ---- Auto-generate listing routes for sections with no explicit index ----
+    for post_data in all_posts.values():
+        section = post_data["section"]
+        section_url = post_data["section_url"]
+        if section and section_url not in section_routes:
+            last_segment = section.rsplit("/", 1)[-1]
+            title = last_segment.replace("-", " ").replace("_", " ").title()
+            section_routes[section_url] = {
+                "type": "listing",
+                "section": section,
+                "post": {
+                    "url_path": section_url,
+                    "section": section,
+                    "section_url": section_url,
+                    "slug": last_segment,
+                    "title": title,
+                    "date": None,
+                    "html": "",
+                    "tags": set(),
+                    "content": "",
+                    "summary": "",
+                    "priority": float("inf"),
+                    "featured": False,
+                },
+            }
+            print(f"Auto-listing: {section_url} ('{title}')")
+
     return all_posts, section_routes, website_name
 
 
