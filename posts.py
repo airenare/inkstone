@@ -13,6 +13,8 @@ ALL_POSTS = {}
 # section root url → {"type": "homepage"|"listing", "post": post_dict, "section": str}
 SECTION_ROUTES = {}
 WEBSITE_NAME = "My Blog"
+# filepath → {metadata, tags, file} for ALL vault notes (feeds Dataview queries)
+DATAVIEW_INDEX = {}
 LAST_SCAN_TIME = 0
 
 DATE_FORMATS = [
@@ -99,9 +101,10 @@ def load_posts():
     section_routes = {}
     website_name = "My Blog"
 
-    # ---- Pass 1: collect metadata and build title → url_path index ----
+    # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
     url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
+    dataview_index = {}  # filepath → dataview context (all vault notes)
 
     for root, _, files in os.walk(VAULT_PATH):
         for f in files:
@@ -116,10 +119,31 @@ def load_posts():
             metadata, md = parse_frontmatter(text)
 
             try:
-                tags = set(t.lower() for t in metadata.get("tags", []))
+                tags = set(t.lower() for t in (metadata.get("tags") or []))
             except Exception as e:
                 print(f"Error processing tags for {filepath}: {e}")
                 tags = set()
+
+            dv_title = metadata.get("title") or extract_h1(md) or f[:-3]
+            dv_date = _parse_date(
+                metadata.get("date") or metadata.get("created"), filepath
+            )
+
+            # Every note goes into the dataview index (URL updated below for
+            # web posts)
+            dataview_index[filepath] = {
+                "filepath": filepath,
+                "title": dv_title,
+                "metadata": metadata,
+                "tags": tags,
+                "url_path": None,
+                "file": {
+                    "path": filepath,
+                    "name": dv_title,
+                    "link": dv_title,
+                    "ctime": dv_date,
+                },
+            }
 
             if BLOG_TAGS.isdisjoint(tags):
                 continue
@@ -134,15 +158,22 @@ def load_posts():
                 url_path = "/" + slug
 
             url_index[slugify(title)] = url_path
+
+            # Update dataview entry with web URL and clickable link
+            dataview_index[filepath]["url_path"] = url_path
+            dataview_index[filepath]["file"]["link"] = (
+                f'<a href="{url_path}">{title}</a>'
+            )
+
             candidates.append((filepath, f, metadata, md, tags, title, slug,
                                 section, url_path))
 
-    # ---- Pass 2: render markdown with resolved wiki-links ----
+    # ---- Pass 2: render markdown with resolved wiki-links + dataview ----
     for (filepath, f, metadata, md, tags, title, slug,
          section, url_path) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
-        html = render_markdown(md, filepath, url_index)
+        html = render_markdown(md, filepath, url_index, dataview_index)
         summary = metadata.get("summary") or _make_summary(html)
         priority_raw = metadata.get("priority")
         priority = float("inf") if priority_raw is None else int(priority_raw)
@@ -151,6 +182,10 @@ def load_posts():
         is_homepage = HOMEPAGE_TAG in tags
         is_listing = LISTING_TAG in tags
         is_featured = FEATURED_TAG in tags
+
+        banner = metadata.get("banner")
+        banner_x = metadata.get("banner_x")
+        banner_y = metadata.get("banner_y")
 
         print(
             f"Loaded: {title} | {url_path} | "
@@ -170,6 +205,9 @@ def load_posts():
             "summary": summary,
             "priority": priority,
             "featured": is_featured,
+            "banner": banner,
+            "banner_x": banner_x,
+            "banner_y": banner_y,
         }
 
         if is_listing:
@@ -215,7 +253,7 @@ def load_posts():
             }
             print(f"Auto-listing: {section_url} ('{title}')")
 
-    return all_posts, section_routes, website_name
+    return all_posts, section_routes, website_name, dataview_index
 
 
 # =========================================
@@ -223,7 +261,7 @@ def load_posts():
 # =========================================
 
 def maybe_reload():
-    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, LAST_SCAN_TIME
+    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, LAST_SCAN_TIME
 
     newest = 0
     for root, _, files in os.walk(VAULT_PATH):
@@ -233,5 +271,5 @@ def maybe_reload():
 
     if newest > LAST_SCAN_TIME:
         print("Reloading vault...")
-        ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME = load_posts()
+        ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX = load_posts()
         LAST_SCAN_TIME = newest

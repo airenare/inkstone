@@ -337,3 +337,75 @@ nav a:hover {
 .post-entry h3 a:hover {
     color: #8ab4f8;
 }
+
+/* =========================================
+   PAGE BANNER
+   ========================================= */
+
+.page-banner {
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    height: 220px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 0;
+    margin-bottom: 1.75rem;
+}
+
+/* =========================================
+   DATAVIEW TABLES
+   ========================================= */
+
+.dataview {
+    margin: 1.5em 0;
+    overflow-x: auto;
+}
+
+.dataview-table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 320px;
+    font-size: 0.9rem;
+}
+
+.dataview-table th {
+    background: #252537;
+    color: #8ab4f8;
+    font-weight: 600;
+    text-align: left;
+    padding: 0.55em 0.8em;
+    border: 1px solid #3d3d5c;
+}
+
+.dataview-table td {
+    padding: 0.5em 0.8em;
+    border: 1px solid #2e2e42;
+    vertical-align: middle;
+    color: #dcdfe4;
+}
+
+.dataview-table tr:nth-child(even) td {
+    background: #22223a;
+}
+
+.dataview-table tr:hover td {
+    background: #2a2a42;
+}
+
+.dataview-table img {
+    display: block;
+    border-radius: 4px;
+}
+
+.dataview-empty {
+    color: #6e6e8e;
+    font-style: italic;
+}
+
+.dataview-error {
+    color: #f38ba8;
+    font-size: 0.85rem;
+    padding: 0.5em;
+    border-left: 3px solid #f38ba8;
+    margin: 1em 0;
+}

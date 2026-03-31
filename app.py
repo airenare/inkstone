@@ -109,7 +109,10 @@ def serve(path):
 # =========================================
 
 if __name__ == "__main__":
-    post_store.ALL_POSTS, post_store.SECTION_ROUTES, post_store.WEBSITE_NAME = (
-        post_store.load_posts()
-    )
+    (
+        post_store.ALL_POSTS,
+        post_store.SECTION_ROUTES,
+        post_store.WEBSITE_NAME,
+        post_store.DATAVIEW_INDEX,
+    ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

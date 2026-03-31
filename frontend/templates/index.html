@@ -3,6 +3,10 @@
 
 {% block content %}
 
+{% if homepage.banner %}
+<div class="page-banner" style="background-image: url('{{ homepage.banner }}'); background-position: {{ ((homepage.banner_x or 0.5) * 100)|int }}% {{ ((homepage.banner_y or 0.5) * 100)|int }}%;"></div>
+{% endif %}
+
 <article class="homepage">
 {{ homepage.html | safe }}
 </article>

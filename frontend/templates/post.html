@@ -3,6 +3,10 @@
 
 {% block content %}
 
+{% if post.banner %}
+<div class="page-banner" style="background-image: url('{{ post.banner }}'); background-position: {{ ((post.banner_x or 0.5) * 100)|int }}% {{ ((post.banner_y or 0.5) * 100)|int }}%;"></div>
+{% endif %}
+
 <a href="{{ back_url }}">← Back</a>
 
 <article>
