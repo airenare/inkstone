@@ -343,13 +343,63 @@ nav a:hover {
    ========================================= */
 
 .page-banner {
+    position: relative;
     width: calc(100% + 4rem);
     margin-left: -2rem;
-    height: 220px;
+    height: 360px;
     background-size: cover;
     background-repeat: no-repeat;
-    border-radius: 0;
-    margin-bottom: 1.75rem;
+    overflow: hidden;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.page-banner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 20%,
+        rgba(30, 30, 46, 0.5) 58%,
+        #1e1e2e 100%
+    );
+    pointer-events: none;
+}
+
+.page-banner-body {
+    position: relative;
+    z-index: 1;
+    padding: 0 2rem 1.75rem;
+}
+
+.banner-back {
+    display: inline-block;
+    color: rgba(220, 223, 228, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
+    text-decoration: none;
+}
+
+.banner-back:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.banner-title {
+    color: #fff;
+    font-size: 1.9rem;
+    line-height: 1.2;
+    margin: 0 0 0.5rem;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.banner-meta {
+    color: rgba(220, 223, 228, 0.75);
+    font-size: 0.85rem;
+    margin: 0;
 }
 
 /* =========================================
