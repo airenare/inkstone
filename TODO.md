@@ -10,7 +10,6 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 ## Ideas & Features
 
 - **Related posts** — "See also" section at post bottom based on shared tags or section
-- **JSON-LD structured data** — rich Google results; especially useful for book pages (Book schema)
 - **Dark/light mode toggle** — CSS variable swap; remember preference in localStorage
 
 ## Bugs & Findings
@@ -34,3 +33,4 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 - Tag filter dropdown on search page
 - Breadcrumb navigation on post pages
 - Bug fixes: reload lock, unchecked file reads, VAULT_PATH stderr warning, wiki-link pipe aliases
+- JSON-LD structured data (Article, Book, WebSite schemas)

@@ -13,6 +13,12 @@
 {% if homepage.banner %}<meta name="twitter:image" content="{{ homepage.banner }}">{% endif %}
 {% endblock %}
 
+{% block jsonld %}
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebSite", "name": {{ homepage.title | tojson }}, "url": {{ canonical_url | tojson }}}
+</script>
+{% endblock %}
+
 {% block content %}
 
 {% if homepage.banner %}

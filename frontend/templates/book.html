@@ -13,6 +13,30 @@
 {% if post.metadata.cover %}<meta name="twitter:image" content="{{ post.metadata.cover }}">{% endif %}
 {% endblock %}
 
+{% block jsonld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Book",
+  "name": {{ post.title | tojson }},
+  "description": {{ post.summary | tojson }},
+  "url": {{ canonical_url | tojson }}
+  {%- if post.metadata.author %}
+  {%- if post.metadata.author is string %}
+  , "author": {"@type": "Person", "name": {{ post.metadata.author | tojson }}}
+  {%- else %}
+  , "author": [{% for a in post.metadata.author %}{"@type": "Person", "name": {{ a | tojson }}}{% if not loop.last %}, {% endif %}{% endfor %}]
+  {%- endif %}
+  {%- endif %}
+  {%- if post.metadata.isbn %}, "isbn": {{ post.metadata.isbn | string | tojson }}{% endif %}
+  {%- if post.metadata.publisher %}, "publisher": {"@type": "Organization", "name": {{ post.metadata.publisher | tojson }}}{% endif %}
+  {%- if post.metadata.publish %}, "datePublished": {{ post.metadata.publish | string | tojson }}{% endif %}
+  {%- if post.metadata.total %}, "numberOfPages": {{ post.metadata.total }}{% endif %}
+  {%- if post.metadata.cover %}, "image": {{ post.metadata.cover | tojson }}{% endif %}
+}
+</script>
+{% endblock %}
+
 {% block content %}
 
 <a href="{{ back_url }}">← Back</a>

@@ -13,6 +13,20 @@
 {% if post.banner %}<meta name="twitter:image" content="{{ post.banner }}">{% endif %}
 {% endblock %}
 
+{% block jsonld %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ post.title | tojson }},
+  "description": {{ post.summary | tojson }},
+  "url": {{ canonical_url | tojson }}
+  {%- if post.date %}, "datePublished": {{ post.date.strftime("%Y-%m-%d") | tojson }}{% endif %}
+  {%- if post.banner %}, "image": {{ post.banner | tojson }}{% endif %}
+}
+</script>
+{% endblock %}
+
 {% block content %}
 
 <nav class="breadcrumbs">
