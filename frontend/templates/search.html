@@ -9,11 +9,11 @@
 
 <input type="text" name="q" value="{{ query }}" placeholder="Search…">
 
-{% if all_tags %}
-<select name="tag">
-<option value="">All tags</option>
-{% for t in all_tags %}
-<option value="{{ t }}"{% if t == selected_tag %} selected{% endif %}>{{ t }}</option>
+{% if all_labels %}
+<select name="label">
+<option value="">All labels</option>
+{% for l in all_labels %}
+<option value="{{ l }}"{% if l == selected_label %} selected{% endif %}>{{ l }}</option>
 {% endfor %}
 </select>
 {% endif %}
@@ -22,13 +22,13 @@
 
 </form>
 
-{% if (query or selected_tag) and not posts %}
-<p class="search-empty">No results{% if query %} for <strong>{{ query }}</strong>{% endif %}{% if selected_tag %} tagged <span class="tag-badge">{{ selected_tag }}</span>{% endif %}.</p>
+{% if (query or selected_label) and not posts %}
+<p class="search-empty">No results{% if query %} for <strong>{{ query }}</strong>{% endif %}{% if selected_label %} labelled <span class="tag-badge">{{ selected_label }}</span>{% endif %}.</p>
 {% endif %}
 
 {% if posts %}
 
-<h3>{{ posts | length }} result{{ 's' if posts | length != 1 }}{% if selected_tag %} tagged <span class="tag-badge">{{ selected_tag }}</span>{% endif %}</h3>
+<h3>{{ posts | length }} result{{ 's' if posts | length != 1 }}{% if selected_label %} labelled <span class="tag-badge">{{ selected_label }}</span>{% endif %}</h3>
 
 <ul class="search-results">
 

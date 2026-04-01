@@ -1,6 +1,10 @@
 ---
 tags:
   - blog
+labels:
+  - programming
+  - philosophy
+  - languages
 date: 2026-02-20
 title: The Philosophy of Semicolons
 summary: An investigation into why some languages use them, some don't, and why developers fight about it anyway.

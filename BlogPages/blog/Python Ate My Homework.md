@@ -1,6 +1,10 @@
 ---
 tags:
   - blog
+labels:
+  - python
+  - automation
+  - humour
 date: 2026-02-10
 title: Python Ate My Homework
 summary: A cautionary tale about automating things that probably should not be automated.

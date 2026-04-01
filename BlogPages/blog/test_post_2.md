@@ -2,6 +2,9 @@
 tags:
   - blog
   - featured
+labels:
+  - demo
+  - media
 date: 2026-01-16
 title: Test Post Two
 priority: 0

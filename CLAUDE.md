@@ -104,6 +104,9 @@ slug: my-post   # optional; auto-generated from title if omitted
 priority: 0     # featured posts only; 0 = top, then 1, 2… (date breaks ties)
 summary: "..."  # shown on listing pages; auto-derived from content if omitted
 menu_order: 1   # pin this post to the top nav; lower = further left; appended after section links
+labels:         # content labels — shown as clickable badges on the post page and used for /label/<name> archive pages and search filtering; separate from engine tags
+  - python
+  - philosophy
 ---
 ```
 

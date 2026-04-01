@@ -147,43 +147,36 @@ def _highlight(text, query):
     )
 
 
-@app.route("/tag/<tag>")
-def tag_archive(tag):
+@app.route("/label/<label>")
+def label_archive(label):
     post_store.maybe_reload()
-    tag_lower = tag.lower()
+    label_lower = label.lower()
     posts = sorted(
         (p for p in post_store.ALL_POSTS.values()
-         if tag_lower in p.get("tags", set())),
+         if label_lower in p.get("labels", [])),
         key=lambda p: p["date"] or datetime.min,
         reverse=True,
     )
     if not posts:
         abort(404)
-    return render_template("tag.html", tag=tag, posts=posts)
-
-
-_SYSTEM_TAGS = {"blog", "website", "homepage", "listing", "featured",
-                "📚book", "search"}
+    return render_template("label.html", label=label, posts=posts)
 
 
 @app.route("/search")
 def search():
     post_store.maybe_reload()
     q = request.args.get("q", "").strip()
-    tag_filter = request.args.get("tag", "").strip().lower()
+    label_filter = request.args.get("label", "").strip().lower()
 
-    all_tags = sorted(
-        tag for tag in set().union(
-            *(p["tags"] for p in post_store.ALL_POSTS.values())
-        )
-        if tag not in _SYSTEM_TAGS
-    )
+    all_labels = sorted(set().union(
+        *(p["labels"] for p in post_store.ALL_POSTS.values())
+    ))
 
     results = []
-    if q or tag_filter:
+    if q or label_filter:
         q_lower = q.lower()
         for p in post_store.ALL_POSTS.values():
-            if tag_filter and tag_filter not in p.get("tags", set()):
+            if label_filter and label_filter not in p.get("labels", []):
                 continue
             if q_lower and q_lower not in p["title"].lower() \
                     and q_lower not in p["content"]:
@@ -198,8 +191,8 @@ def search():
         "search.html",
         posts=results,
         query=q,
-        selected_tag=tag_filter,
-        all_tags=all_tags,
+        selected_label=label_filter,
+        all_labels=all_labels,
     )
 
 

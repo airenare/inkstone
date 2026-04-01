@@ -1,6 +1,10 @@
 ---
 tags:
   - blog
+labels:
+  - generative-art
+  - algorithms
+  - simulation
 date: 2026-03-15
 title: Watercolor Algorithms
 summary: Simulating the wet bleed of watercolor paint using diffusion equations and deliberate imprecision.

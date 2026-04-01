@@ -1,6 +1,10 @@
 ---
 tags:
   - blog
+labels:
+  - generative-art
+  - pixel-art
+  - photography
 date: 2026-03-05
 title: Pixel Sunset
 summary: What happens when you reduce a photograph to 64x64 pixels and then blow it back up to poster size.

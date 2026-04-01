@@ -225,6 +225,12 @@ def load_posts():
         word_count = len(re.sub(r"<[^>]+>", "", body_html).split())
         reading_time = max(1, word_count // 200)
 
+        raw_labels = metadata.get("labels") or []
+        try:
+            labels = sorted(set(str(l).lower() for l in raw_labels))
+        except Exception:
+            labels = []
+
         post_data = {
             "url_path": url_path,
             "section": section,
@@ -236,6 +242,7 @@ def load_posts():
             "toc": toc,
             "reading_time": reading_time,
             "tags": tags,
+            "labels": labels,
             "content": html.lower(),
             "summary": summary,
             "priority": priority,

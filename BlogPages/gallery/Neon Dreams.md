@@ -1,6 +1,10 @@
 ---
 tags:
   - blog
+labels:
+  - generative-art
+  - cityscape
+  - shaders
 date: 2026-03-01
 title: Neon Dreams
 summary: A series of procedurally generated cityscapes rendered at 2am for no particular reason.

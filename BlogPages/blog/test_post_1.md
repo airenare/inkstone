@@ -2,6 +2,9 @@
 tags:
   - blog
   - featured
+labels:
+  - demo
+  - formatting
 date: 2026-01-15
 title: Test Post One
 priority: 1

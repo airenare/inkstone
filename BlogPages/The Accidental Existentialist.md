@@ -1,6 +1,9 @@
 ---
 tags:
   - blog
+labels:
+  - philosophy
+  - meta
 slug: test_post
 title: The Accidental Existentialist
 summary: A post with an identity crisis — it knows neither its section nor its purpose, and has made peace with both.

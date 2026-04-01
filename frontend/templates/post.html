@@ -54,10 +54,9 @@
 </div>
 {% endif %}
 
-{%- set system_tags = ["blog", "website", "homepage", "listing", "featured", "📚book", "search"] -%}
 <div class="post-tags">
-{%- for tag in post.tags | sort -%}
-{%- if tag not in system_tags -%}<a href="/tag/{{ tag }}" class="tag-badge">{{ tag }}</a>{% endif %}
+{%- for label in post.labels -%}
+<a href="/label/{{ label }}" class="tag-badge">{{ label }}</a>
 {%- endfor -%}
 </div>
 

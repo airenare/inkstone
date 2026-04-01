@@ -1,0 +1,31 @@
+
+{% extends "base.html" %}
+
+{% block meta %}
+<meta property="og:title" content="Posts labelled {{ label }} — {{ website_name }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ canonical_url }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Posts labelled {{ label }} — {{ website_name }}">
+{% endblock %}
+
+{% block content %}
+
+<h2>Posts labelled <span class="tag-badge tag-badge--heading">{{ label }}</span></h2>
+
+<section class="regular-posts">
+
+{% for post in posts %}
+<article class="post-entry">
+    <h3><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
+    <div class="post-meta">
+        {% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}
+        {% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}
+    </div>
+    <p class="post-summary">{{ post.summary }}</p>
+</article>
+{% endfor %}
+
+</section>
+
+{% endblock %}
