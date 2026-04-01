@@ -22,7 +22,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ## Features
 
-- **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]`), image embeds (`![[file.jpg]]`), checkboxes — all rendered without any client-side plugins
+- **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes — all rendered without any client-side plugins
 - **Dataview queries** — `TABLE` queries in fenced ` ```dataview ``` ` blocks are executed server-side and rendered as HTML tables; queries can reference any note in the vault, including unpublished ones
 - **Lightbox gallery** — `![[img.jpg]]` on its own line becomes a lightbox-enabled image; multiple images on one line become a slider
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
@@ -39,6 +39,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **RSS feed** — latest 20 posts served at `/feed.xml`
 - **Sitemap** — auto-generated from all published routes at `/sitemap.xml`
 - **OpenGraph / Twitter Card** — per-page meta tags for rich link previews; uses banner image if set
+- **JSON-LD structured data** — Article, Book, and WebSite schemas for rich Google results
 - **Custom 404** — styled 404 page consistent with the rest of the site
 
 ---
@@ -138,7 +139,7 @@ config.py        Loads .env, VAULT_PATH, tag constants
 converters.py    Markdown pipeline + Dataview query engine
 posts.py         Two-pass vault loader, ALL_POSTS, SECTION_ROUTES, DATAVIEW_INDEX
 frontend/
-  templates/     base, index, post, listing, private, search
+  templates/     base, index, post, listing, book, private, search, tag, 404
   static/        obsidian.css, callouts.css, code.css
 BlogPages/       Bundled demo vault (fallback when no VAULT_PATH set)
 Dockerfile

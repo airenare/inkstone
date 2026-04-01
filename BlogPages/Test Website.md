@@ -23,13 +23,22 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 
 ## Features
 
-- **Markdown-native** — callouts, checkboxes, wiki-links, image embeds, sliders, all rendered from standard Obsidian syntax
+- **Markdown-native** — callouts, checkboxes, wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds, sliders — all rendered from standard Obsidian syntax
 - **Syntax highlighting** — fenced code blocks with language labels and a copy button
 - **Dataview queries** — `TABLE` queries rendered as live HTML tables, pulling from any notes in your vault
-- **Lightbox gallery** — single or multi-image embeds become a full-screen gallery
-- **Banner images** — set `banner:` in frontmatter for a hero image at the top of any page
-- **Private notes** — notes in your vault without a `website` tag are queryable by Dataview but show a placeholder instead of their content
+- **Lightbox gallery** — single image embeds become a full-screen lightbox; multiple on one line become a slider
+- **Banner images** — set `banner:` in frontmatter for a hero image with configurable focal point
+- **Private notes** — notes without a `website` tag are queryable by Dataview but show a placeholder page instead of their content
 - **Hot-reload** — the server detects file changes and reloads without a restart
+- **Search** — full-text search across all published posts at `/search`, with tag filter
+- **Tag pages** — every tag gets a `/tag/<name>` archive page; tags on posts are clickable badges
+- **Breadcrumb navigation** — posts show a `Home › Section › Post` trail
+- **Reading time** — estimated reading time on post pages and listing cards
+- **Pagination** — listing pages paginate at 20 posts per page
+- **RSS feed** — latest 20 posts at `/feed.xml`
+- **Sitemap** — auto-generated at `/sitemap.xml`
+- **OpenGraph / Twitter Card** — per-page meta tags for rich link previews
+- **JSON-LD structured data** — Article, Book, and WebSite schemas for rich Google results
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
 
 ---
