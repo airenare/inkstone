@@ -3,87 +3,120 @@ tags:
   - blog
   - featured
 labels:
-  - demo
-  - media
-date: 2026-01-16
-title: Test Post Two
-priority: 0
-summary: Showcasing image sliders, all callout types, and deeply nested task lists.
+  - obsidian
+  - workflow
+  - writing
+date: 2026-01-15
+title: Writing for the Web Without Leaving Obsidian
+slug: writing-for-the-web
+priority: 1
+summary: The full authoring workflow — from blank note to published post — without ever touching a CMS, an export tool, or a terminal.
+banner: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&auto=format&fit=crop"
+banner_x: 0.5
+banner_y: 0.4
 ---
 
-# Test Post Two
+The pitch is simple: write in Obsidian, save the file, refresh the browser. That is the entire publishing workflow. No build step, no CMS login, no export. This post walks through what that actually looks like in practice — and shows off a few things the engine can do along the way.
 
-This post covers image sliders, additional callout types, and nested checkboxes. See also [[Test Post One]] for text formatting, tables, and code examples.
+> [!abstract] What You Will See Here
+> A full tour of the authoring experience: frontmatter, images (slider + lightbox), callouts, nested checklists, and the live-reload cycle. All rendered from a single `.md` file in a vault folder.
 
 ---
 
-## Image Slider
+## The Frontmatter Contract
 
-Three images on one line become a slider gallery. Use the arrows or swipe to navigate.
+Everything about how a note behaves on the site is declared in the YAML frontmatter at the top of the file. You write it once; the engine does the rest.
+
+```yaml
+---
+tags:
+  - blog        # publishes the note; "website" also works
+  - featured    # promotes it to the Featured section of the listing
+date: 2026-01-15
+title: Writing for the Web Without Leaving Obsidian
+slug: writing-for-the-web   # optional; derived from title if omitted
+priority: 1                 # featured sort order (0 = first)
+summary: "Shown on the listing page. Auto-derived from content if omitted."
+banner: "https://images.unsplash.com/..."
+labels:
+  - obsidian
+  - workflow
+  - writing
+---
+```
+
+`tags` controls engine behaviour — reserved words the server acts on. `labels` are for readers — they appear as clickable badges on the post and power the label filter on the search page.
+
+---
+
+## Images: Slider vs Lightbox
+
+How images are arranged on the page is controlled entirely by how they sit in the source markdown.
+
+**Same line → slider.** Three images on one line become a swipeable gallery:
 
 ![[test_image_1.png]] ![[test_image_2.png]] ![[test_image_3.png]]
 
----
+**Separate lines → lightbox.** Each image on its own line becomes a standalone lightbox:
 
-## More Callout Types
+![[test_image_1.png]]
+![[test_image_2.png]]
 
-> [!info] Information
-> This is an info callout. Good for neutral context or background explanation.
-
-> [!abstract] Summary
-> Use the abstract callout to provide a TL;DR or summary at the top of a long post.
-
-> [!danger] Danger
-> This is a danger callout. Reserve it for critical errors or destructive actions.
-
-> [!tip] Tip
-> A quick tip callout for helpful suggestions or shortcuts.
+Click any image above to open the lightbox. Images live in a `_attachments/` folder alongside the `.md` file — the engine resolves the path automatically.
 
 ---
 
-## Nested Checkboxes
+## Callouts
 
-- [ ] Backend tasks
-    - [x] Parse frontmatter
-    - [x] Convert wiki-links
-    - [x] Render callouts
-    - [ ] Add tag index page
-        - [ ] Design template
-        - [ ] Add route `/tag/<name>`
-- [x] Frontend tasks
-    - [x] Dark theme
-    - [x] Lightbox gallery
-    - [x] Image slider
-    - [x] Code copy button
+Obsidian's callout syntax (`> [!type] Title`) is rendered into styled blocks. All standard Obsidian callout types are supported.
 
----
+> [!info] Context
+> Use `info` for neutral background or explanatory notes that sit outside the main narrative.
 
-## Mixed Formatting in a Table
+> [!tip] Shortcut
+> If you omit the `summary` field, the engine auto-derives it from the first paragraph of content. You only need to write it explicitly when you want something different on the listing page.
 
-| Callout Type | Icon | Use Case              |
-|--------------|------|-----------------------|
-| `note`       | 📝   | General information   |
-| `warning`    | ⚠️   | Potential issues      |
-| `danger`     | 🔥   | Critical errors       |
-| `info`       | ℹ️   | Background context    |
-| `tip`        | 💡   | Helpful suggestions   |
-| `abstract`   | 📋   | Summaries / TL;DR     |
+> [!warning] Watch Out
+> Filenames and `slug` values both feed into URL generation. If you rename a note after it has been live, its URL changes. Update any wiki-links that point to it.
+
+> [!danger] Do Not Do This
+> Do not put `listing` and `homepage` on the same file. `listing` wins, and your hand-written content will never be shown. Pick one.
 
 ---
 
-## Code Block
+## Wiki-Links Across Sections
 
-```javascript
-// Client-side slider navigation
-document.querySelectorAll(".slider-gallery").forEach(gallery => {
-    const slides = gallery.querySelector(".slides")
-    const left = gallery.querySelector(".left")
-    const right = gallery.querySelector(".right")
-    let index = 0
+Standard Obsidian `[[Note Title]]` syntax works across the entire vault. The engine builds a slug-to-URL index in a first pass before rendering any markdown, so links resolve correctly regardless of where the target file lives.
 
-    right.onclick = () => {
-        index = Math.min(index + 1, slides.children.length - 1)
-        slides.scrollTo({ left: slides.clientWidth * index, behavior: "smooth" })
-    }
-})
-```
+A post in `/blog` can link to a post in `/gallery` — [[Watercolor Algorithms]], for instance — and the URL will be correct. No path prefixes needed.
+
+---
+
+## The Publishing Checklist
+
+The engine renders Obsidian-style checkboxes, including nested lists. Here is what a typical publish workflow looks like:
+
+- [x] Write the post in Obsidian
+    - [x] Add frontmatter (`tags`, `title`, `date`, `labels`)
+    - [x] Add a `summary` if the auto-derived one is wrong
+    - [x] Place images in `_attachments/` subfolder
+- [x] Check the live preview
+    - [x] Refresh the browser — no restart needed
+    - [x] Verify wiki-links resolve (hover shows the URL)
+    - [x] Confirm the post appears in the section listing
+- [ ] Optional polish
+    - [ ] Add a `banner` image URL with focal point (`banner_x`, `banner_y`)
+    - [ ] Set `priority` if it should rank in Featured
+    - [ ] Add `menu_order` if it should appear in the top nav
+
+---
+
+## The Live-Reload Cycle
+
+On every request, the server checks whether any file in the vault has changed. If it has, the entire vault is rescanned before the response is sent. Edit a note, hit save, refresh the page — the change is there.
+
+This makes the authoring cycle genuinely tight. You are not context-switching between a writing tool and a publish interface. Obsidian *is* the publish interface.
+
+---
+
+For a deeper look at how the server actually processes these files under the hood, see [[From Vault to Web: How This Blog Works]].
