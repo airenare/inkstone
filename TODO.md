@@ -4,13 +4,25 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 ## High Priority
 
+- **`==highlight==` syntax** — convert `==text==` to `<mark>` tags; one regex in `converters.py`
+- **Footnotes** — `[^1]` / `[^note]` syntax; just enable the `footnotes` extension in `markdown.Markdown()`
+- **Mermaid diagrams** — render ` ```mermaid ``` ` blocks via client-side mermaid.js
 
 ## Medium Priority
+
+- **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX (client-side) or python-markdown-math
+- **Note transclusion** — `![[Note Title]]` embeds another note's full markdown content inline (distinct from media)
+- **`[[Link#Heading]]` anchor links** — resolve to `/path/to/note#heading-slug` instead of just the page root
+- **Embedded audio** — `![[audio.mp3]]` → `<audio>` tag; images and video already handled
+- **`aliases` frontmatter** — add alias slugs to `url_index` so wiki-links using alternate names resolve correctly
 
 ## Ideas & Features
 
 - **Related posts** — "See also" section at post bottom based on shared tags or section
 - **Dark/light mode toggle** — CSS variable swap; remember preference in localStorage
+- **Inline body tags** — collect `#tag` mentions from note body, not just frontmatter
+- **Dataview inline queries** — `` `= this.field` `` expressions inline in text
+- **Block references** — `[[Note^block-id]]` links to a specific block within a note
 
 ## Bugs & Findings
 
