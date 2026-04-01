@@ -138,6 +138,7 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 
 ## Workflow Rules
 
+- **Sync before starting:** At the beginning of every task, run `git fetch` and check if the remote is ahead. If it is, run `git pull --rebase`, give a short summary of what changed, then proceed with the task.
 - **Code style:** Follow PEP 8 — snake_case for variables/functions, 4-space indentation, double quotes for strings, max line length 79 characters.
 - **Before editing:** Always read a file before modifying it.
 - **Autonomy:** Work autonomously — execute shell commands needed for testing and all git operations (including `git push`) without asking for confirmation. Always report what was executed after the fact. Do not ask for permission before making code changes.
