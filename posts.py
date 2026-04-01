@@ -1,5 +1,7 @@
 import os
 import re
+import sys
+import threading
 from datetime import datetime, date as date_type
 
 import yaml
@@ -22,6 +24,7 @@ MENU_POSTS = []
 # True when the root homepage has the "search" tag — controls nav search link
 SHOW_SEARCH = False
 LAST_SCAN_TIME = 0
+_reload_lock = threading.Lock()
 
 DATE_FORMATS = [
     "%Y-%m-%d",
@@ -121,8 +124,12 @@ def load_posts():
 
             filepath = os.path.join(root, f)
 
-            with open(filepath, encoding="utf-8") as fh:
-                text = fh.read()
+            try:
+                with open(filepath, encoding="utf-8") as fh:
+                    text = fh.read()
+            except OSError as e:
+                print(f"Skipping {filepath}: {e}", file=sys.stderr)
+                continue
 
             metadata, md = parse_frontmatter(text)
 
@@ -316,14 +323,27 @@ def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, LAST_SCAN_TIME
 
-    newest = 0
-    for root, _, files in os.walk(VAULT_PATH):
-        for f in files:
-            filepath = os.path.join(root, f)
-            newest = max(newest, os.path.getmtime(filepath))
+    if not _reload_lock.acquire(blocking=False):
+        return  # Another thread is already reloading
 
-    if newest > LAST_SCAN_TIME:
-        print("Reloading vault...")
-        (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
-         DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH) = load_posts()
-        LAST_SCAN_TIME = newest
+    try:
+        newest = 0
+        for root, _, files in os.walk(VAULT_PATH):
+            for f in files:
+                try:
+                    newest = max(newest, os.path.getmtime(
+                        os.path.join(root, f)
+                    ))
+                except OSError:
+                    pass
+
+        if newest > LAST_SCAN_TIME:
+            print("Reloading vault...")
+            (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
+             DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
+             SHOW_SEARCH) = load_posts()
+            LAST_SCAN_TIME = newest
+    except Exception as e:
+        print(f"Reload error (serving stale data): {e}", file=sys.stderr)
+    finally:
+        _reload_lock.release()

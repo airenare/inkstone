@@ -22,18 +22,19 @@ def slugify(text):
 # =========================================
 
 def convert_links(md, url_index=None):
-    """Convert [[Wiki Links]] to markdown links.
+    """Convert [[Wiki Links]] and [[Title|Display Text]] to markdown links.
 
     url_index: dict of {slugify(title): url_path} built during two-pass loading.
     Falls back to /slugified-title if the title is not found in the index.
     """
-    pattern = r"\[\[([^\]]+)\]\]"
+    pattern = r"\[\[([^|\]]+)(?:\|([^\]]+))?\]\]"
 
     def repl(match):
-        target = match.group(1)
+        target = match.group(1).strip()
+        display = (match.group(2) or target).strip()
         slug = slugify(target)
         url = url_index.get(slug) if url_index else None
-        return f"[{target}]({url or '/' + slug})"
+        return f"[{display}]({url or '/' + slug})"
 
     return re.sub(pattern, repl, md)
 

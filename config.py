@@ -1,4 +1,5 @@
 import os
+import sys
 
 import dotenv
 
@@ -10,8 +11,9 @@ with open(os.path.join(os.path.dirname(__file__), "VERSION")) as _vf:
 VAULT_PATH = os.getenv("VAULT_PATH")
 if not VAULT_PATH or not os.path.exists(VAULT_PATH):
     print(
-        f"Warning: VAULT_PATH '{VAULT_PATH}' does not exist. "
-        "Using './BlogPages' for testing."
+        f"WARNING: VAULT_PATH '{VAULT_PATH}' not found. "
+        "Falling back to './BlogPages' (demo vault).",
+        file=sys.stderr,
     )
     VAULT_PATH = "./BlogPages"
 

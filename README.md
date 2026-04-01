@@ -31,7 +31,11 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Hot-reload** — the server watches file modification times and reloads the vault on any change, no restart needed
 - **Search** — full-text search across all published posts at `/search`
 - **Auto-listings** — sections with no explicit index file get an auto-generated listing page
+- **Pagination** — listing pages paginate at 20 posts per page
 - **Nav pinning** — add `menu_order: N` to any note's frontmatter to pin it to the top nav (About, Contact, etc.)
+- **Breadcrumb navigation** — posts show a `Home › Section › Post` trail, useful for nested paths like `/gallery/arts/post`
+- **Tag pages** — every user tag gets a `/tag/<name>` archive page; tags on posts are clickable badges
+- **Reading time** — estimated reading time shown on post pages and listing cards
 - **RSS feed** — latest 20 posts served at `/feed.xml`
 - **Sitemap** — auto-generated from all published routes at `/sitemap.xml`
 - **OpenGraph / Twitter Card** — per-page meta tags for rich link previews; uses banner image if set
@@ -48,6 +52,7 @@ tags:
   - homepage     # serve this note's content at the section root URL
   - listing      # auto-generate a post index at the section root URL
   - featured     # highlight this post in the section's featured area
+  - search       # root homepage only: show a Search link in the top nav
 date: 2026-01-15
 title: My Post   # optional; overrides H1 and filename
 slug: my-post    # optional; auto-generated from title if omitted

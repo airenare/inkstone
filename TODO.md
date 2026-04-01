@@ -15,12 +15,6 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 
 ## Bugs & Findings
 
-- **No error handling in `serve()`** (`app.py`) — hard crash if post_store functions fail mid-request
-- **Unchecked file reads** (`posts.py`) — no try/except around file open; missing files cause silent failures
-- **`VAULT_PATH` not validated at startup** (`config.py`) — silently falls back to `./BlogPages` if path is invalid/missing; should warn loudly
-- **Hot reload race condition** (`posts.py`) — `os.walk()` + `getmtime()` can miss rapid-fire changes; no locking
-- **Regex fragility in wiki-link parser** (`converters.py`) — doesn't handle escaped brackets or pipes in link text
-
 ## Done
 
 - Write a README.md
@@ -39,3 +33,4 @@ Items are grouped by priority. Tell Claude "do the TODOs" or name specific items
 - Search link in top nav (opt-in via `search` tag on root homepage)
 - Tag filter dropdown on search page
 - Breadcrumb navigation on post pages
+- Bug fixes: reload lock, unchecked file reads, VAULT_PATH stderr warning, wiki-link pipe aliases
