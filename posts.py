@@ -170,8 +170,20 @@ def load_posts():
             if BLOG_TAGS.isdisjoint(tags):
                 continue
 
-            title = metadata.get("title") or extract_h1(md) or f[:-3]
-            slug = metadata.get("slug") or slugify(title)
+            title_raw = metadata.get("title")
+            if isinstance(title_raw, dict):
+                # YAML parsed "title: Some: Value" as a nested mapping.
+                # The field must be quoted: title: "Some: Value"
+                print(
+                    f"WARNING: {filepath} — 'title' parsed as a dict "
+                    f"(value contains an unquoted colon). "
+                    f"Wrap it in quotes: title: \"...\". Falling back to H1/filename.",
+                    file=sys.stderr,
+                )
+                title_raw = None
+            title = title_raw or extract_h1(md) or f[:-3]
+            slug_raw = metadata.get("slug")
+            slug = (slug_raw if isinstance(slug_raw, str) else None) or slugify(title)
             section = _section_from_filepath(filepath)
 
             if section:

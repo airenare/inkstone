@@ -112,6 +112,13 @@ labels:         # content labels — shown as clickable badges on the post page 
 
 **Title resolution order:** frontmatter `title` → first `# H1` in body → filename (without `.md`).
 
+**YAML quoting:** Any string value that contains a colon (`:`) must be wrapped in double quotes, otherwise YAML parses it as a nested mapping and the field silently breaks. This applies to `title`, `summary`, `slug`, and any other string field.
+```yaml
+title: "From Vault to Web: How This Blog Works"   # correct
+title: From Vault to Web: How This Blog Works      # broken — YAML parses as a dict
+```
+The engine will log a `WARNING` to stderr and fall back to the H1/filename when it detects a dict-valued `title`.
+
 **`listing` vs `homepage`:** `listing` renders an auto-generated post index; `homepage` renders the file's own markdown content. If a file has both tags, `listing` wins. A section can only have one of each — if multiple files in the same folder are tagged `listing`, the last one loaded wins (undefined behavior; avoid).
 
 **`posts.py` globals:** `ALL_POSTS` (url_path → post dict), `SECTION_ROUTES` (section url → route dict), `WEBSITE_NAME` (from root homepage title).
