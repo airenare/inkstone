@@ -117,6 +117,21 @@ def sitemap():
     return Response(xml, mimetype="application/xml")
 
 
+def _build_breadcrumbs(url_path, post_title):
+    """Build breadcrumb list: [(label, url), ..., (current_title, None)]."""
+    crumbs = [("Home", "/")]
+    parts = [p for p in url_path.split("/") if p]
+    for i in range(len(parts) - 1):
+        segment_url = "/" + "/".join(parts[: i + 1])
+        if segment_url in post_store.SECTION_ROUTES:
+            label = post_store.SECTION_ROUTES[segment_url]["post"]["title"]
+        else:
+            label = parts[i].replace("-", " ").title()
+        crumbs.append((label, segment_url))
+    crumbs.append((post_title, None))
+    return crumbs
+
+
 def _highlight(text, query):
     """HTML-escape text, then wrap query matches in <mark>."""
     if not text:
@@ -247,7 +262,10 @@ def serve(path):
         template = (
             "book.html" if "📚book" in post.get("tags", set()) else "post.html"
         )
-        return render_template(template, post=post, back_url=back_url)
+        breadcrumbs = _build_breadcrumbs(url_path, post["title"])
+        return render_template(
+            template, post=post, back_url=back_url, breadcrumbs=breadcrumbs
+        )
 
     # 3. Private note placeholder
     if url_path in post_store.PRIVATE_ROUTES:

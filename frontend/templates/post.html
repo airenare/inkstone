@@ -15,16 +15,19 @@
 
 {% block content %}
 
+<nav class="breadcrumbs">
+{% for label, url in breadcrumbs %}
+{% if url %}<a href="{{ url }}">{{ label }}</a><span class="breadcrumb-sep">›</span>{% else %}<span class="breadcrumb-current">{{ label }}</span>{% endif %}
+{% endfor %}
+</nav>
+
 {% if post.banner %}
 <div class="page-banner" style="background-image: url('{{ post.banner }}'); background-position: {{ ((post.banner_x or 0.5) * 100)|int }}% {{ ((post.banner_y or 0.5) * 100)|int }}%;">
 <div class="page-banner-body">
-<a href="{{ back_url }}" class="banner-back">← Back</a>
 <h1 class="banner-title">{{ post.title }}</h1>
 <div class="post-meta banner-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
 </div>
 </div>
-{% else %}
-<a href="{{ back_url }}">← Back</a>
 {% endif %}
 
 <article>
