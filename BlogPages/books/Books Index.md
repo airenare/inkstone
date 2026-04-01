@@ -10,6 +10,8 @@ banner_y: 0.4
 
 # Books list
 
+Each book below is a note in the vault. The tables are generated automatically via Dataview queries — adding a new book note with the `📚Book` tag makes it appear here instantly, no manual editing required.
+
 ## 📚 My Bookshelf
 
 ```dataview
