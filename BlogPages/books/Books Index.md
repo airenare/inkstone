@@ -16,8 +16,8 @@ Each book below is a note in the vault. The tables are generated automatically v
 
 ```dataview
 TABLE WITHOUT ID
-    status as Status,
-    rows.file.link as Book
+    rows.file.link as Book,
+    status as Status
 FROM #📚Book
 WHERE !contains(file.path, "Templates")
 GROUP BY status
@@ -32,7 +32,8 @@ TABLE WITHOUT ID
     "![|60](" + cover + ")" as Cover,
     link(file.link, title) as Title,
     author as Author,
-    join(list(publisher, publish)) as Publisher
+    publish as Published,
+	total as Pages
 FROM #📚Book
 WHERE !contains(file.path, "Templates") & contains(tags, "datascience")
 SORT status DESC, file.ctime ASC
@@ -46,7 +47,8 @@ TABLE WITHOUT ID
     "![|60](" + cover + ")" as Cover,
     link(file.link, title) as Title,
     author as Author,
-    join(list(publisher, publish)) as Publisher
+    publish as Published,
+	total as Pages
 FROM #📚Book
 WHERE !contains(file.path, "Templates")
 SORT status DESC, file.ctime ASC
