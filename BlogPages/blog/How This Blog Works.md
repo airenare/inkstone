@@ -401,6 +401,14 @@ labels:
 
 `tags` are reserved engine keywords — they change how the server handles the file. `labels` are for readers — they appear as clickable badges on the post page and drive the label filter on the search page and `/label/<name>` archive pages.
 
+> [!warning] Colons in frontmatter values
+> YAML uses `: ` (colon + space) as a key-value separator. If your `title`, `summary`, or any other string field contains a colon, you must wrap the entire value in double quotes — otherwise the YAML parser silently turns it into a nested dict and the post's URL, title, and wiki-links all break.
+> ```yaml
+> title: "From Vault to Web: How This Blog Works"   # correct
+> title: From Vault to Web: How This Blog Works      # broken
+> ```
+> The engine will log a warning to stderr and fall back to the H1 heading or filename when it detects this, so the post still loads — but the title will be wrong until you add the quotes.
+
 ---
 
 ## What Ships
