@@ -43,7 +43,7 @@ New features should follow this chain — `app.py` imports from `posts.py`, neve
 
 ### Data Flow
 
-1. **Pass 1** — `load_posts()` scans all `.md` files, parses frontmatter, computes `url_path` and `section` from folder location, builds `url_index` (`slugify(title) → url_path`) for wiki-link resolution.
+1. **Pass 1** — `load_posts()` scans all `.md` files, parses frontmatter, computes `url_path` and `section` from folder location, builds `url_index` for wiki-link resolution. Each post is indexed three ways: `slugify(title)`, `slugify(filename without .md)`, and frontmatter `slug`. This means `[[Filename|Display]]`, `[[Title]]`, and `[[slug]]` all resolve correctly even when the file name, title, and slug differ.
 2. **Pass 2** — renders markdown for each file using `url_index` so `[[Wiki Links]]` resolve to the correct cross-section URLs.
 3. Files tagged `listing` → registered in `SECTION_ROUTES[section_url]`; files tagged `homepage` → same. Neither appears in `ALL_POSTS`.
 4. `maybe_reload()` checks modification times on each request and reloads if anything changed.

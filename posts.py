@@ -180,6 +180,10 @@ def load_posts():
                 url_path = "/" + slug
 
             url_index[slugify(title)] = url_path
+            # Also index by filename and slug so [[Filename|Display]] links
+            # resolve even when the title differs from the file name.
+            url_index[slugify(f[:-3])] = url_path
+            url_index[slug] = url_path
 
             # Update dataview entry with web URL and clickable link
             dataview_index[filepath]["url_path"] = url_path
