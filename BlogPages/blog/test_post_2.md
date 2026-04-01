@@ -55,12 +55,12 @@ How images are arranged on the page is controlled entirely by how they sit in th
 
 **Same line → slider.** Three images on one line become a swipeable gallery:
 
-![[test_image_1.png]] ![[test_image_2.png]] ![[test_image_3.png]]
+![[test_image_1.jpg]] ![[test_image_2.jpg]] ![[test_image_3.jpg]]
 
 **Separate lines → lightbox.** Each image on its own line becomes a standalone lightbox:
 
-![[test_image_1.png]]
-![[test_image_2.png]]
+![[test_image_1.jpg]]
+![[test_image_2.jpg]]
 
 Click any image above to open the lightbox. Images live in a `_attachments/` folder alongside the `.md` file — the engine resolves the path automatically.
 
