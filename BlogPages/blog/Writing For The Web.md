@@ -9,9 +9,9 @@ labels:
 date: 2026-01-15
 title: Writing for the Web Without Leaving Obsidian
 slug: writing-for-the-web
-priority: 1
+priority: 0
 summary: The full authoring workflow — from blank note to published post — without ever touching a CMS, an export tool, or a terminal.
-banner: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&auto=format&fit=crop"
+banner: https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1400&auto=format&fit=crop
 banner_x: 0.5
 banner_y: 0.4
 ---

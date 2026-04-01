@@ -9,7 +9,7 @@ labels:
 date: 2026-01-20
 title: From Vault to Web How This Blog Works
 slug: how-this-blog-works
-priority: 0
+priority: 1
 summary: This site is an Obsidian vault served directly by a Python server — no build step, no CMS, no export. Here is a complete technical walkthrough of every moving part.
 banner: https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1400&auto=format&fit=crop
 banner_x: 0.5
