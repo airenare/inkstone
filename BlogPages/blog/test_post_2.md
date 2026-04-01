@@ -119,4 +119,4 @@ This makes the authoring cycle genuinely tight. You are not context-switching be
 
 ---
 
-For a deeper look at how the server actually processes these files under the hood, see [[From Vault to Web: How This Blog Works]].
+For a deeper look at how the server actually processes these files under the hood, see [From Vault to Web: How This Blog Works](/blog/how-this-blog-works).
