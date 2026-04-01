@@ -427,4 +427,4 @@ labels:
 
 ---
 
-For the authoring side of things — what this actually feels like to write in — see [[Writing for the Web Without Leaving Obsidian]].
+For the authoring side of things — what this actually feels like to write in — see [[Writing For The Web|Writing for the Web Without Leaving Obsidian]].
