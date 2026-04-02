@@ -217,7 +217,8 @@ def load_posts():
          section, url_path) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
-        html, toc = render_markdown(md, filepath, url_index, dataview_index)
+        html, toc = render_markdown(md, filepath, url_index, dataview_index,
+                                    note_metadata=metadata)
         summary = metadata.get("summary") or _make_summary(html)
         priority_raw = metadata.get("priority")
         priority = float("inf") if priority_raw is None else int(priority_raw)
@@ -249,9 +250,14 @@ def load_posts():
 
         raw_labels = metadata.get("labels") or []
         try:
-            labels = sorted(set(str(l).lower() for l in raw_labels))
+            fm_labels = set(str(l).lower() for l in raw_labels)
         except Exception:
-            labels = []
+            fm_labels = set()
+        # Also collect #hashtag mentions from the raw markdown body
+        body_tags = set(
+            t.lower() for t in re.findall(r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", md)
+        )
+        labels = sorted(fm_labels | body_tags)
 
         post_data = {
             "url_path": url_path,

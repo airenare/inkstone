@@ -132,6 +132,24 @@ def _build_breadcrumbs(url_path, post_title):
     return crumbs
 
 
+def _get_related(post, all_posts, max_results=4):
+    """Return up to max_results related posts sorted by shared-label count."""
+    post_labels = set(post.get("labels") or [])
+    post_section = post.get("section", "")
+    scored = []
+    for p in all_posts.values():
+        if p["url_path"] == post["url_path"]:
+            continue
+        shared = len(post_labels & set(p.get("labels") or []))
+        same_section = int(p.get("section", "") == post_section)
+        score = shared * 2 + same_section
+        if score > 0:
+            scored.append((score, p))
+    scored.sort(key=lambda x: (-x[0], -(x[1]["date"].timestamp()
+                                         if x[1]["date"] else 0)))
+    return [p for _, p in scored[:max_results]]
+
+
 def _highlight(text, query):
     """HTML-escape text, then wrap query matches in <mark>."""
     if not text:
@@ -256,8 +274,10 @@ def serve(path):
             "book.html" if "📚book" in post.get("tags", set()) else "post.html"
         )
         breadcrumbs = _build_breadcrumbs(url_path, post["title"])
+        related = _get_related(post, post_store.ALL_POSTS)
         return render_template(
-            template, post=post, back_url=back_url, breadcrumbs=breadcrumbs
+            template, post=post, back_url=back_url,
+            breadcrumbs=breadcrumbs, related=related
         )
 
     # 3. Private note placeholder

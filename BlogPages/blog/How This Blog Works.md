@@ -526,8 +526,11 @@ After this, `[[vault to web]]` and `[[how the engine works]]` both point to this
 - [x] `[[Link#Heading]]` anchor links — resolves to page URL + `#heading-slug`
 - [x] Audio embeds — `![[audio.mp3]]` → `<audio>` element
 - [x] `aliases` frontmatter — alternate wiki-link names for a note
-- [ ] Related posts
-- [ ] Dark / light mode toggle
+- [x] Related posts — "See also" section, scored by shared labels and section
+- [x] Dark / light mode toggle — CSS variable swap, persisted in localStorage
+- [x] Inline body labels — `#hashtag` in note body collected as labels automatically
+- [x] Dataview inline queries — `` `= this.field` `` evaluated against note frontmatter
+- [x] Block references — `[[Note^block-id]]` links; `^id` markers become anchor spans
 
 ---
 

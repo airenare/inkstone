@@ -29,6 +29,11 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Anchor links** — `[[Note#Heading]]` resolves to the note's URL with a `#heading-slug` fragment
 - **Audio embeds** — `![[audio.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
 - **Aliases** — `aliases:` frontmatter registers alternate wiki-link names that resolve to the same post
+- **Related posts** — automatic "See also" section at the bottom of each post, scored by shared labels and section
+- **Dark / light mode** — toggle button in the header; preference persisted in `localStorage`
+- **Inline body labels** — `#hashtag` mentions in the note body are collected as labels; merged with frontmatter `labels:`
+- **Dataview inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
+- **Block references** — `^block-id` suffix on paragraphs creates anchor targets; `[[Note^block-id]]` links scroll to them
 - **Dataview queries** — `TABLE` queries in fenced ` ```dataview ``` ` blocks are executed server-side and rendered as HTML tables; queries can reference any note in the vault, including unpublished ones
 - **Lightbox gallery** — `![[img.jpg]]` on its own line becomes a lightbox-enabled image; multiple images on one line become a slider
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js

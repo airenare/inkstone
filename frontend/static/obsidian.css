@@ -1,7 +1,43 @@
 
+/* =========================================
+   COLOUR TOKENS (dark default)
+   ========================================= */
+
+:root {
+    --bg:        #1e1e2e;
+    --bg-raised: #181825;
+    --bg-card:   #1e1e2e;
+    --border:    #3d3d5c;
+    --text:      #dcdfe4;
+    --text-muted:#a9a9b7;
+    --text-dim:  #6e6e8e;
+    --accent:    #8ab4f8;
+    --mark-bg:   #3d3520;
+    --mark-fg:   #f9e2af;
+    --code-bg:   #0d1117;
+    --inline-code-bg: #1f2933;
+    --banner-gradient: transparent, rgba(30,30,46,0.5), #1e1e2e;
+}
+
+[data-theme="light"] {
+    --bg:        #f5f5f0;
+    --bg-raised: #ebebе4;
+    --bg-card:   #f0f0eb;
+    --border:    #c8c8d0;
+    --text:      #2a2a3a;
+    --text-muted:#555566;
+    --text-dim:  #888899;
+    --accent:    #2563eb;
+    --mark-bg:   #fef08a;
+    --mark-fg:   #713f12;
+    --code-bg:   #1a1b26;
+    --inline-code-bg: #e8e8e0;
+    --banner-gradient: transparent, rgba(245,245,240,0.5), #f5f5f0;
+}
+
 body {
-    background-color: #1e1e2e;
-    color: #dcdfe4;
+    background-color: var(--bg);
+    color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.6;
     padding: 2rem;
@@ -10,7 +46,7 @@ body {
 }
 
 a {
-    color: #8ab4f8;
+    color: var(--accent);
     text-decoration: none;
 }
 
@@ -19,12 +55,12 @@ a:hover {
 }
 
 h1,h2,h3,h4{
-    color:white;
+    color: var(--text);
 }
 
 blockquote {
-    border-left: 4px solid #565678;
-    color: #a9a9b7;
+    border-left: 4px solid var(--border);
+    color: var(--text-muted);
     margin: 1em 0;
     padding-left: 1em;
     font-style: italic;
@@ -40,7 +76,7 @@ table {
 }
 
 table th, table td {
-    border: 1px solid #565678;
+    border: 1px solid var(--border);
     padding: 0.5em;
 }
 
@@ -259,12 +295,12 @@ nav {
 }
 
 nav a {
-    color: #a9a9b7;
+    color: var(--text-muted);
     font-size: 0.95rem;
 }
 
 nav a:hover {
-    color: #dcdfe4;
+    color: var(--text);
     text-decoration: none;
 }
 
@@ -360,12 +396,7 @@ nav a:hover {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        to bottom,
-        transparent 20%,
-        rgba(30, 30, 46, 0.5) 58%,
-        #1e1e2e 100%
-    );
+    background: linear-gradient(to bottom, var(--banner-gradient));
     pointer-events: none;
 }
 
@@ -825,8 +856,8 @@ details[open].toc-block summary::before {
 }
 
 mark {
-    background: #3d3520;
-    color: #f9e2af;
+    background: var(--mark-bg);
+    color: var(--mark-fg);
     padding: 0 0.1em;
     border-radius: 2px;
 }
@@ -1011,4 +1042,85 @@ audio {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 240px;
+}
+/* =========================================
+   DARK / LIGHT MODE TOGGLE
+   ========================================= */
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    line-height: 1.6;
+    margin-left: auto;
+}
+
+.theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+}
+
+/* =========================================
+   RELATED POSTS
+   ========================================= */
+
+.related-posts {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.related-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-bottom: 1.25rem;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.related-card {
+    display: block;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    text-decoration: none;
+    transition: border-color 0.15s;
+}
+
+.related-card:hover {
+    border-color: var(--accent);
+    text-decoration: none;
+}
+
+.related-card-title {
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.related-card-meta {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+}
+
+.related-card-summary {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }

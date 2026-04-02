@@ -30,6 +30,11 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Anchor links** — `[[Note#Heading]]` links to a specific heading within a note
 - **Audio embeds** — `![[file.mp3]]` → `<audio>` element
 - **Aliases** — `aliases:` frontmatter for alternate wiki-link names
+- **Related posts** — automatic "See also" section scored by shared labels and section
+- **Dark / light mode** — toggle in the header, remembered across visits
+- **Inline body labels** — `#hashtag` in post body auto-collected as labels
+- **Dataview inline queries** — `` `= this.field` `` evaluated against note frontmatter
+- **Block references** — `^block-id` on a paragraph; `[[Note^id]]` links scroll to it
 - **Syntax highlighting** — fenced code blocks with language labels and a copy button
 - **Dataview queries** — `TABLE` queries rendered as live HTML tables, pulling from any notes in your vault
 - **Lightbox gallery** — single image embeds become a full-screen lightbox; multiple on one line become a slider

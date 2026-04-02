@@ -7,12 +7,6 @@
 
 ## Ideas & Features
 
-- **Related posts** — "See also" section at post bottom based on shared tags or section
-- **Dark/light mode toggle** — CSS variable swap; remember preference in localStorage
-- **Inline body tags** — collect `#tag` mentions from note body, not just frontmatter
-- **Dataview inline queries** — `` `= this.field` `` expressions inline in text
-- **Block references** — `[[Note^block-id]]` links to a specific block within a note
-
 ## Bugs & Findings
 
 - **Mermaid inner background** — Mermaid v11 injects an inline `style` background on the SVG that can't be reliably overridden via CSS or `themeVariables`. Needs investigation into the correct Mermaid v11 API to suppress it.
@@ -45,3 +39,8 @@
 - `[[Link#Heading]]` anchor links
 - Audio embeds — `![[audio.mp3]]` → `<audio>` element
 - `aliases` frontmatter — alternate wiki-link names
+- Related posts — "See also" section scored by shared labels and section
+- Dark / light mode toggle — CSS variables, localStorage persistence
+- Inline body labels — `#hashtag` in note body collected as labels
+- Dataview inline queries — `` `= this.field` `` in prose
+- Block references — `^block-id` anchor targets; `[[Note^id]]` links

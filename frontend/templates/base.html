@@ -90,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="header-inner">
 <h1><a href="/">{{ website_name }}</a></h1>
 <nav>{% for url in nav_sections %}<a href="{{ url }}">{{ url.lstrip("/") | title }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}">{{ p.title }}</a>{% endfor %}{% if show_search %}<a href="/search">Search</a>{% endif %}</nav>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">☀</button>
 </div>
 </header>
 
@@ -371,6 +372,29 @@ hljs.initLineNumbersOnLoad()
 
 })
 
+</script>
+
+<script>
+(function() {
+    const saved = localStorage.getItem("theme")
+    if (saved) document.documentElement.setAttribute("data-theme", saved)
+})()
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("theme-toggle")
+    function update() {
+        const light = document.documentElement.getAttribute("data-theme") === "light"
+        btn.textContent = light ? "☾" : "☀"
+    }
+    update()
+    btn.addEventListener("click", () => {
+        const next = document.documentElement.getAttribute("data-theme") === "light"
+            ? "dark" : "light"
+        document.documentElement.setAttribute("data-theme", next)
+        localStorage.setItem("theme", next)
+        update()
+    })
+})
 </script>
 
 </body>

@@ -25,25 +25,28 @@ def convert_links(md, url_index=None):
     """Convert [[Wiki Links]] and [[Title|Display Text]] to markdown links.
 
     Supports:
-      [[Title]]               → resolved URL
-      [[Title|Display]]       → resolved URL with custom display text
-      [[Title#Heading]]       → resolved URL + #heading-slug anchor
+      [[Title]]                 → resolved URL
+      [[Title|Display]]         → resolved URL with custom display text
+      [[Title#Heading]]         → resolved URL + #heading-slug anchor
       [[Title#Heading|Display]]
+      [[Title^block-id]]        → resolved URL + #block-id anchor
+      [[Title^block-id|Display]]
 
     url_index: dict of {slugify(title): url_path} built during two-pass loading.
     Falls back to /slugified-title if the title is not found in the index.
     """
-    pattern = r"\[\[([^|\]#]+)(?:#([^|\]]+))?(?:\|([^\]]+))?\]\]"
+    # Capture optional #heading or ^block-id, then optional |display
+    pattern = r"\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
 
     def repl(match):
         target = match.group(1).strip()
-        heading = match.group(2).strip() if match.group(2) else None
+        anchor_text = match.group(2).strip() if match.group(2) else None
         display = (match.group(3) or
-                   (f"{target} › {heading}" if heading else target)).strip()
+                   (f"{target} › {anchor_text}" if anchor_text else target)).strip()
         slug = slugify(target)
         url = url_index.get(slug) if url_index else None
         base = url or ("/" + slug)
-        anchor = ("#" + slugify(heading).lower()) if heading else ""
+        anchor = ("#" + slugify(anchor_text).lower()) if anchor_text else ""
         return f"[{display}]({base}{anchor})"
 
     return re.sub(pattern, repl, md)
@@ -346,6 +349,21 @@ def convert_transclusion(md, dataview_index):
     return re.sub(pattern, repl, md)
 
 
+def convert_block_ids(md):
+    """Replace trailing ^block-id markers with anchor spans.
+
+    Obsidian uses `^word` at the end of a paragraph to assign a block ID.
+    This converts them to <span id="block-id"></span> so that
+    [[Note^block-id]] links have a valid anchor to scroll to.
+    """
+    return re.sub(
+        r" \^([A-Za-z0-9_-]+)\s*$",
+        lambda m: f' <span id="{m.group(1).lower()}"></span>',
+        md,
+        flags=re.MULTILINE,
+    )
+
+
 def convert_highlights(md):
     """Convert ==highlighted text== to <mark> tags."""
     return re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", md)
@@ -377,7 +395,8 @@ def convert_math(md):
     return md
 
 
-def render_markdown(md, path, url_index=None, dataview_index=None):
+def render_markdown(md, path, url_index=None, dataview_index=None,
+                    note_metadata=None):
     md = strip_leading_h1(md)
     md = convert_media(md, path)
     if dataview_index is not None:
@@ -386,7 +405,12 @@ def render_markdown(md, path, url_index=None, dataview_index=None):
     md = convert_callouts(md)
     md = convert_checkboxes(md)
     md = convert_highlights(md)
+    md = convert_block_ids(md)
     md = convert_math(md)
+    if note_metadata is not None:
+        note_ctx = dict(note_metadata)
+        note_ctx["file"] = {"name": os.path.basename(path)}
+        md = convert_dataview_inline(md, note_ctx)
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
 
@@ -763,3 +787,28 @@ def convert_dataview(md, dataview_index):
             return f'<div class="dataview-error">Dataview error: {e}</div>'
 
     return pattern.sub(replace_block, md)
+
+
+def convert_dataview_inline(md, note_ctx):
+    """Replace `= expr` inline queries with evaluated values.
+
+    note_ctx is a dict of the current note's frontmatter fields plus
+    special keys: file.name, file.link, file.ctime, tags.
+
+    Example: `= this.title` → the note's title value.
+    `this.field` is an alias for the top-level field name.
+    """
+    # Skip code spans that don't start with `= `
+    pattern = r'`= ([^`]+)`'
+
+    def repl(match):
+        expr = match.group(1).strip()
+        # `this.field` → field
+        expr = re.sub(r"^this\.", "", expr)
+        try:
+            val = _eval_dv_expr(expr, note_ctx)
+            return f'<span class="dv-inline">{_to_str(val)}</span>'
+        except Exception:
+            return f'<span class="dv-inline dv-inline-error">{expr}</span>'
+
+    return re.sub(pattern, repl, md)
