@@ -21,3 +21,15 @@ BLOG_TAGS = {"blog", "website"}
 HOMEPAGE_TAG = "homepage"
 FEATURED_TAG = "featured"
 LISTING_TAG = "listing"
+
+# Optional vault-wide attachments directory.
+# Set ATTACHMENTS_PATH in .env to a directory that is checked as a fallback
+# when a media file is not found in the note's own _attachments/ folder.
+# If unset, the engine also auto-checks _attachments/ at the vault root.
+ATTACHMENTS_PATH = os.getenv("ATTACHMENTS_PATH") or None
+if ATTACHMENTS_PATH and not os.path.isdir(ATTACHMENTS_PATH):
+    print(
+        f"WARNING: ATTACHMENTS_PATH '{ATTACHMENTS_PATH}' is not a directory. Ignoring.",
+        file=sys.stderr,
+    )
+    ATTACHMENTS_PATH = None

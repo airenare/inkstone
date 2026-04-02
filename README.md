@@ -25,7 +25,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes, `==highlights==`, footnotes (`[^1]`) — all rendered without any client-side plugins
 - **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; dark theme matches the site
 - **Math / LaTeX** — `$inline$` and `$$block$$` rendered via KaTeX; expressions are protected from the markdown parser before rendering
-- **Note transclusion** — `![[Note Title]]` (non-media) embeds the target note's content inline with a link back to the source
+- **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds a note (or just a heading section) inline with a link back to the source
 - **Anchor links** — `[[Note#Heading]]` resolves to the note's URL with a `#heading-slug` fragment
 - **Audio embeds** — `![[audio.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
 - **Aliases** — `aliases:` frontmatter registers alternate wiki-link names that resolve to the same post
@@ -40,6 +40,12 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Banner images** — set `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
 - **Private notes** — notes without a `website` tag are invisible as web pages but fully queryable by Dataview; navigating to their URL shows a styled placeholder with instructions to publish
 - **Hot-reload** — the server watches file modification times and reloads the vault on any change, no restart needed
+- **Next / previous navigation** — "← Older" / "Newer →" links at the bottom of each post, ordered by date within the same section
+- **Collapsible callouts** — `> [!type]- Title` collapses; `> [!type]+` expands — rendered as native HTML `<details>`
+- **Visible image captions** — `![[photo.jpg|Caption]]` renders a `<figcaption>` below the image
+- **Section RSS feeds** — per-section feeds at `/blog/feed.xml`, `/gallery/feed.xml`, etc.
+- **Labels index page** — `/labels` lists all labels with post counts; opt-in via `labels` tag on the root homepage
+- **Vault-wide attachments** — media resolution falls back to vault root `_attachments/` and then `ATTACHMENTS_PATH` from `.env`
 - **Search** — full-text search across all published posts at `/search`
 - **Auto-listings** — sections with no explicit index file get an auto-generated listing page
 - **Pagination** — listing pages paginate at 20 posts per page
@@ -65,6 +71,7 @@ tags:
   - listing      # auto-generate a post index at the section root URL
   - featured     # highlight this post in the section's featured area
   - search       # root homepage only: show a Search link in the top nav
+  - labels       # root homepage only: show a Labels link in the top nav
 date: 2026-01-15
 title: My Post   # optional; overrides H1 and filename
 slug: my-post    # optional; auto-generated from title if omitted

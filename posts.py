@@ -23,6 +23,8 @@ PRIVATE_ROUTES = {}
 MENU_POSTS = []
 # True when the root homepage has the "search" tag — controls nav search link
 SHOW_SEARCH = False
+# True when the root homepage has the "labels" tag — controls nav labels link
+SHOW_LABELS = False
 LAST_SCAN_TIME = 0
 _reload_lock = threading.Lock()
 
@@ -111,6 +113,7 @@ def load_posts():
     website_name = "My Blog"
     menu_posts = []
     show_search = False
+    show_labels = False
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
@@ -300,6 +303,7 @@ def load_posts():
             if section == "":
                 website_name = title
                 show_search = "search" in tags
+                show_labels = "labels" in tags
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,
@@ -355,7 +359,7 @@ def load_posts():
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, dataview_index,
-            private_routes, menu_posts, show_search)
+            private_routes, menu_posts, show_search, show_labels)
 
 
 # =========================================
@@ -364,7 +368,7 @@ def load_posts():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, LAST_SCAN_TIME
+        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_LABELS, LAST_SCAN_TIME
 
     if not _reload_lock.acquire(blocking=False):
         return  # Another thread is already reloading
@@ -384,7 +388,7 @@ def maybe_reload():
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
-             SHOW_SEARCH) = load_posts()
+             SHOW_SEARCH, SHOW_LABELS) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)

@@ -3,6 +3,7 @@ tags:
   - blog
   - homepage
   - search
+  - labels
 title: Obsidian Blog Engine
 ---
 
@@ -26,7 +27,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Markdown-native** — callouts, checkboxes, wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds, sliders, `==highlights==`, footnotes (`[^1]`) — all rendered from standard Obsidian syntax
 - **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side; dark theme included
 - **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX; safe from markdown parser mangling
-- **Note transclusion** — `![[Note Title]]` embeds a note's content inline (distinct from media embeds)
+- **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds a note (or just one section) inline
 - **Anchor links** — `[[Note#Heading]]` links to a specific heading within a note
 - **Audio embeds** — `![[file.mp3]]` → `<audio>` element
 - **Aliases** — `aliases:` frontmatter for alternate wiki-link names
@@ -50,6 +51,13 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Sitemap** — auto-generated at `/sitemap.xml`
 - **OpenGraph / Twitter Card** — per-page meta tags for rich link previews
 - **JSON-LD structured data** — Article, Book, and WebSite schemas for rich Google results
+- **Next / previous post navigation** — "← Older" / "Newer →" links at the bottom of each post, ordered by date within the same section
+- **Collapsible callouts** — `> [!type]- Title` collapses by default; `> [!type]+` is pinned open — uses native `<details>`
+- **Visible image captions** — `![[photo.jpg|Caption text]]` renders a `<figcaption>` below the image
+- **Section RSS feeds** — every section has its own feed: `/blog/feed.xml`, `/gallery/feed.xml`, etc.
+- **Labels index page** — `/labels` lists every label with post counts; opt-in by adding `labels` to root homepage `tags:`
+- **Vault-wide attachments** — if a media file isn't found in the post's own `_attachments/`, the engine checks `_attachments/` at the vault root, then `ATTACHMENTS_PATH` from `.env`
+- **Dataview LIMIT clause** — `LIMIT N` in a `dataview` block now trims results after sorting
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
 
 ---

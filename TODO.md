@@ -7,17 +7,7 @@ _(all done — see Done section)_
 
 ## Medium Priority
 
-- **Next / previous post navigation** — Add "← Older" / "Newer →" links at the bottom of individual post pages, ordered by date within the same section.
-- **Collapsible callouts** — Obsidian supports `> [!type]- Title` (collapsed by default) and `> [!type]+ Title` (expanded). `convert_callouts()` currently ignores the `+`/`-` modifier. Render collapsed ones as `<details>`.
-- **Visible image captions** — Single-image embeds with a pipe label (`![[photo.png|A sunset]]`) already store the caption in `data-caption`, but no `<figcaption>` is rendered below the image. Wrap in `<figure>` and emit `<figcaption>` when the caption is non-numeric.
-- **`![[Note#Heading]]` partial transclusion** — Currently `convert_transclusion` embeds the entire target note. Add support for transcluding only the content under a specific heading (already partially handled by ignoring the `#...` fragment).
-- **Dataview LIMIT clause** — The parser recognises `LIMIT` in the keyword list but `_execute_dv_query` never reads it. Apply it as a post-sort slice.
-- **Section RSS feeds** — Expose `/blog/feed.xml`, `/gallery/feed.xml`, etc. per top-level section so readers can subscribe to individual sections independently.
-- **Labels index page** — Add a `/labels` route that lists all labels alphabetically with post counts, and link to it from the nav (opt-in via a frontmatter tag, similar to `search`).
-- **`lstrip("> ")` over-strips callout titles** — In `convert_callouts`, `line.lstrip("> ")` removes any leading `>`, space, or `"` characters from the start of the title text as well, not just the blockquote prefix. Use a fixed-width strip (`line[2:]` or a regex) instead.
-- **`og:image` missing on listing pages** — `listing.html` never sets `og:image`. If the section has a banner or a featured post with a banner, use it.
-- **`book.html` missing breadcrumbs and related posts** — Parity with `post.html`; the book template only has a bare `← Back` link.
-- **Vault-wide attachments folder** — Obsidian lets users configure a single `_attachments/` at vault root rather than per-folder. Support a `ATTACHMENTS_PATH` env var (or auto-detect) to allow vault-root media resolution as a fallback.
+_(all done — see Done section)_
 
 ## Ideas & Features
 
@@ -39,6 +29,17 @@ _(all done — see Done section)_
 
 ## Done
 
+- Next / previous post navigation ("← Older" / "Newer →") on post and book pages
+- Collapsible callouts: `> [!type]-` collapses, `> [!type]+` expands; rendered as `<details>`
+- Fixed `lstrip("> ")` over-stripping callout titles — now uses regex to strip only the blockquote prefix
+- Visible image captions: `![[photo.jpg|Caption]]` renders `<figure>` + `<figcaption>`
+- `![[Note#Heading]]` partial transclusion — only embeds content under the specified heading
+- Dataview `LIMIT N` clause now applied as a post-sort slice
+- Section RSS feeds: `/blog/feed.xml`, `/gallery/feed.xml`, etc.
+- Labels index page at `/labels` with post counts; opt-in via `labels` tag on root homepage
+- `og:image` on listing pages: uses section banner or first featured post banner
+- `book.html` now has breadcrumbs and "See also" related posts (parity with `post.html`)
+- Vault-wide attachments: falls back to vault root `_attachments/` then `ATTACHMENTS_PATH` from `.env`
 - Fix `requirements.txt`: removed duplicate PyYAML entry, bumped gunicorn to 21.2.0
 - Fix invalid HTML: removed stray `<script>` block between `</head>` and `<body>`
 - Remove `hljs.initLineNumbersOnLoad()` call (extension was never loaded)

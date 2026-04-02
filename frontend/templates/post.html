@@ -86,4 +86,11 @@
 </section>
 {% endif %}
 
+{% if prev_post or next_post %}
+<nav class="post-nav">
+{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev">← {{ prev_post.title }}</a>{% endif %}
+{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next">{{ next_post.title }} →</a>{% endif %}
+</nav>
+{% endif %}
+
 {% endblock %}

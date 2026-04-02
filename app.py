@@ -32,6 +32,7 @@ def inject_globals():
         "nav_sections": top_sections,
         "menu_posts": post_store.MENU_POSTS,
         "show_search": post_store.SHOW_SEARCH,
+        "show_labels": post_store.SHOW_LABELS,
         "current_url": request.url,
         "canonical_url": request.base_url,
         "app_version": VERSION,
@@ -95,6 +96,65 @@ def rss_feed():
     return Response(xml, mimetype="application/rss+xml")
 
 
+@app.route("/<path:section>/feed.xml")
+def section_rss_feed(section):
+    post_store.maybe_reload()
+    section = section.strip("/")
+    section_url = "/" + section
+    if section_url not in post_store.SECTION_ROUTES:
+        abort(404)
+    section_title = post_store.SECTION_ROUTES[section_url]["post"]["title"]
+    posts = sorted(
+        [p for p in post_store.ALL_POSTS.values()
+         if p["section"] == section
+         or p["section"].startswith(section + "/")],
+        key=lambda p: p["date"] or datetime.min,
+        reverse=True,
+    )[:20]
+    base = request.url_root.rstrip("/")
+    now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    items = []
+    for p in posts:
+        pub = p["date"].strftime("%a, %d %b %Y %H:%M:%S +0000") if p["date"] else ""
+        link = base + p["url_path"]
+        items.append(
+            f"    <item>\n"
+            f"      <title>{html.escape(p['title'])}</title>\n"
+            f"      <link>{link}</link>\n"
+            f"      <guid>{link}</guid>\n"
+            f"      <pubDate>{pub}</pubDate>\n"
+            f"      <description>{html.escape(p['summary'])}</description>\n"
+            f"    </item>"
+        )
+    feed_title = html.escape(
+        f"{section_title} \u2014 {post_store.WEBSITE_NAME}"
+    )
+    site_link = base + section_url
+    xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0">\n'
+        "  <channel>\n"
+        f"    <title>{feed_title}</title>\n"
+        f"    <link>{site_link}</link>\n"
+        f"    <description>{feed_title}</description>\n"
+        f"    <lastBuildDate>{now}</lastBuildDate>\n"
+        + "\n".join(items)
+        + "\n  </channel>\n</rss>"
+    )
+    return Response(xml, mimetype="application/rss+xml")
+
+
+@app.route("/labels")
+def labels_index():
+    post_store.maybe_reload()
+    label_counts = {}
+    for p in post_store.ALL_POSTS.values():
+        for label in p.get("labels", []):
+            label_counts[label] = label_counts.get(label, 0) + 1
+    labels = sorted(label_counts.items())
+    return render_template("labels.html", labels=labels)
+
+
 @app.route("/sitemap.xml")
 def sitemap():
     post_store.maybe_reload()
@@ -130,6 +190,30 @@ def _build_breadcrumbs(url_path, post_title):
         crumbs.append((label, segment_url))
     crumbs.append((post_title, None))
     return crumbs
+
+
+def _get_adjacent_posts(post, all_posts):
+    """Return (prev_post, next_post) ordered by date within the same section.
+
+    prev = older post (lower date), next = newer post (higher date).
+    Posts without a date are excluded from ordering.
+    """
+    section = post["section"]
+    ordered = sorted(
+        [p for p in all_posts.values()
+         if p["section"] == section and p["date"]],
+        key=lambda p: p["date"],
+    )
+    idx = next(
+        (i for i, p in enumerate(ordered)
+         if p["url_path"] == post["url_path"]),
+        None,
+    )
+    if idx is None:
+        return None, None
+    prev_post = ordered[idx - 1] if idx > 0 else None
+    next_post = ordered[idx + 1] if idx < len(ordered) - 1 else None
+    return prev_post, next_post
 
 
 def _get_related(post, all_posts, max_results=4):
@@ -275,9 +359,11 @@ def serve(path):
         )
         breadcrumbs = _build_breadcrumbs(url_path, post["title"])
         related = _get_related(post, post_store.ALL_POSTS)
+        prev_post, next_post = _get_adjacent_posts(post, post_store.ALL_POSTS)
         return render_template(
             template, post=post, back_url=back_url,
-            breadcrumbs=breadcrumbs, related=related
+            breadcrumbs=breadcrumbs, related=related,
+            prev_post=prev_post, next_post=next_post,
         )
 
     # 3. Private note placeholder
@@ -303,5 +389,6 @@ if __name__ == "__main__":
         post_store.PRIVATE_ROUTES,
         post_store.MENU_POSTS,
         post_store.SHOW_SEARCH,
+        post_store.SHOW_LABELS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)
