@@ -299,10 +299,15 @@ def convert_transclusion(md, dataview_index):
         # also map by slugified title
         title_map[slugify(entry.get("title", "")).lower()] = filepath
 
-    pattern = r'!\[\[([^|\]#]+?)(?:#[^\]]*)?(?:\|[^\]]*)?\]\]'
+    # The first alternative matches inline code spans and fenced code blocks
+    # so they are returned unchanged; only the second alternative (group 1
+    # captured) triggers transclusion logic.
+    pattern = r'(`+[^`]*`+|```[\s\S]*?```)|!\[\[([^|\]#]+?)(?:#[^\]]*)?(?:\|[^\]]*)?\]\]'
 
     def repl(match):
-        target = match.group(1).strip()
+        if match.group(1) is not None:
+            return match.group(1)  # inside code — leave untouched
+        target = match.group(2).strip()
         key = target.lower()
         filepath = title_map.get(key) or title_map.get(slugify(target).lower())
         if not filepath:

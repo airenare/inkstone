@@ -15,6 +15,8 @@
 
 ## Bugs & Findings
 
+- **Mermaid inner background** — Mermaid v11 injects an inline `style` background on the SVG that can't be reliably overridden via CSS or `themeVariables`. Needs investigation into the correct Mermaid v11 API to suppress it.
+
 ## Done
 
 - Write a README.md
