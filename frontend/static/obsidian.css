@@ -287,12 +287,16 @@ header {
 
 .header-inner {
     display: flex;
-    align-items: baseline;
-    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
 }
 
 .header-inner h1 {
+    flex: 1 1 auto;
     margin: 0;
+    padding-right: 1rem;
+    min-width: 0;
 }
 
 .header-inner h1 a {
@@ -302,13 +306,17 @@ header {
 }
 
 nav {
+    flex: 1 1 100%;   /* always occupies its own row */
     display: flex;
-    gap: 1.5rem;
+    flex-wrap: wrap;  /* links wrap within the row if there are many */
+    gap: 0.4rem 1.25rem;
+    padding: 0.5rem 0 0;
 }
 
 nav a {
     color: var(--text-muted);
     font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 nav a:hover {
@@ -1068,7 +1076,7 @@ audio {
     font-size: 0.85rem;
     cursor: pointer;
     line-height: 1.6;
-    margin-left: auto;
+    flex-shrink: 0;
 }
 
 .theme-toggle:hover {
