@@ -48,7 +48,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-ni
 
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-mermaid.initialize({ startOnLoad: false, theme: "dark" })
+mermaid.initialize({
+    startOnLoad: false,
+    theme: "dark",
+    themeVariables: { background: "transparent", edgeLabelBackground: "transparent" }
+})
 document.addEventListener("DOMContentLoaded", async () => {
     document.querySelectorAll("code.language-mermaid").forEach(code => {
         const div = document.createElement("div")
@@ -57,6 +61,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         code.closest("pre").replaceWith(div)
     })
     await mermaid.run()
+    // Strip any inline background styles Mermaid injects on the SVG element
+    document.querySelectorAll(".mermaid svg").forEach(svg => {
+        svg.style.background = "transparent"
+        svg.querySelectorAll("rect").forEach(r => {
+            if (r.getAttribute("class") === "background" ||
+                (r.style.fill && r.style.fill !== "none" && !r.closest("g[class]"))) {
+                r.style.fill = "transparent"
+            }
+        })
+    })
 })
 </script>
 
