@@ -90,6 +90,30 @@ Standard Obsidian `[[Note Title]]` syntax works across the entire vault. The eng
 
 A post in `/blog` can link to a post in `/gallery` — [[Watercolor Algorithms]], for instance — and the URL will be correct. No path prefixes needed.
 
+You can also link directly to a heading within a note: `[[Note Title#Heading]]` resolves to the page URL plus a `#heading-slug` anchor. And if a note has `aliases` in its frontmatter, any of those alternate names work as link targets too.
+
+---
+
+## Math and Diagrams
+
+Write LaTeX math directly in your notes. Inline: $f(x) = x^2 + 2x + 1$. Or as a centred block:
+
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$
+
+For diagrams, a fenced `mermaid` block renders a live diagram:
+
+```mermaid
+flowchart LR
+    Write[Write in Obsidian] --> Save[Save file]
+    Save --> Reload[Server hot-reloads]
+    Reload --> View[Refresh browser]
+    View --> Write
+```
+
+Both are rendered without any special Obsidian plugin — just standard note syntax.
+
 ---
 
 ## The Publishing Checklist

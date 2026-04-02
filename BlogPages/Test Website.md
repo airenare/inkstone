@@ -25,6 +25,11 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 
 - **Markdown-native** — callouts, checkboxes, wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds, sliders, `==highlights==`, footnotes (`[^1]`) — all rendered from standard Obsidian syntax
 - **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side; dark theme included
+- **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX; safe from markdown parser mangling
+- **Note transclusion** — `![[Note Title]]` embeds a note's content inline (distinct from media embeds)
+- **Anchor links** — `[[Note#Heading]]` links to a specific heading within a note
+- **Audio embeds** — `![[file.mp3]]` → `<audio>` element
+- **Aliases** — `aliases:` frontmatter for alternate wiki-link names
 - **Syntax highlighting** — fenced code blocks with language labels and a copy button
 - **Dataview queries** — `TABLE` queries rendered as live HTML tables, pulling from any notes in your vault
 - **Lightbox gallery** — single image embeds become a full-screen lightbox; multiple on one line become a slider

@@ -35,6 +35,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-ni
 
 {% block jsonld %}{% endblock %}
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+    onload="document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.math-inline, .math-block').forEach(el => {
+            katex.render(el.textContent, el, {
+                displayMode: el.classList.contains('math-block'),
+                throwOnError: false
+            })
+        })
+    })"></script>
+
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
 mermaid.initialize({ startOnLoad: false, theme: "dark" })

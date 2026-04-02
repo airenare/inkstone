@@ -887,6 +887,75 @@ mark {
 }
 
 /* =========================================
+   NOTE TRANSCLUSION
+   ========================================= */
+
+.transclusion {
+    border-left: 3px solid #565678;
+    background: #181825;
+    border-radius: 0 6px 6px 0;
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+}
+
+.transclusion-title {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6e6e8e;
+    margin-bottom: 0.75rem;
+}
+
+.transclusion-title a {
+    color: #6e6e8e;
+}
+
+.transclusion-title a:hover {
+    color: #a9a9b7;
+}
+
+.transclusion-body {
+    font-size: 0.95rem;
+    color: #a9a9b7;
+}
+
+.transclusion-body p:last-child {
+    margin-bottom: 0;
+}
+
+.transclusion-missing {
+    color: #f38ba8;
+    font-style: italic;
+}
+
+/* =========================================
+   MATH / KATEX
+   ========================================= */
+
+.math-block {
+    overflow-x: auto;
+    text-align: center;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: #181825;
+    border-radius: 6px;
+}
+
+.math-inline .katex {
+    font-size: 1em;
+}
+
+/* =========================================
+   AUDIO EMBEDS
+   ========================================= */
+
+audio {
+    width: 100%;
+    margin: 1rem 0;
+    border-radius: 6px;
+}
+
+/* =========================================
    PAGINATION
    ========================================= */
 

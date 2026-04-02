@@ -5,12 +5,6 @@
 
 ## Medium Priority
 
-- **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX (client-side) or python-markdown-math
-- **Note transclusion** — `![[Note Title]]` embeds another note's full markdown content inline (distinct from media)
-- **`[[Link#Heading]]` anchor links** — resolve to `/path/to/note#heading-slug` instead of just the page root
-- **Embedded audio** — `![[audio.mp3]]` → `<audio>` tag; images and video already handled
-- **`aliases` frontmatter** — add alias slugs to `url_index` so wiki-links using alternate names resolve correctly
-
 ## Ideas & Features
 
 - **Related posts** — "See also" section at post bottom based on shared tags or section
@@ -44,3 +38,8 @@
 - `==highlight==` syntax → `<mark>` tags
 - Footnotes — `[^1]` / `[^note]` syntax via Python-Markdown `footnotes` extension
 - Mermaid diagrams — ` ```mermaid ``` ` blocks rendered via client-side Mermaid.js
+- Math / LaTeX — `$inline$` and `$$block$$` via KaTeX
+- Note transclusion — `![[Note Title]]` embeds note content inline
+- `[[Link#Heading]]` anchor links
+- Audio embeds — `![[audio.mp3]]` → `<audio>` element
+- `aliases` frontmatter — alternate wiki-link names

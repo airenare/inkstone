@@ -24,6 +24,11 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 - **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes, `==highlights==`, footnotes (`[^1]`) — all rendered without any client-side plugins
 - **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; dark theme matches the site
+- **Math / LaTeX** — `$inline$` and `$$block$$` rendered via KaTeX; expressions are protected from the markdown parser before rendering
+- **Note transclusion** — `![[Note Title]]` (non-media) embeds the target note's content inline with a link back to the source
+- **Anchor links** — `[[Note#Heading]]` resolves to the note's URL with a `#heading-slug` fragment
+- **Audio embeds** — `![[audio.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
+- **Aliases** — `aliases:` frontmatter registers alternate wiki-link names that resolve to the same post
 - **Dataview queries** — `TABLE` queries in fenced ` ```dataview ``` ` blocks are executed server-side and rendered as HTML tables; queries can reference any note in the vault, including unpublished ones
 - **Lightbox gallery** — `![[img.jpg]]` on its own line becomes a lightbox-enabled image; multiple images on one line become a slider
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
@@ -64,6 +69,8 @@ menu_order: 1    # pin to top nav; lower number = further left; appended after s
 banner: "https://example.com/image.jpg"
 banner_x: 0.5   # horizontal focal point (0–1)
 banner_y: 0.4   # vertical focal point (0–1)
+aliases:
+  - alternate name    # extra wiki-link targets that resolve to this post
 ---
 ```
 

@@ -196,6 +196,12 @@ def load_posts():
             # resolve even when the title differs from the file name.
             url_index[slugify(f[:-3])] = url_path
             url_index[slug] = url_path
+            # aliases frontmatter: list of alternate names that resolve to this post
+            aliases = metadata.get("aliases") or []
+            if isinstance(aliases, str):
+                aliases = [aliases]
+            for alias in aliases:
+                url_index[slugify(str(alias))] = url_path
 
             # Update dataview entry with web URL and clickable link
             dataview_index[filepath]["url_path"] = url_path

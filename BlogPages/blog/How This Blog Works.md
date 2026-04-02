@@ -419,7 +419,7 @@ labels:
 
 ## Text Formatting Extensions
 
-Three Obsidian-style formatting features are supported beyond standard markdown.
+Several Obsidian-native formatting features are supported beyond standard markdown.
 
 ### ==Highlights==
 
@@ -456,6 +456,47 @@ graph LR
 
 Flowcharts, sequence diagrams, entity-relationship diagrams, Gantt charts, and all other Mermaid diagram types work — anything the Mermaid.js library supports.
 
+### Math / LaTeX
+
+Inline math uses single dollar signs: $E = mc^2$. Block math uses double dollar signs on their own line:
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+
+Both are converted server-side to protected `<span>`/`<div>` elements before the markdown parser runs — so underscores and asterisks inside math expressions are never misread as emphasis. KaTeX renders them client-side.
+
+### Note Transclusion
+
+`![[Note Title]]` embeds another note's full content inline. When an embed is not a media file (image, video, audio), the engine looks up the note by title or filename in the vault index and renders its body markdown directly into the page — wrapped in a styled block with a link back to the source note.
+
+This is distinct from `[[Note Title]]` (a hyperlink) — transclusion physically embeds the content.
+
+### Anchor Links
+
+`[[Note Title#Heading]]` resolves to the note's URL with a `#heading-slug` fragment appended. The heading text is slugified using the same rules as the ToC extension. Display text defaults to `Title › Heading` if no pipe alias is given:
+
+```markdown
+[[How This Blog Works#The Two-Pass Load]]
+[[How This Blog Works#The Two-Pass Load|jump to the loading section]]
+```
+
+### Audio Embeds
+
+`![[audio.mp3]]` in `_attachments/` renders as an HTML5 `<audio>` element. Supported formats: `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a`.
+
+### Aliases
+
+The `aliases` frontmatter field registers alternate names for a note in the wiki-link index. A link using any alias resolves to the same URL as the canonical title:
+
+```yaml
+aliases:
+  - vault to web
+  - how the engine works
+```
+
+After this, `[[vault to web]]` and `[[how the engine works]]` both point to this post.
+
 ---
 
 ## What Ships
@@ -480,6 +521,11 @@ Flowcharts, sequence diagrams, entity-relationship diagrams, Gantt charts, and a
 - [x] `==highlight==` syntax → `<mark>` tags
 - [x] Footnotes — `[^1]` / `[^note]` syntax
 - [x] Mermaid diagrams — rendered client-side via Mermaid.js
+- [x] Math / LaTeX — `$inline$` and `$$block$$` via KaTeX
+- [x] Note transclusion — `![[Note Title]]` embeds note content inline
+- [x] `[[Link#Heading]]` anchor links — resolves to page URL + `#heading-slug`
+- [x] Audio embeds — `![[audio.mp3]]` → `<audio>` element
+- [x] `aliases` frontmatter — alternate wiki-link names for a note
 - [ ] Related posts
 - [ ] Dark / light mode toggle
 

@@ -24,17 +24,27 @@ def slugify(text):
 def convert_links(md, url_index=None):
     """Convert [[Wiki Links]] and [[Title|Display Text]] to markdown links.
 
+    Supports:
+      [[Title]]               → resolved URL
+      [[Title|Display]]       → resolved URL with custom display text
+      [[Title#Heading]]       → resolved URL + #heading-slug anchor
+      [[Title#Heading|Display]]
+
     url_index: dict of {slugify(title): url_path} built during two-pass loading.
     Falls back to /slugified-title if the title is not found in the index.
     """
-    pattern = r"\[\[([^|\]]+)(?:\|([^\]]+))?\]\]"
+    pattern = r"\[\[([^|\]#]+)(?:#([^|\]]+))?(?:\|([^\]]+))?\]\]"
 
     def repl(match):
         target = match.group(1).strip()
-        display = (match.group(2) or target).strip()
+        heading = match.group(2).strip() if match.group(2) else None
+        display = (match.group(3) or
+                   (f"{target} › {heading}" if heading else target)).strip()
         slug = slugify(target)
         url = url_index.get(slug) if url_index else None
-        return f"[{display}]({url or '/' + slug})"
+        base = url or ("/" + slug)
+        anchor = ("#" + slugify(heading).lower()) if heading else ""
+        return f"[{display}]({base}{anchor})"
 
     return re.sub(pattern, repl, md)
 
@@ -197,6 +207,10 @@ def convert_media(md, md_path):
                     slider.append(
                         f'<video src="/attachments/{rel}" controls loading="lazy"></video>'
                     )
+                elif ext in ["mp3", "ogg", "wav", "flac", "m4a"]:
+                    slider.append(
+                        f'<audio src="/attachments/{rel}" controls></audio>'
+                    )
                 else:
                     slider.append(
                         f'<img src="/attachments/{rel}" alt="{caption}" loading="lazy">'
@@ -217,6 +231,10 @@ def convert_media(md, md_path):
             if ext in ["mp4", "webm", "mov"]:
                 gallery.append(
                     f'<video src="/attachments/{rel}" controls loading="lazy"></video>'
+                )
+            elif ext in ["mp3", "ogg", "wav", "flac", "m4a"]:
+                gallery.append(
+                    f'<audio src="/attachments/{rel}" controls></audio>'
                 )
             else:
                 gallery.append(
@@ -261,18 +279,109 @@ def strip_leading_h1(md):
     return "\n".join(lines)
 
 
+def convert_transclusion(md, dataview_index):
+    """Replace ![[Note Title]] with the target note's rendered content.
+
+    Only fires for embeds that were NOT consumed by convert_media() (i.e. not
+    resolved to a file in _attachments/).  Looks up the note in dataview_index
+    by filepath — matches on the note title (case-insensitive filename stem).
+    Renders the target note's body markdown inline, wrapped in a blockquote-
+    style div so it is visually distinct.
+    """
+    if not dataview_index:
+        return md
+
+    # Build a title → filepath map from the dataview index
+    title_map = {}
+    for filepath, entry in dataview_index.items():
+        stem = os.path.splitext(os.path.basename(filepath))[0].lower()
+        title_map[stem] = filepath
+        # also map by slugified title
+        title_map[slugify(entry.get("title", "")).lower()] = filepath
+
+    pattern = r'!\[\[([^|\]#]+?)(?:#[^\]]*)?(?:\|[^\]]*)?\]\]'
+
+    def repl(match):
+        target = match.group(1).strip()
+        key = target.lower()
+        filepath = title_map.get(key) or title_map.get(slugify(target).lower())
+        if not filepath:
+            return f'<em class="transclusion-missing">Note not found: {target}</em>'
+        try:
+            with open(filepath, encoding="utf-8") as fh:
+                text = fh.read()
+        except OSError:
+            return f'<em class="transclusion-missing">Could not read: {target}</em>'
+        _, body = (text.split("---", 2)[1:3] if text.startswith("---")
+                   else ("", text))
+        body = body.strip()
+        # Render the transclusion body through the pipeline (no recursive
+        # transclusion to avoid infinite loops; no dataview_index passed)
+        body_md = strip_leading_h1(body)
+        body_md = convert_callouts(body_md)
+        body_md = convert_checkboxes(body_md)
+        body_md = convert_highlights(body_md)
+        md_obj = markdown.Markdown(
+            extensions=["fenced_code", "tables", "md_in_html", "codehilite",
+                        "footnotes"],
+            output_format="html5",
+        )
+        body_html = md_obj.convert(body_md)
+        entry = dataview_index[filepath]
+        title = entry.get("title", target)
+        url = entry.get("url_path", "")
+        link = f'<a href="{url}">{title}</a>' if url else title
+        return (
+            f'<div class="transclusion">'
+            f'<div class="transclusion-title">{link}</div>'
+            f'<div class="transclusion-body">{body_html}</div>'
+            f'</div>'
+        )
+
+    return re.sub(pattern, repl, md)
+
+
 def convert_highlights(md):
     """Convert ==highlighted text== to <mark> tags."""
     return re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", md)
 
 
+def convert_math(md):
+    """Protect LaTeX math from the markdown parser.
+
+    $$...$$ block math → <div class="math-block">...</div>
+    $...$ inline math  → <span class="math-inline">...</span>
+
+    Conversion happens before markdown.Markdown() runs so that
+    underscores and asterisks inside math expressions are not
+    interpreted as markdown emphasis.
+    """
+    # Block math first (must come before inline to avoid partial matches)
+    md = re.sub(
+        r"\$\$(.+?)\$\$",
+        lambda m: f'<div class="math-block">{m.group(1)}</div>',
+        md,
+        flags=re.DOTALL,
+    )
+    # Inline math — avoid matching empty $$ (already handled above)
+    md = re.sub(
+        r"\$([^\$\n]+)\$",
+        lambda m: f'<span class="math-inline">{m.group(1)}</span>',
+        md,
+    )
+    return md
+
+
 def render_markdown(md, path, url_index=None, dataview_index=None):
     md = strip_leading_h1(md)
     md = convert_media(md, path)
+    if dataview_index is not None:
+        md = convert_transclusion(md, dataview_index)
     md = convert_links(md, url_index)
     md = convert_callouts(md)
     md = convert_checkboxes(md)
     md = convert_highlights(md)
+    md = convert_math(md)
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
 
