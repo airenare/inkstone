@@ -114,10 +114,16 @@ labels:         # content labels — shown as clickable badges on the post page 
 
 **YAML quoting:** Any string value that contains a colon (`:`) must be wrapped in double quotes, otherwise YAML parses it as a nested mapping and the field silently breaks. This applies to `title`, `summary`, `slug`, and any other string field.
 ```yaml
-title: "From Vault to Web: How This Blog Works"   # correct
+title: "From Vault to Web: How This Blog Works"   # correct — quotes are YAML syntax, stripped from value
 title: From Vault to Web: How This Blog Works      # broken — YAML parses as a dict
 ```
 The engine will log a `WARNING` to stderr and fall back to the H1/filename when it detects a dict-valued `title`.
+
+**Intentional quotes in a title:** YAML double-quote wrappers are always stripped by the parser — they never appear in the final value. To include literal `"` characters in a title (e.g. `"Hello World" Considered Harmful`), wrap the whole value in single quotes:
+```yaml
+title: '"Hello World" Considered Harmful'   # value → "Hello World" Considered Harmful
+title: "No quotes here: just a colon"       # value → No quotes here: just a colon
+```
 
 **`listing` vs `homepage`:** `listing` renders an auto-generated post index; `homepage` renders the file's own markdown content. If a file has both tags, `listing` wins. A section can only have one of each — if multiple files in the same folder are tagged `listing`, the last one loaded wins (undefined behavior; avoid).
 

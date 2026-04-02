@@ -7,7 +7,7 @@ labels:
   - python
   - architecture
 date: 2026-01-20
-title: '"From Vault to Web: How This Blog Works"'
+title: "From Vault to Web: How This Blog Works"
 slug: how-this-blog-works
 priority: 1
 summary: This site is an Obsidian vault served directly by a Python server — no build step, no CMS, no export. Here is a complete technical walkthrough of every moving part.
@@ -404,10 +404,16 @@ labels:
 > [!warning] Colons in frontmatter values
 > YAML uses `: ` (colon + space) as a key-value separator. If your `title`, `summary`, or any other string field contains a colon, you must wrap the entire value in double quotes — otherwise the YAML parser silently turns it into a nested dict and the post's URL, title, and wiki-links all break.
 > ```yaml
-> title: "From Vault to Web: How This Blog Works"   # correct
+> title: "From Vault to Web: How This Blog Works"   # correct — quotes are YAML syntax, stripped from value
 > title: From Vault to Web: How This Blog Works      # broken
 > ```
 > The engine will log a warning to stderr and fall back to the H1 heading or filename when it detects this, so the post still loads — but the title will be wrong until you add the quotes.
+>
+> **Intentional quotes in a title:** YAML double-quote wrappers are always stripped by the parser — they never appear in the rendered title. To include literal `"` characters in a title (e.g. `"Hello World" Considered Harmful`), wrap the whole value in single quotes instead:
+> ```yaml
+> title: '"Hello World" Considered Harmful'   # renders as → "Hello World" Considered Harmful
+> title: "No quotes here: just a colon"       # renders as → No quotes here: just a colon
+> ```
 
 ---
 
