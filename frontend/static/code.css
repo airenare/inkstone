@@ -29,6 +29,7 @@ pre code {
     font-family: "JetBrains Mono", monospace;
     font-size: 0.92rem;
     line-height: 1.55;
+    background: transparent !important;
 }
 
 /* Inline code */
