@@ -411,6 +411,47 @@ labels:
 
 ---
 
+## Text Formatting Extensions
+
+Three Obsidian-style formatting features are supported beyond standard markdown.
+
+### ==Highlights==
+
+Wrap text in double equals signs to highlight it: ==this text is highlighted==. The syntax is converted to `<mark>` tags before the markdown parser runs, so it works anywhere inline text is valid — in paragraphs, table cells, callout bodies, and list items.
+
+### Footnotes
+
+Standard footnote syntax works[^1]. The reference sits inline in the text, and the footnote content is collected at the bottom of the note:
+
+```markdown
+The engine uses a two-pass loading strategy[^2] to resolve wiki-links.
+
+[^2]: Pass 1 builds the url_index; Pass 2 renders markdown with resolved links.
+```
+
+The rendered footnotes get their own styled block at the bottom of the post with back-links to the reference.
+
+[^1]: Footnotes are rendered by the Python-Markdown `footnotes` extension, which follows the MultiMarkdown spec.
+
+### Mermaid Diagrams
+
+Fenced ` ```mermaid ``` ` blocks are rendered as diagrams client-side via Mermaid.js. The engine uses dark theme by default to match the site's colour scheme.
+
+```mermaid
+graph LR
+    A[.md file in vault] --> B[parse frontmatter]
+    B --> C{publish tag?}
+    C -- yes --> D[Pass 1: build url_index]
+    C -- no --> E[dataview_index only]
+    D --> F[Pass 2: render markdown]
+    F --> G[ALL_POSTS / SECTION_ROUTES]
+    G --> H[HTTP response]
+```
+
+Flowcharts, sequence diagrams, entity-relationship diagrams, Gantt charts, and all other Mermaid diagram types work — anything the Mermaid.js library supports.
+
+---
+
 ## What Ships
 
 - [x] Wiki-links (`[[Note Title]]`) resolved across all vault sections
@@ -430,6 +471,9 @@ labels:
 - [x] Private note placeholders — linked but unpublished notes show a holding page
 - [x] Auto-generated section listings — no index file required
 - [x] `menu_order` frontmatter to pin pages to the top nav
+- [x] `==highlight==` syntax → `<mark>` tags
+- [x] Footnotes — `[^1]` / `[^note]` syntax
+- [x] Mermaid diagrams — rendered client-side via Mermaid.js
 - [ ] Related posts
 - [ ] Dark / light mode toggle
 

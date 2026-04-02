@@ -261,17 +261,24 @@ def strip_leading_h1(md):
     return "\n".join(lines)
 
 
+def convert_highlights(md):
+    """Convert ==highlighted text== to <mark> tags."""
+    return re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", md)
+
+
 def render_markdown(md, path, url_index=None, dataview_index=None):
     md = strip_leading_h1(md)
     md = convert_media(md, path)
     md = convert_links(md, url_index)
     md = convert_callouts(md)
     md = convert_checkboxes(md)
+    md = convert_highlights(md)
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
 
     md_obj = markdown.Markdown(
-        extensions=["fenced_code", "tables", "toc", "md_in_html", "codehilite"],
+        extensions=["fenced_code", "tables", "toc", "md_in_html", "codehilite",
+                    "footnotes"],
         output_format="html5",
     )
     html_str = md_obj.convert(md)

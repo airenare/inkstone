@@ -3,10 +3,6 @@
 
 ## High Priority
 
-- **`==highlight==` syntax** — convert `==text==` to `<mark>` tags; one regex in `converters.py`
-- **Footnotes** — `[^1]` / `[^note]` syntax; just enable the `footnotes` extension in `markdown.Markdown()`
-- **Mermaid diagrams** — render ` ```mermaid ``` ` blocks via client-side mermaid.js
-
 ## Medium Priority
 
 - **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX (client-side) or python-markdown-math
@@ -45,3 +41,6 @@
 - Breadcrumb navigation on post pages
 - Bug fixes: reload lock, unchecked file reads, VAULT_PATH stderr warning, wiki-link pipe aliases
 - JSON-LD structured data (Article, Book, WebSite schemas)
+- `==highlight==` syntax → `<mark>` tags
+- Footnotes — `[^1]` / `[^note]` syntax via Python-Markdown `footnotes` extension
+- Mermaid diagrams — ` ```mermaid ``` ` blocks rendered via client-side Mermaid.js

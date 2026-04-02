@@ -22,7 +22,8 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ## Features
 
-- **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes — all rendered without any client-side plugins
+- **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes, `==highlights==`, footnotes (`[^1]`) — all rendered without any client-side plugins
+- **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; dark theme matches the site
 - **Dataview queries** — `TABLE` queries in fenced ` ```dataview ``` ` blocks are executed server-side and rendered as HTML tables; queries can reference any note in the vault, including unpublished ones
 - **Lightbox gallery** — `![[img.jpg]]` on its own line becomes a lightbox-enabled image; multiple images on one line become a slider
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
