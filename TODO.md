@@ -3,14 +3,7 @@
 
 ## High Priority
 
-- **Fix `requirements.txt` malformed gunicorn version** — `gunicorn==20.1.01.8.0` is two version strings merged (should be `gunicorn==21.2.0` or whichever is current). This breaks `pip install -r requirements.txt`.
-- **Invalid HTML in `base.html`** — The first `<script>` block (hljs DOMContentLoaded) sits between `</head>` and `<body>` tags, which is invalid HTML. Move it into `<head>` or the top of `<body>`.
-- **`hljs.initLineNumbersOnLoad()` called without the extension** — `highlight.js-line-numbers.js` is never loaded, so this call silently fails on every page. Remove it or load the extension.
-- **Search searches raw HTML markup** — `p["content"]` in `posts.py` stores lowercased HTML. Searching for a word can match HTML attribute names or tag substrings. Strip tags before storing the content field (as a plain-text copy) to search against.
-- **`slugify()` is case-sensitive** — `[[My Note]]` and `[[my note]]` produce different lookup keys. The `url_index` lookup in `convert_links` should normalise to lowercase before lookup so wiki-links resolve regardless of capitalisation.
-- **Image width hint ignored** — `![[image.png|200]]` captures the `200` as `caption` but never applies it to the `<img>` tag as a `width` style or attribute. Treat a purely numeric pipe value as a pixel-width hint.
-- **`_eval_dv_condition` silent pass-through** — Unrecognised WHERE conditions always return `True`, silently including all rows. Add a fallback that logs a warning and returns `False` (or raises) instead of invisibly matching everything.
-- **Auto-listing post dicts are incomplete** — The synthetic dicts generated for sections with no explicit index file (in `posts.py`) are missing `reading_time`, `toc`, `labels`, `metadata`, `banner`, and other keys that templates may reference, which can cause `AttributeError` / `UndefinedError` in edge cases. Populate all keys with safe defaults.
+_(all done — see Done section)_
 
 ## Medium Priority
 
@@ -45,6 +38,15 @@
 - **Mermaid inner background** — Mermaid v11 injects an inline `style` background on the SVG that can't be reliably overridden via CSS or `themeVariables`. The current post-render JS strip in `base.html` is a workaround; needs investigation into the correct Mermaid v11 API to suppress it at initialisation time.
 
 ## Done
+
+- Fix `requirements.txt`: removed duplicate PyYAML entry, bumped gunicorn to 21.2.0
+- Fix invalid HTML: removed stray `<script>` block between `</head>` and `<body>`
+- Remove `hljs.initLineNumbersOnLoad()` call (extension was never loaded)
+- Search now strips HTML tags before storing `content` field — no more false matches on tag attributes
+- Wiki-link lookup is now case-insensitive (`url_index` keys stored lowercase; `convert_links` looks up lowercase)
+- Image width hint: `![[image.png|200]]` now applies `style="max-width:200px"` to the `<img>` tag
+- `_eval_dv_condition` logs a warning and returns `False` for unrecognised WHERE conditions instead of silently returning `True`
+- Auto-listing post dicts now populated with all safe defaults (`toc`, `reading_time`, `labels`, `metadata`, `banner`, etc.)
 
 - Write a README.md
 - RSS feed (`/feed.xml`)

@@ -43,7 +43,7 @@ def convert_links(md, url_index=None):
         anchor_text = match.group(2).strip() if match.group(2) else None
         display = (match.group(3) or
                    (f"{target} › {anchor_text}" if anchor_text else target)).strip()
-        slug = slugify(target)
+        slug = slugify(target).lower()
         url = url_index.get(slug) if url_index else None
         base = url or ("/" + slug)
         anchor = ("#" + slugify(anchor_text).lower()) if anchor_text else ""
@@ -215,8 +215,14 @@ def convert_media(md, md_path):
                         f'<audio src="/attachments/{rel}" controls></audio>'
                     )
                 else:
+                    width_attr = (
+                        f' style="max-width:{caption}px"'
+                        if caption and caption.isdigit()
+                        else ""
+                    )
                     slider.append(
-                        f'<img src="/attachments/{rel}" alt="{caption}" loading="lazy">'
+                        f'<img src="/attachments/{rel}" alt=""'
+                        f'{width_attr} loading="lazy">'
                     )
             output.append(flush_slider())
             continue
@@ -240,10 +246,17 @@ def convert_media(md, md_path):
                     f'<audio src="/attachments/{rel}" controls></audio>'
                 )
             else:
+                width_attr = (
+                    f' style="max-width:{caption}px"'
+                    if caption and caption.isdigit()
+                    else ""
+                )
+                img_caption = "" if (caption and caption.isdigit()) else caption
                 gallery.append(
-                    f'<img src="/attachments/{rel}" '
+                    f'<img src="/attachments/{rel}"'
+                    f'{width_attr} '
                     f'data-gallery="gallery" data-src="/attachments/{rel}" '
-                    f'data-type="image" data-caption="{caption}" loading="lazy">'
+                    f'data-type="image" data-caption="{img_caption}" loading="lazy">'
                 )
             continue
 
@@ -597,7 +610,12 @@ def _eval_dv_condition(condition, ctx):
     if condition.startswith("(") and condition.endswith(")"):
         return _eval_dv_condition(condition[1:-1], ctx)
 
-    return True
+    import sys
+    print(
+        f"WARNING: Dataview: unrecognised WHERE condition: {condition!r}",
+        file=sys.stderr,
+    )
+    return False
 
 
 def _parse_sort_clause(sort_str):

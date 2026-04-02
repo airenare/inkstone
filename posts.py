@@ -191,17 +191,18 @@ def load_posts():
             else:
                 url_path = "/" + slug
 
-            url_index[slugify(title)] = url_path
+            # Store all keys lowercase so wiki-link lookup is case-insensitive
+            url_index[slugify(title).lower()] = url_path
             # Also index by filename and slug so [[Filename|Display]] links
             # resolve even when the title differs from the file name.
-            url_index[slugify(f[:-3])] = url_path
-            url_index[slug] = url_path
+            url_index[slugify(f[:-3]).lower()] = url_path
+            url_index[slug.lower()] = url_path
             # aliases frontmatter: list of alternate names that resolve to this post
             aliases = metadata.get("aliases") or []
             if isinstance(aliases, str):
                 aliases = [aliases]
             for alias in aliases:
-                url_index[slugify(str(alias))] = url_path
+                url_index[slugify(str(alias)).lower()] = url_path
 
             # Update dataview entry with web URL and clickable link
             dataview_index[filepath]["url_path"] = url_path
@@ -271,7 +272,7 @@ def load_posts():
             "reading_time": reading_time,
             "tags": tags,
             "labels": labels,
-            "content": html.lower(),
+            "content": re.sub(r"<[^>]+>", "", html).lower(),
             "summary": summary,
             "priority": priority,
             "featured": is_featured,
@@ -324,11 +325,18 @@ def load_posts():
                     "title": title,
                     "date": None,
                     "html": "",
+                    "toc": "",
+                    "reading_time": 0,
                     "tags": set(),
+                    "labels": [],
                     "content": "",
                     "summary": "",
                     "priority": float("inf"),
                     "featured": False,
+                    "banner": None,
+                    "banner_x": None,
+                    "banner_y": None,
+                    "metadata": {},
                 },
             }
             print(f"Auto-listing: {section_url} ('{title}')")
