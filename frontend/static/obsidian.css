@@ -286,17 +286,15 @@ header {
 }
 
 .header-inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: 0 1.5rem;
 }
 
 .header-inner h1 {
-    flex: 1 1 auto;
+    grid-column: 1;
     margin: 0;
-    padding-right: 1rem;
-    min-width: 0;
 }
 
 .header-inner h1 a {
@@ -306,11 +304,13 @@ header {
 }
 
 nav {
-    flex: 1 1 100%;   /* always occupies its own row */
+    grid-column: 2;
     display: flex;
-    flex-wrap: wrap;  /* links wrap within the row if there are many */
+    flex-wrap: wrap;
     gap: 0.4rem 1.25rem;
-    padding: 0.5rem 0 0;
+    align-items: center;
+    /* slight top offset so toggle appears visually above the first nav row */
+    padding-top: 0.35rem;
 }
 
 nav a {
@@ -1076,7 +1076,8 @@ audio {
     font-size: 0.85rem;
     cursor: pointer;
     line-height: 1.6;
-    flex-shrink: 0;
+    grid-column: 3;
+    align-self: start;
 }
 
 .theme-toggle:hover {
