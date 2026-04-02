@@ -35,7 +35,8 @@ pre code {
 /* Inline code */
 
 :not(pre) > code {
-    background: #1f2933;
+    background: var(--inline-code-bg);
+    color: var(--inline-code-text);
     padding: 3px 6px;
     border-radius: 6px;
 }
