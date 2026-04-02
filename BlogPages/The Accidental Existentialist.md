@@ -5,7 +5,7 @@ labels:
   - philosophy
   - meta
 slug: test_post
-title: Root Level Post
+title: Root Post
 summary: A post with an identity crisis — it knows neither its section nor its purpose, and has made peace with both.
 menu_order: 1
 ---
