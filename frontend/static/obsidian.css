@@ -878,6 +878,14 @@ mark {
     text-align: center;
 }
 
+.mermaid svg {
+    background: transparent !important;
+}
+
+.mermaid svg rect.background {
+    fill: transparent !important;
+}
+
 /* =========================================
    PAGINATION
    ========================================= */
