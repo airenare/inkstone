@@ -7,7 +7,7 @@ _(all done — see Done section)_
 
 ## Medium Priority
 
-_(all done — see Done section)_
+- **Use only lowercase URLs**
 
 ## Ideas & Features
 
