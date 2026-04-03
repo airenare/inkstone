@@ -818,11 +818,9 @@ def _execute_dv_query(parsed, dataview_index):
         m = re.match(r"^#(.+)$", from_clause)
         if m:
             tag = m.group(1).lower()
-            # Match against both frontmatter tags and labels
             posts = [
                 p for p in posts
-                if tag in p.get("tags", set())
-                or tag in p.get("labels", [])
+                if tag in p.get("tags", [])
             ]
 
     # --- Build context dicts ---
@@ -832,8 +830,7 @@ def _execute_dv_query(parsed, dataview_index):
         for k, v in (p.get("metadata") or {}).items():
             ctx[k] = v
             ctx[k.lower()] = v
-        ctx["tags"] = p.get("tags", set())
-        ctx["labels"] = p.get("labels", [])
+        ctx["tags"] = p.get("tags", [])
         ctx["section"] = p.get("section", "")
         ctx["file"] = p.get("file", {})
         contexts.append(ctx)

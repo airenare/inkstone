@@ -29,9 +29,9 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Anchor links** — `[[Note#Heading]]` resolves to the note's URL with a `#heading-slug` fragment
 - **Audio embeds** — `![[audio.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
 - **Aliases** — `aliases:` frontmatter registers alternate wiki-link names that resolve to the same post
-- **Related posts** — automatic "See also" section at the bottom of each post, scored by shared labels and section
+- **Related posts** — automatic "See also" section at the bottom of each post, scored by shared tags and section
 - **Dark / light mode** — toggle button in the header; preference persisted in `localStorage`
-- **Inline body labels** — `#hashtag` mentions in the note body are collected as labels; merged with frontmatter `labels:`
+- **Inline body tags** — `#hashtag` mentions in the note body are collected as tags; merged with frontmatter `tags:`
 - **Dataview inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
 - **Block references** — `^block-id` suffix on paragraphs creates anchor targets; `[[Note^block-id]]` links scroll to them
 - **Dataview queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
@@ -44,7 +44,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Collapsible callouts** — `> [!type]- Title` collapses; `> [!type]+` expands — rendered as native HTML `<details>`
 - **Visible image captions** — `![[photo.jpg|Caption]]` renders a `<figcaption>` below the image
 - **Section RSS feeds** — per-section feeds at `/blog/feed.xml`, `/gallery/feed.xml`, etc.
-- **Labels index page** — `/labels` lists all labels with post counts; opt-in via `labels` tag on the root homepage
+- **Tags index page** — `/tags` lists all tags with post counts; opt-in via `show_tags: true` on the root homepage
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/` and then `ATTACHMENTS_PATH` from `.env`
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD structured data
 - **Date last modified** — `updated:` or `modified:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
@@ -69,26 +69,30 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ```yaml
 ---
-tags:
-  - website      # required to publish the note as a web page
-  - homepage     # serve this note's content at the section root URL
-  - listing      # auto-generate a post index at the section root URL
-  - featured     # highlight this post in the section's featured area
-  - search       # root homepage only: show a Search link in the top nav
-  - labels       # root homepage only: show a Labels link in the top nav
+website: true         # required to publish the note as a web page
+type: homepage        # optional: homepage | listing | book
+                      #   homepage — serves this note's content at the section root URL
+                      #   listing  — auto-generates a post index at the section root URL
+                      #   book     — uses the book template with cover/metadata header
+featured: true        # optional: highlight this post in the section's featured area
+show_search: true     # root homepage only: show a Search link in the top nav
+show_tags: true       # root homepage only: show a Tags link in the top nav
 date: 2026-01-15
-title: My Post   # optional; overrides H1 and filename
-slug: my-post    # optional; auto-generated from title if omitted
-priority: 0      # featured posts only; lower = higher (date breaks ties)
-summary: "..."   # shown on listing pages; auto-derived from content if omitted
-menu_order: 1    # pin to top nav; lower number = further left; appended after section links
+title: My Post        # optional; overrides H1 and filename
+slug: my-post         # optional; auto-generated from title if omitted
+priority: 0           # featured posts only; lower = higher (date breaks ties)
+summary: "..."        # shown on listing pages; auto-derived from content if omitted
+menu_order: 1         # pin to top nav; lower number = further left; appended after section links
 banner: "https://example.com/image.jpg"
-banner_x: 0.5   # horizontal focal point (0–1)
-banner_y: 0.4   # vertical focal point (0–1)
+banner_x: 0.5         # horizontal focal point (0–1)
+banner_y: 0.4         # vertical focal point (0–1)
 aliases:
   - alternate name    # extra wiki-link targets that resolve to this post
-author: "Jane Doe"   # optional; shown in post meta and JSON-LD (string or list)
-updated: 2026-04-01  # optional; shown as "Updated …" when different from date
+author: "Jane Doe"    # optional; shown in post meta and JSON-LD (string or list)
+updated: 2026-04-01   # optional; shown as "Updated …" when different from date
+tags:                 # user content tags — shown as badges, used for /tag/<name> archive pages,
+  - python            #   search filtering, related posts, and Dataview FROM queries
+  - philosophy        #   body #hashtags are also collected as tags automatically
 ---
 ```
 

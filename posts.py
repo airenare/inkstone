@@ -6,7 +6,7 @@ from datetime import datetime, date as date_type
 
 import yaml
 
-from config import VAULT_PATH, BLOG_TAGS, HOMEPAGE_TAG, FEATURED_TAG, LISTING_TAG
+from config import VAULT_PATH
 from converters import slugify, render_markdown, extract_h1
 
 
@@ -23,8 +23,8 @@ PRIVATE_ROUTES = {}
 MENU_POSTS = []
 # True when the root homepage has the "search" tag — controls nav search link
 SHOW_SEARCH = False
-# True when the root homepage has the "labels" tag — controls nav labels link
-SHOW_LABELS = False
+# True when the root homepage has show_tags: true — controls nav tags link
+SHOW_TAGS = False
 LAST_SCAN_TIME = 0
 _reload_lock = threading.Lock()
 
@@ -113,7 +113,7 @@ def load_posts():
     website_name = "My Blog"
     menu_posts = []
     show_search = False
-    show_labels = False
+    show_tags = False
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
@@ -136,12 +136,6 @@ def load_posts():
 
             metadata, md = parse_frontmatter(text)
 
-            try:
-                tags = set(t.lower() for t in (metadata.get("tags") or []))
-            except Exception as e:
-                print(f"Error processing tags for {filepath}: {e}")
-                tags = set()
-
             dv_title = metadata.get("title") or extract_h1(md) or f[:-3]
             dv_date = _parse_date(
                 metadata.get("date") or metadata.get("created"), filepath
@@ -160,8 +154,7 @@ def load_posts():
                 "filepath": filepath,
                 "title": dv_title,
                 "metadata": metadata,
-                "tags": tags,
-                "labels": [],   # populated in pass 2 for published notes
+                "tags": [],     # user content tags; populated in pass 2
                 "section": dv_section,
                 "url_path": dv_url,
                 "file": {
@@ -172,7 +165,7 @@ def load_posts():
                 },
             }
 
-            if BLOG_TAGS.isdisjoint(tags):
+            if not metadata.get("website"):
                 continue
 
             title_raw = metadata.get("title")
@@ -216,11 +209,11 @@ def load_posts():
                 f'<a href="{url_path}">{title}</a>'
             )
 
-            candidates.append((filepath, f, metadata, md, tags, title, slug,
+            candidates.append((filepath, f, metadata, md, title, slug,
                                 section, url_path))
 
     # ---- Pass 2: render markdown with resolved wiki-links + dataview ----
-    for (filepath, f, metadata, md, tags, title, slug,
+    for (filepath, f, metadata, md, title, slug,
          section, url_path) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
@@ -234,9 +227,11 @@ def load_posts():
         priority = float("inf") if priority_raw is None else int(priority_raw)
 
         section_url = ("/" + section) if section else "/"
-        is_homepage = HOMEPAGE_TAG in tags
-        is_listing = LISTING_TAG in tags
-        is_featured = FEATURED_TAG in tags
+        note_type = (metadata.get("type") or "").strip().lower()
+        is_homepage = note_type == "homepage"
+        is_listing = note_type == "listing"
+        is_book = note_type == "book"
+        is_featured = bool(metadata.get("featured"))
 
         banner = metadata.get("banner")
         banner_x = metadata.get("banner_x")
@@ -258,7 +253,7 @@ def load_posts():
         # For book posts, strip the leading cover <img> paragraph — it renders
         # in the book template header instead of the body.
         body_html = html
-        if "📚book" in tags:
+        if is_book:
             body_html = re.sub(
                 r"^\s*<p>\s*<img[^>]+>\s*</p>", "", html.strip()
             ).strip()
@@ -266,17 +261,17 @@ def load_posts():
         word_count = len(re.sub(r"<[^>]+>", "", body_html).split())
         reading_time = max(1, word_count // 200)
 
-        raw_labels = metadata.get("labels") or []
+        raw_tags = metadata.get("tags") or []
         try:
-            fm_labels = set(str(l).lower() for l in raw_labels)
+            fm_tags = set(str(t).lower() for t in raw_tags)
         except Exception:
-            fm_labels = set()
+            fm_tags = set()
         # Also collect #hashtag mentions from the raw markdown body
-        body_tags = set(
+        body_hashtags = set(
             t.lower() for t in re.findall(r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", md)
         )
-        labels = sorted(fm_labels | body_tags)
-        dataview_index[filepath]["labels"] = labels
+        tags = sorted(fm_tags | body_hashtags)
+        dataview_index[filepath]["tags"] = tags
 
         post_data = {
             "url_path": url_path,
@@ -290,8 +285,8 @@ def load_posts():
             "html": body_html,
             "toc": toc,
             "reading_time": reading_time,
+            "post_type": note_type,
             "tags": tags,
-            "labels": labels,
             "content": re.sub(r"<[^>]+>", "", html).lower(),
             "summary": summary,
             "priority": priority,
@@ -319,8 +314,8 @@ def load_posts():
         elif is_homepage:
             if section == "":
                 website_name = title
-                show_search = "search" in tags
-                show_labels = "labels" in tags
+                show_search = bool(metadata.get("show_search"))
+                show_tags = bool(metadata.get("show_tags"))
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,
@@ -350,8 +345,8 @@ def load_posts():
                     "html": "",
                     "toc": "",
                     "reading_time": 0,
-                    "tags": set(),
-                    "labels": [],
+                    "post_type": "",
+                    "tags": [],
                     "content": "",
                     "summary": "",
                     "priority": float("inf"),
@@ -365,20 +360,21 @@ def load_posts():
             print(f"Auto-listing: {section_url} ('{title}')")
 
     # ---- Build private routes: vault notes that have a URL but are not published ----
-    # Exclude homepage/listing files (served at section URLs, not their slug URL)
+    # Exclude homepage/listing files — their slug URL differs from the section URL
+    # they are registered under, so they pass the section_routes check but must
+    # not appear as private placeholders.
     private_routes = {
         entry["url_path"]: entry
         for entry in dataview_index.values()
         if entry.get("url_path")
         and entry["url_path"] not in all_posts
         and entry["url_path"] not in section_routes
-        and HOMEPAGE_TAG not in entry.get("tags", set())
-        and LISTING_TAG not in entry.get("tags", set())
+        and entry.get("metadata", {}).get("type") not in ("homepage", "listing")
     }
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, dataview_index,
-            private_routes, menu_posts, show_search, show_labels)
+            private_routes, menu_posts, show_search, show_tags)
 
 
 # =========================================
@@ -387,7 +383,7 @@ def load_posts():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_LABELS, LAST_SCAN_TIME
+        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, LAST_SCAN_TIME
 
     if not _reload_lock.acquire(blocking=False):
         return  # Another thread is already reloading
@@ -407,7 +403,7 @@ def maybe_reload():
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
-             SHOW_SEARCH, SHOW_LABELS) = load_posts()
+             SHOW_SEARCH, SHOW_TAGS) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)

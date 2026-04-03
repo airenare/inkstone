@@ -1,8 +1,8 @@
 ---
+website: true
+featured: true
 tags:
   - blog
-  - featured
-labels:
   - obsidian
   - python
   - architecture

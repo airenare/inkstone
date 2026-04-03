@@ -1,7 +1,6 @@
 ---
+website: true
 tags:
-  - blog
-labels:
   - generative-art
   - cityscape
   - shaders

@@ -1,7 +1,6 @@
 ---
-tags:
-  - blog
-  - listing
+website: true
+type: listing
 title: Blog
 ---
 
