@@ -161,6 +161,8 @@ def load_posts():
                 "title": dv_title,
                 "metadata": metadata,
                 "tags": tags,
+                "labels": [],   # populated in pass 2 for published notes
+                "section": dv_section,
                 "url_path": dv_url,
                 "file": {
                     "path": filepath,
@@ -207,8 +209,9 @@ def load_posts():
             for alias in aliases:
                 url_index[slugify(str(alias)).lower()] = url_path
 
-            # Update dataview entry with web URL and clickable link
+            # Update dataview entry with web URL, section, and clickable link
             dataview_index[filepath]["url_path"] = url_path
+            dataview_index[filepath]["section"] = section
             dataview_index[filepath]["file"]["link"] = (
                 f'<a href="{url_path}">{title}</a>'
             )
@@ -273,6 +276,7 @@ def load_posts():
             t.lower() for t in re.findall(r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", md)
         )
         labels = sorted(fm_labels | body_tags)
+        dataview_index[filepath]["labels"] = labels
 
         post_data = {
             "url_path": url_path,

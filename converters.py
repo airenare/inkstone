@@ -818,7 +818,12 @@ def _execute_dv_query(parsed, dataview_index):
         m = re.match(r"^#(.+)$", from_clause)
         if m:
             tag = m.group(1).lower()
-            posts = [p for p in posts if tag in p.get("tags", set())]
+            # Match against both frontmatter tags and labels
+            posts = [
+                p for p in posts
+                if tag in p.get("tags", set())
+                or tag in p.get("labels", [])
+            ]
 
     # --- Build context dicts ---
     contexts = []
@@ -828,6 +833,8 @@ def _execute_dv_query(parsed, dataview_index):
             ctx[k] = v
             ctx[k.lower()] = v
         ctx["tags"] = p.get("tags", set())
+        ctx["labels"] = p.get("labels", [])
+        ctx["section"] = p.get("section", "")
         ctx["file"] = p.get("file", {})
         contexts.append(ctx)
 
@@ -980,11 +987,13 @@ def convert_dataview_inline(md, note_ctx):
     Example: `= this.title` → the note's title value.
     `this.field` is an alias for the top-level field name.
     """
-    # Skip code spans that don't start with `= `
-    pattern = r'`= ([^`]+)`'
+    # Skip multi-backtick code spans; only match single-backtick `= expr`
+    pattern = r'(``+[^`].*?``+)|`= ([^`]+)`'
 
     def repl(match):
-        expr = match.group(1).strip()
+        if match.group(1) is not None:
+            return match.group(1)  # multi-backtick code span — leave untouched
+        expr = match.group(2).strip()
         # `this.field` → field
         expr = re.sub(r"^this\.", "", expr)
         try:
