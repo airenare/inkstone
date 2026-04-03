@@ -81,8 +81,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 <header>
 <div class="header-inner">
 <h1><a href="/">{{ website_name }}</a></h1>
-<nav>{% for url in nav_sections %}<a href="{{ url }}"{% if request.path == url or request.path.startswith(url + '/') %} class="nav-active"{% endif %}>{{ url.lstrip("/") | title }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}"{% if request.path == p.url_path %} class="nav-active"{% endif %}>{{ p.title }}</a>{% endfor %}{% if show_labels %}<a href="/labels"{% if request.path == '/labels' %} class="nav-active"{% endif %}>Labels</a>{% endif %}{% if show_search %}<a href="/search"{% if request.path == '/search' %} class="nav-active"{% endif %}>Search</a>{% endif %}</nav>
+<nav id="main-nav">{% for url in nav_sections %}<a href="{{ url }}"{% if request.path == url or request.path.startswith(url + '/') %} class="nav-active"{% endif %}>{{ url.lstrip("/") | title }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}"{% if request.path == p.url_path %} class="nav-active"{% endif %}>{{ p.title }}</a>{% endfor %}{% if show_labels %}<a href="/labels"{% if request.path == '/labels' %} class="nav-active"{% endif %}>Labels</a>{% endif %}{% if show_search %}<a href="/search"{% if request.path == '/search' %} class="nav-active"{% endif %}>Search</a>{% endif %}</nav>
+<div class="header-controls">
+<button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav">&#9776;</button>
 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">☀</button>
+</div>
 </div>
 </header>
 
@@ -363,6 +366,23 @@ hljs.highlightAll()
 
 })
 
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("nav-hamburger")
+    const nav = document.getElementById("main-nav")
+    if (btn && nav) {
+        btn.addEventListener("click", () => {
+            const open = nav.classList.toggle("nav-open")
+            btn.setAttribute("aria-expanded", open)
+        })
+        // Close nav when a link inside it is clicked (mobile UX)
+        nav.addEventListener("click", e => {
+            if (e.target.tagName === "A") nav.classList.remove("nav-open")
+        })
+    }
+})
 </script>
 
 <script>

@@ -37,7 +37,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Dataview inline queries** — `` `= this.field` `` evaluated against note frontmatter
 - **Block references** — `^block-id` on a paragraph; `[[Note^id]]` links scroll to it
 - **Syntax highlighting** — fenced code blocks with language labels and a copy button
-- **Dataview queries** — `TABLE` queries rendered as live HTML tables, pulling from any notes in your vault
+- **Dataview queries** — `TABLE` and `LIST` queries rendered server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
 - **Lightbox gallery** — single image embeds become a full-screen lightbox; multiple on one line become a slider
 - **Banner images** — set `banner:` in frontmatter for a hero image with configurable focal point
 - **Private notes** — notes without a `website` tag are queryable by Dataview but show a placeholder page instead of their content
@@ -58,6 +58,10 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Labels index page** — `/labels` lists every label with post counts; opt-in by adding `labels` to root homepage `tags:`
 - **Vault-wide attachments** — if a media file isn't found in the post's own `_attachments/`, the engine checks `_attachments/` at the vault root, then `ATTACHMENTS_PATH` from `.env`
 - **Dataview LIMIT clause** — `LIMIT N` in a `dataview` block now trims results after sorting
+- **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD
+- **Date last modified** — `updated:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
+- **Mobile nav** — collapsible hamburger menu on narrow screens; desktop layout unchanged
+- **Print stylesheet** — clean `@media print` styles for printing or saving as PDF
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
 
 ---

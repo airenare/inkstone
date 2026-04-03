@@ -333,6 +333,82 @@ nav a.nav-active {
     font-weight: 600;
 }
 
+/* Header controls (hamburger + toggle) grouped together */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Hamburger — hidden on desktop */
+.nav-hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    line-height: 1.6;
+}
+
+/* =========================================
+   RESPONSIVE / MOBILE NAV
+   ========================================= */
+
+@media (max-width: 600px) {
+    body {
+        padding: 1rem;
+    }
+
+    .header-inner {
+        grid-template-columns: 1fr auto;
+    }
+
+    nav {
+        display: none;
+        grid-column: 1 / -1;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 0.5rem 0;
+        border-top: 1px solid var(--border);
+        margin-top: 0.5rem;
+    }
+
+    nav.nav-open {
+        display: flex;
+    }
+
+    nav a {
+        width: 100%;
+        padding: 0.5em 0.75em;
+        border-radius: 6px;
+    }
+
+    .nav-hamburger {
+        display: block;
+    }
+
+    .related-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .post-nav {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .post-nav-next {
+        margin-left: 0;
+        text-align: left;
+    }
+
+    .post-nav-prev::before { content: "← "; }
+    .post-nav-next::after  { content: " →"; }
+}
+
 /* =========================================
    BLOG INDEX
    ========================================= */
@@ -1474,4 +1550,119 @@ details.callout[open] > summary::after {
     background: var(--bg-raised);
     border-radius: 10px;
     padding: 0.1em 0.5em;
+}
+
+
+/* =========================================
+   LABEL POST NAV (next/prev within a label)
+   ========================================= */
+
+.label-post-nav {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+}
+
+.label-nav-link {
+    color: var(--text-dim);
+}
+
+.label-nav-link--next {
+    margin-left: auto;
+}
+
+[data-theme="light"] .label-nav-link {
+    color: #44445a;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   DATAVIEW LIST + GROUPED
+   ========================================= */
+
+ul.dataview-list {
+    padding-left: 1.4em;
+    margin: 0.75em 0;
+}
+
+ul.dataview-list li {
+    margin: 0.3em 0;
+    color: var(--text);
+}
+
+.dataview-grouped {
+    margin: 0.75em 0;
+}
+
+.dv-group-heading {
+    margin: 1.25em 0 0.4em;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.2em;
+}
+
+.dataview-grouped .dataview-table {
+    margin-top: 0;
+}
+
+
+/* =========================================
+   PRINT STYLESHEET
+   ========================================= */
+
+@media print {
+    /* Reset layout */
+    body {
+        background: #fff;
+        color: #000;
+        max-width: none;
+        padding: 0;
+        margin: 0;
+        font-size: 11pt;
+        line-height: 1.5;
+    }
+
+    /* Hide chrome */
+    header, nav, .theme-toggle, .nav-hamburger,
+    .toc-block, .related-posts, .post-nav,
+    .breadcrumbs, .post-tags, .pagination,
+    footer, .lightbox, .slider-gallery .slider-arrow,
+    .copy-btn, .code-lang {
+        display: none !important;
+    }
+
+    /* Show all links as plain text */
+    a { color: #000; text-decoration: none; }
+    a[href]::after { content: " (" attr(href) ")"; font-size: 0.8em; color: #555; }
+    /* But not for internal anchors or empty hrefs */
+    a[href^="#"]::after,
+    a[href^="javascript"]::after { content: ""; }
+
+    /* Images */
+    img { max-width: 100% !important; page-break-inside: avoid; }
+
+    /* Code blocks */
+    pre, blockquote { page-break-inside: avoid; }
+    pre { background: #f4f4f4 !important; color: #000 !important;
+          border: 1px solid #ccc; padding: 0.75em; border-radius: 4px; }
+    code { background: #f4f4f4 !important; color: #000 !important; }
+
+    /* Callouts */
+    .callout { border: 1px solid #ccc; background: #f9f9f9 !important;
+               box-shadow: none; }
+
+    /* Article */
+    article { max-width: none; }
+
+    h1, h2, h3, h4 {
+        page-break-after: avoid;
+        color: #000;
+    }
 }

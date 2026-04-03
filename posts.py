@@ -221,6 +221,9 @@ def load_posts():
          section, url_path) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
+        updated = _parse_date(
+            metadata.get("updated") or metadata.get("modified"), filepath
+        )
         html, toc = render_markdown(md, filepath, url_index, dataview_index,
                                     note_metadata=metadata)
         summary = metadata.get("summary") or _make_summary(html)
@@ -235,6 +238,14 @@ def load_posts():
         banner = metadata.get("banner")
         banner_x = metadata.get("banner_x")
         banner_y = metadata.get("banner_y")
+        # author: string or list — normalise to a list for the template
+        author_raw = metadata.get("author")
+        if isinstance(author_raw, str):
+            author = [author_raw] if author_raw.strip() else []
+        elif isinstance(author_raw, list):
+            author = [str(a) for a in author_raw if a]
+        else:
+            author = []
 
         print(
             f"Loaded: {title} | {url_path} | "
@@ -270,6 +281,8 @@ def load_posts():
             "slug": slug,
             "title": title,
             "date": date,
+            "updated": updated,
+            "author": author,
             "html": body_html,
             "toc": toc,
             "reading_time": reading_time,
@@ -328,6 +341,8 @@ def load_posts():
                     "slug": last_segment,
                     "title": title,
                     "date": None,
+                    "updated": None,
+                    "author": [],
                     "html": "",
                     "toc": "",
                     "reading_time": 0,

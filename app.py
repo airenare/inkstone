@@ -261,7 +261,14 @@ def label_archive(label):
     )
     if not posts:
         abort(404)
-    return render_template("label.html", label=label, posts=posts)
+    # Build per-post prev/next within this label (older ← / → newer)
+    nav = {}
+    for i, p in enumerate(posts):
+        nav[p["url_path"]] = {
+            "prev": posts[i + 1] if i + 1 < len(posts) else None,  # older
+            "next": posts[i - 1] if i > 0 else None,               # newer
+        }
+    return render_template("label.html", label=label, posts=posts, label_nav=nav)
 
 
 @app.route("/search")

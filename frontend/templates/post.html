@@ -22,6 +22,8 @@
   "description": {{ post.summary | tojson }},
   "url": {{ canonical_url | tojson }}
   {%- if post.date %}, "datePublished": {{ post.date.strftime("%Y-%m-%d") | tojson }}{% endif %}
+  {%- if post.updated %}, "dateModified": {{ post.updated.strftime("%Y-%m-%d") | tojson }}{% endif %}
+  {%- if post.author %}, "author": [{% for a in post.author %}{"@type": "Person", "name": {{ a | tojson }}}{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}
   {%- if post.banner %}, "image": {{ post.banner | tojson }}{% endif %}
 }
 </script>
@@ -39,7 +41,7 @@
 <div class="page-banner" style="background-image: url('{{ post.banner }}'); background-position: {{ ((post.banner_x or 0.5) * 100)|int }}% {{ ((post.banner_y or 0.5) * 100)|int }}%;">
 <div class="page-banner-body">
 <h1 class="banner-title">{{ post.title }}</h1>
-<div class="post-meta banner-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
+<div class="post-meta banner-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.updated and post.updated != post.date %} · Updated {{ post.updated.strftime("%B %d, %Y") }}{% endif %}{% if post.author %} · by {{ post.author | join(", ") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
 </div>
 </div>
 {% endif %}
@@ -50,6 +52,8 @@
 <h1>{{ post.title }}</h1>
 <div class="post-meta">
 {% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}
+{% if post.updated and post.updated != post.date %} · Updated {{ post.updated.strftime("%B %d, %Y") }}{% endif %}
+{% if post.author %} · by {{ post.author | join(", ") }}{% endif %}
 {% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}
 </div>
 {% endif %}

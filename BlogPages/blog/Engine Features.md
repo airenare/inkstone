@@ -6,12 +6,14 @@ labels:
   - features
   - demo
 date: 2026-04-02
-title: Five More Engine Features
+updated: 2026-04-02
+author: The Engine
+title: Engine Features Showcase
 slug: engine-features
-summary: Related posts, dark/light mode, inline hashtags, Dataview inline queries, and block references — all demonstrated in one post.
+summary: Related posts, dark/light mode, inline hashtags, Dataview queries, block references, Dataview LIST, GROUP BY, author field, and more — all demonstrated in one post.
 ---
 
-This post demonstrates five features added in v1.8.0. It exists to give each one something live to point at.
+This post demonstrates features from v1.8.0–v1.11.0. It exists to give each feature something live to point at.
 
 ---
 
@@ -50,6 +52,58 @@ This is the same expression language used in `TABLE` blocks, but inline in prose
 Any paragraph can be given a stable ID by appending `^block-id` at the end. Then `[[Note^block-id]]` links directly to that paragraph. ^demo-block
 
 The paragraph above has the ID `demo-block`. A link like `[[Engine Features^demo-block]]` resolves to `/blog/engine-features#demo-block` and scrolls to that exact paragraph.
+
+---
+
+---
+
+## Author Field
+
+This post has `author: The Engine` in its frontmatter. You should see it in the meta line below the title. It can also be a list:
+
+```yaml
+author:
+  - Alice
+  - Bob
+```
+
+---
+
+## Date Last Modified
+
+The `updated:` frontmatter field shows an "Updated" date in the post meta when it differs from `date`. This post has both set to the same date, so nothing extra appears here — but try setting `updated: 2027-01-01` to see it in action.
+
+---
+
+## Dataview LIST
+
+A simple `LIST` query renders a `<ul>` instead of a table:
+
+```dataview
+LIST
+FROM #demo
+SORT file.name ASC
+```
+
+---
+
+## Dataview GROUP BY
+
+A `TABLE` with `GROUP BY` renders a heading per group with a sub-table of its rows:
+
+```dataview
+TABLE date, summary
+FROM #blog
+GROUP BY section
+SORT date DESC
+LIMIT 6
+```
+
+---
+
+## Mobile Nav
+
+Shrink this window below 600 px. The nav links collapse into a hamburger ☰ menu that toggles open on tap. The site name and theme toggle always stay visible.
 
 ---
 

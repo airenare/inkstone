@@ -34,7 +34,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Inline body labels** — `#hashtag` mentions in the note body are collected as labels; merged with frontmatter `labels:`
 - **Dataview inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
 - **Block references** — `^block-id` suffix on paragraphs creates anchor targets; `[[Note^block-id]]` links scroll to them
-- **Dataview queries** — `TABLE` queries in fenced ` ```dataview ``` ` blocks are executed server-side and rendered as HTML tables; queries can reference any note in the vault, including unpublished ones
+- **Dataview queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
 - **Lightbox gallery** — `![[img.jpg]]` on its own line becomes a lightbox-enabled image; multiple images on one line become a slider
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
 - **Banner images** — set `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
@@ -46,6 +46,10 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Section RSS feeds** — per-section feeds at `/blog/feed.xml`, `/gallery/feed.xml`, etc.
 - **Labels index page** — `/labels` lists all labels with post counts; opt-in via `labels` tag on the root homepage
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/` and then `ATTACHMENTS_PATH` from `.env`
+- **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD structured data
+- **Date last modified** — `updated:` or `modified:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
+- **Mobile nav** — collapsible hamburger menu on narrow viewports (≤ 600 px); desktop layout unchanged
+- **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
 - **Search** — full-text search across all published posts at `/search`
 - **Auto-listings** — sections with no explicit index file get an auto-generated listing page
 - **Pagination** — listing pages paginate at 20 posts per page
@@ -83,6 +87,8 @@ banner_x: 0.5   # horizontal focal point (0–1)
 banner_y: 0.4   # vertical focal point (0–1)
 aliases:
   - alternate name    # extra wiki-link targets that resolve to this post
+author: "Jane Doe"   # optional; shown in post meta and JSON-LD (string or list)
+updated: 2026-04-01  # optional; shown as "Updated …" when different from date
 ---
 ```
 

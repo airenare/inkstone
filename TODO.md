@@ -11,15 +11,8 @@ _(all done — see Done section)_
 
 ## Ideas & Features
 
-- **Dataview LIST type** — `LIST` queries are common in Obsidian vaults; add support alongside TABLE so that `LIST field FROM #tag` renders a `<ul>`.
-- **Next/prev within label** — Label archive pages could also show prev/next post navigation scoped to that label.
-- **Author field on post pages** — If frontmatter contains `author`, display it below the title in `post.html` (similar to how `book.html` shows author). Useful for multi-author blogs.
-- **Date last modified** — Track `updated` or `modified` frontmatter and show "Last updated …" on post pages when it differs from `date`. Also include it in the sitemap as `<lastmod>`.
 - **Social / `rel="me"` links** — Add optional `social_links` config (env var or homepage frontmatter) that renders `rel="me"` links in the footer/header for Mastodon verification and social profiles.
 - **Comment system integration** — Add opt-in Giscus (GitHub Discussions) or utterances embed block at the bottom of `post.html`, configurable via env vars.
-- **Dataview GROUP BY flattened display** — Currently GROUP BY produces grouped contexts but there is no way to render them as collapsible sections. A grouped list view would be a natural extension.
-- **Responsive / mobile nav** — The current `<nav>` is a flat horizontal list with no hamburger menu; on narrow viewports it wraps awkwardly. Add a collapsible mobile menu.
-- **Print stylesheet** — Add `@media print` rules to hide nav, sidebar, and interactive elements and format the post body for clean printing / PDF export.
 - **Inline Dataview: `dv.pages()` expression** — Extend `convert_dataview_inline` beyond `this.*` fields to support simple cross-note expressions like `` `= dv.pages("#tag").length` ``.
 - **Canvas file rendering** — Obsidian `.canvas` files are JSON; render them as a read-only visual board (SVG or simple positioned-div layout) so they can be included in the blog.
 
@@ -29,6 +22,13 @@ _(all done — see Done section)_
 
 ## Done
 
+- Dataview LIST type — `LIST [field] FROM #tag` renders a `<ul>` with optional field annotation
+- Dataview GROUP BY flattened display — grouped TABLE/LIST renders a heading per group + sub-table/sub-list
+- Author field on post pages — `author:` frontmatter shown in post meta + JSON-LD (single or list)
+- Date last modified — `updated:`/`modified:` frontmatter shown in post meta and JSON-LD `dateModified`
+- Next/prev within label — label archive pages show inline older/newer links per post entry
+- Responsive mobile nav — hamburger button, slide-down menu, single-column layout under 600 px
+- Print stylesheet — `@media print` hides nav/chrome, resets colours, appends link URLs
 - Next / previous post navigation ("← Older" / "Newer →") on post and book pages
 - Collapsible callouts: `> [!type]-` collapses, `> [!type]+` expands; rendered as `<details>`
 - Fixed `lstrip("> ")` over-stripping callout titles — now uses regex to strip only the blockquote prefix

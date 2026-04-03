@@ -98,12 +98,15 @@ tags:
   - listing     # auto-generates a post listing at the section root URL
   - featured    # shows post in the Featured section of the parent listing
   - search      # root homepage only: shows a Search link in the top nav
+  - labels      # root homepage only: shows a Labels link in the top nav
 date: 2026-03-21
+updated: 2026-04-01  # optional; shown as "Updated …" in post meta and JSON-LD dateModified
 title: My Post  # optional; overrides H1 in body and filename
 slug: my-post   # optional; auto-generated from title if omitted
 priority: 0     # featured posts only; 0 = top, then 1, 2… (date breaks ties)
 summary: "..."  # shown on listing pages; auto-derived from content if omitted
 menu_order: 1   # pin this post to the top nav; lower = further left; appended after section links
+author: "Jane Doe"   # optional; shown in post meta and JSON-LD (string or list)
 labels:         # content labels — shown as clickable badges on the post page and used for /label/<name> archive pages and search filtering; separate from engine tags
   - python
   - philosophy

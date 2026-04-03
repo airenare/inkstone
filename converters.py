@@ -741,14 +741,20 @@ def _render_dv_value(val):
 
 
 def _parse_dv_query(query_text):
-    """Parse a Dataview TABLE query into a structured dict."""
+    """Parse a Dataview TABLE or LIST query into a structured dict."""
     lines = [ln.strip() for ln in query_text.strip().split("\n") if ln.strip()]
-    if not lines or not lines[0].upper().startswith("TABLE"):
+    if not lines:
+        return None
+    first_upper = lines[0].upper()
+    is_list = first_upper.startswith("LIST")
+    if not first_upper.startswith("TABLE") and not is_list:
         return None
 
     result = {
+        "type": "list" if is_list else "table",
         "without_id": "WITHOUT ID" in lines[0].upper(),
         "columns": [],
+        "list_expr": "",
         "from": "",
         "where": "",
         "group_by": "",
@@ -758,26 +764,32 @@ def _parse_dv_query(query_text):
 
     keywords = {"FROM", "WHERE", "GROUP BY", "SORT", "LIMIT", "FLATTEN"}
     i = 1
-    col_lines = []
-    while i < len(lines):
-        upper = lines[i].upper()
-        if any(upper.startswith(kw) for kw in keywords):
-            break
-        col_lines.append(lines[i])
-        i += 1
 
-    col_text = " ".join(col_lines)
-    for part in _split_tokens(col_text, ", "):
-        part = part.strip()
-        if not part:
-            continue
-        m = re.match(r"^(.*?)\s+as\s+(.+)$", part, re.IGNORECASE)
-        if m:
-            result["columns"].append(
-                {"expr": m.group(1).strip(), "label": m.group(2).strip()}
-            )
-        else:
-            result["columns"].append({"expr": part, "label": part})
+    if is_list:
+        # LIST [expr] — optional field expression after the keyword
+        list_expr = re.sub(r"^LIST\s*", "", lines[0], flags=re.IGNORECASE).strip()
+        result["list_expr"] = list_expr
+    else:
+        col_lines = []
+        while i < len(lines):
+            upper = lines[i].upper()
+            if any(upper.startswith(kw) for kw in keywords):
+                break
+            col_lines.append(lines[i])
+            i += 1
+
+        col_text = " ".join(col_lines)
+        for part in _split_tokens(col_text, ", "):
+            part = part.strip()
+            if not part:
+                continue
+            m = re.match(r"^(.*?)\s+as\s+(.+)$", part, re.IGNORECASE)
+            if m:
+                result["columns"].append(
+                    {"expr": m.group(1).strip(), "label": m.group(2).strip()}
+                )
+            else:
+                result["columns"].append({"expr": part, "label": part})
 
     while i < len(lines):
         line = lines[i]
@@ -868,10 +880,63 @@ def _execute_dv_query(parsed, dataview_index):
         except ValueError:
             pass
 
-    # --- Render table ---
-    columns = parsed.get("columns") or []
     if not contexts:
         return '<p class="dataview-empty">No results.</p>'
+
+    # --- LIST rendering ---
+    if parsed.get("type") == "list":
+        list_expr = (parsed.get("list_expr") or "").strip()
+        group_by = (parsed.get("group_by") or "").strip()
+        if group_by:
+            # Grouped list: <h4> per group, <ul> per group's rows
+            html = '<div class="dataview dataview-list">\n'
+            for ctx in contexts:
+                group_label = _to_str(_eval_dv_expr(group_by, ctx))
+                html += f'<h4 class="dv-group-heading">{group_label}</h4>\n<ul>\n'
+                for row in ctx.get("rows", []):
+                    link = _render_dv_value(row.get("file", {}).get("link", ""))
+                    extra = (
+                        f' — {_render_dv_value(_eval_dv_expr(list_expr, row))}'
+                        if list_expr else ""
+                    )
+                    html += f'<li>{link}{extra}</li>\n'
+                html += "</ul>\n"
+            html += "</div>"
+        else:
+            html = '<ul class="dataview dataview-list">\n'
+            for ctx in contexts:
+                link = _render_dv_value(ctx.get("file", {}).get("link", ""))
+                extra = (
+                    f' — {_render_dv_value(_eval_dv_expr(list_expr, ctx))}'
+                    if list_expr else ""
+                )
+                html += f'<li>{link}{extra}</li>\n'
+            html += "</ul>"
+        return html
+
+    # --- TABLE rendering ---
+    columns = parsed.get("columns") or []
+    group_by = (parsed.get("group_by") or "").strip()
+
+    if group_by:
+        # Flattened GROUP BY: heading per group, table per group
+        html = '<div class="dataview dataview-grouped">\n'
+        for ctx in contexts:
+            group_label = _to_str(_eval_dv_expr(group_by, ctx))
+            html += f'<h4 class="dv-group-heading">{group_label}</h4>\n'
+            html += '<table class="dataview-table">\n<thead><tr>\n'
+            for col in columns:
+                html += f'<th>{col["label"]}</th>\n'
+            html += "</tr></thead>\n<tbody>\n"
+            for row in ctx.get("rows", []):
+                html += "<tr>\n"
+                for col in columns:
+                    val = _eval_dv_expr(col["expr"], row)
+                    html += f"<td>{_render_dv_value(val)}</td>\n"
+                html += "</tr>\n"
+            html += "</tbody>\n</table>\n"
+        html += "</div>"
+        return html
 
     html = '<table class="dataview-table">\n<thead><tr>\n'
     for col in columns:
