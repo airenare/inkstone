@@ -163,6 +163,11 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 - **Before editing:** Always read a file before modifying it.
 - **Autonomy:** Work autonomously — execute shell commands needed for testing and all git operations (including `git push`) without asking for confirmation. Always report what was executed after the fact. Do not ask for permission before making code changes.
 - **Commits:** Keep commit messages short and informative — one tight subject line, no verbose body.
+- **VERSIONING — DO THIS EVERY TIME:** After every bug fix or feature, bump the `VERSION` file and create a git tag. This is mandatory, not optional.
+  - Bug fix → PATCH bump (e.g. `1.11.0` → `1.11.1`)
+  - New feature → MINOR bump (e.g. `1.11.0` → `1.12.0`)
+  - Breaking change → MAJOR bump (e.g. `1.11.0` → `2.0.0`)
+  - Steps: edit `VERSION`, commit as `chore: bump version to X.Y.Z`, then `git tag vX.Y.Z && git push origin vX.Y.Z`
 - **Blog posts:** Never delete files in `BlogPages/`. New `.md` files may be created there for testing purposes.
 - **Memory sync:** Whenever something valuable is saved to the local `~/.claude` memory store, also distill it into this file under the relevant section. This keeps preferences and context in sync across machines.
 - **TODO.md:** Project backlog lives in `TODO.md` at the repo root. Check it when the user asks to implement todos. Move completed items to the Done section after finishing them.
