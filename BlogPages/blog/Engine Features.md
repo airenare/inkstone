@@ -93,8 +93,8 @@ A `TABLE` with `GROUP BY` renders a heading per group with a sub-table of its ro
 
 ```dataview
 TABLE date, summary
-FROM #demo 
-GROUP BY section
+FROM #blog
+GROUP BY file.folder
 SORT date DESC
 LIMIT 6
 ```

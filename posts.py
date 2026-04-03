@@ -150,11 +150,34 @@ def load_posts():
                 else ("/" + dv_slug)
             )
 
+            # Compute tags now so Dataview queries can filter by tag
+            # during pass-2 rendering (before individual posts set their own
+            # tags entry).
+            raw_tags = metadata.get("tags") or []
+            try:
+                fm_tags = set(str(t).lower() for t in raw_tags)
+            except Exception:
+                fm_tags = set()
+            body_hashtags = set(
+                t.lower()
+                for t in re.findall(
+                    r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", md
+                )
+            )
+            dv_tags = sorted(fm_tags | body_hashtags)
+
+            dv_folder = os.path.relpath(
+                os.path.dirname(os.path.abspath(filepath)),
+                os.path.abspath(VAULT_PATH),
+            ).replace("\\", "/")
+            if dv_folder == ".":
+                dv_folder = ""
+
             dataview_index[filepath] = {
                 "filepath": filepath,
                 "title": dv_title,
                 "metadata": metadata,
-                "tags": [],     # user content tags; populated in pass 2
+                "tags": dv_tags,
                 "section": dv_section,
                 "url_path": dv_url,
                 "file": {
@@ -162,6 +185,7 @@ def load_posts():
                     "name": dv_title,
                     "link": f'<a href="{dv_url}">{dv_title}</a>',
                     "ctime": dv_date,
+                    "folder": dv_folder,
                 },
             }
 

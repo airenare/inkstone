@@ -587,7 +587,15 @@ def _split_tokens(text, delimiter):
 
 
 def _get_nested(ctx, field):
-    """Dot-separated field access into a nested dict."""
+    """Dot-separated field access into a nested dict.
+
+    Checks for a flat key first so that group contexts, which store the
+    group-by expression (e.g. "file.folder") as a literal dict key, resolve
+    correctly before falling through to nested-path lookup.
+    """
+    if isinstance(ctx, dict) and field in ctx:
+        val = ctx[field]
+        return val if val is not None else ""
     val = ctx
     for part in field.split("."):
         if isinstance(val, dict):
@@ -771,6 +779,12 @@ def _parse_dv_query(query_text):
         result["list_expr"] = list_expr
     else:
         col_lines = []
+        # Columns may appear on the TABLE line itself: TABLE date, summary
+        inline_cols = re.sub(
+            r"^TABLE\s*(WITHOUT\s+ID\s*)?", "", lines[0], flags=re.IGNORECASE
+        ).strip()
+        if inline_cols:
+            col_lines.append(inline_cols)
         while i < len(lines):
             upper = lines[i].upper()
             if any(upper.startswith(kw) for kw in keywords):
