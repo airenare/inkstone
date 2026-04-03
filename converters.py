@@ -926,23 +926,41 @@ def _execute_dv_query(parsed, dataview_index):
     group_by = (parsed.get("group_by") or "").strip()
 
     if group_by:
-        # Flattened GROUP BY: heading per group, table per group
-        html = '<div class="dataview dataview-grouped">\n'
-        for ctx in contexts:
-            group_label = _to_str(_eval_dv_expr(group_by, ctx))
-            html += f'<h4 class="dv-group-heading">{group_label}</h4>\n'
-            html += '<table class="dataview-table">\n<thead><tr>\n'
+        uses_rows = any(
+            col["expr"].startswith("rows.") for col in columns
+        )
+        if uses_rows:
+            # Obsidian-native GROUP BY: one row per group;
+            # rows.field expressions collect values across grouped rows.
+            html = '<table class="dataview-table">\n<thead><tr>\n'
             for col in columns:
                 html += f'<th>{col["label"]}</th>\n'
             html += "</tr></thead>\n<tbody>\n"
-            for row in ctx.get("rows", []):
+            for ctx in contexts:
                 html += "<tr>\n"
                 for col in columns:
-                    val = _eval_dv_expr(col["expr"], row)
+                    val = _eval_dv_expr(col["expr"], ctx)
                     html += f"<td>{_render_dv_value(val)}</td>\n"
                 html += "</tr>\n"
             html += "</tbody>\n</table>\n"
-        html += "</div>"
+        else:
+            # Flattened GROUP BY: heading per group, sub-table of rows
+            html = '<div class="dataview dataview-grouped">\n'
+            for ctx in contexts:
+                group_label = _to_str(_eval_dv_expr(group_by, ctx))
+                html += f'<h4 class="dv-group-heading">{group_label}</h4>\n'
+                html += '<table class="dataview-table">\n<thead><tr>\n'
+                for col in columns:
+                    html += f'<th>{col["label"]}</th>\n'
+                html += "</tr></thead>\n<tbody>\n"
+                for row in ctx.get("rows", []):
+                    html += "<tr>\n"
+                    for col in columns:
+                        val = _eval_dv_expr(col["expr"], row)
+                        html += f"<td>{_render_dv_value(val)}</td>\n"
+                    html += "</tr>\n"
+                html += "</tbody>\n</table>\n"
+            html += "</div>"
         return html
 
     html = '<table class="dataview-table">\n<thead><tr>\n'
