@@ -1,7 +1,7 @@
 ---
+website: true
 tags:
   - blog
-labels:
   - programming
   - philosophy
   - languages

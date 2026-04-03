@@ -1,7 +1,6 @@
 ---
+website: true
 tags:
-  - blog
-labels:
   - philosophy
   - meta
 slug: test_post

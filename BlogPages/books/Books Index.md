@@ -1,7 +1,6 @@
 ---
-tags:
-  - website
-  - homepage
+website: true
+type: homepage
 title: Books
 banner: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1500&auto=format&fit=crop"
 banner_x: 0.5

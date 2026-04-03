@@ -1,7 +1,8 @@
 ---
+website: true
+type: book
 tags:
   - 📚Book
-  - website
   - books
 title: Thinking, Fast and Slow
 author:

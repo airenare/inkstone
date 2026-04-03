@@ -17,11 +17,6 @@ if not VAULT_PATH or not os.path.exists(VAULT_PATH):
     )
     VAULT_PATH = "./BlogPages"
 
-BLOG_TAGS = {"blog", "website"}
-HOMEPAGE_TAG = "homepage"
-FEATURED_TAG = "featured"
-LISTING_TAG = "listing"
-
 # Optional vault-wide attachments directory.
 # Set ATTACHMENTS_PATH in .env to a directory that is checked as a fallback
 # when a media file is not found in the note's own _attachments/ folder.

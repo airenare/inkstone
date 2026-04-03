@@ -34,7 +34,7 @@ config.py  ←  converters.py  ←  posts.py  ←  app.py
 
 | File | Responsibility |
 |------|---------------|
-| `config.py` | Loads `.env`, sets `VAULT_PATH`, `BLOG_TAGS`, tag constants |
+| `config.py` | Loads `.env`, sets `VAULT_PATH`, `ATTACHMENTS_PATH` |
 | `converters.py` | All markdown conversion functions + `render_markdown()` pipeline |
 | `posts.py` | Two-pass `load_posts()`, `maybe_reload()`, `ALL_POSTS`, `SECTION_ROUTES` |
 | `app.py` | Flask app init, context processor, single catch-all route |
@@ -45,7 +45,7 @@ New features should follow this chain — `app.py` imports from `posts.py`, neve
 
 1. **Pass 1** — `load_posts()` scans all `.md` files, parses frontmatter, computes `url_path` and `section` from folder location, builds `url_index` for wiki-link resolution. Each post is indexed three ways: `slugify(title)`, `slugify(filename without .md)`, and frontmatter `slug`. This means `[[Filename|Display]]`, `[[Title]]`, and `[[slug]]` all resolve correctly even when the file name, title, and slug differ.
 2. **Pass 2** — renders markdown for each file using `url_index` so `[[Wiki Links]]` resolve to the correct cross-section URLs.
-3. Files tagged `listing` → registered in `SECTION_ROUTES[section_url]`; files tagged `homepage` → same. Neither appears in `ALL_POSTS`.
+3. Files with `type: listing` → registered in `SECTION_ROUTES[section_url]`; files with `type: homepage` → same. Neither appears in `ALL_POSTS`.
 4. `maybe_reload()` checks modification times on each request and reloads if anything changed.
 5. A single `/<path:path>` Flask route checks `SECTION_ROUTES` first (section homepages and listings), then `ALL_POSTS`, then 404.
 
@@ -53,8 +53,8 @@ New features should follow this chain — `app.py` imports from `posts.py`, neve
 
 | URL pattern | Source |
 |-------------|--------|
-| `/` | `SECTION_ROUTES["/"]` — file tagged `homepage` in vault root |
-| `/blog` | `SECTION_ROUTES["/blog"]` — file tagged `listing` in `blog/` folder |
+| `/` | `SECTION_ROUTES["/"]` — file with `type: homepage` in vault root |
+| `/blog` | `SECTION_ROUTES["/blog"]` — file with `type: listing` in `blog/` folder |
 | `/blog/my-post` | `ALL_POSTS["/blog/my-post"]` — regular post in `blog/` folder |
 | `/gallery/arts/post` | `ALL_POSTS["/gallery/arts/post"]` — post in nested subfolder |
 | `/search` | Full-text search across `ALL_POSTS` |
@@ -64,7 +64,7 @@ New features should follow this chain — `app.py` imports from `posts.py`, neve
 
 Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct children of `/`). Posts with `menu_order` in frontmatter are additionally pinned to the nav (sorted by value, appended after section links). This is the intended mechanism for standalone pages like About or Contact.
 
-**Root-level standalone pages:** Files in the vault root that are not tagged `homepage` or `listing` are served at `/slug` with no section prefix. They are intentionally unlisted — they don't appear in any auto-generated listing. The expected usage is to link to them via wiki-links from other content, or pin them to the nav via `menu_order`. Do not add special logic to surface them automatically in listings.
+**Root-level standalone pages:** Files in the vault root that do not have `type: homepage` or `type: listing` are served at `/slug` with no section prefix. They are intentionally unlisted — they don't appear in any auto-generated listing. The expected usage is to link to them via wiki-links from other content, or pin them to the nav via `menu_order`. Do not add special logic to surface them automatically in listings.
 
 ### Markdown Pipeline (order matters)
 
@@ -92,24 +92,25 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 
 ```yaml
 ---
-tags:
-  - blog        # required to publish ("blog" or "website")
-  - homepage    # serves this file's content at the section root URL (e.g. / or /gallery)
-  - listing     # auto-generates a post listing at the section root URL
-  - featured    # shows post in the Featured section of the parent listing
-  - search      # root homepage only: shows a Search link in the top nav
-  - labels      # root homepage only: shows a Labels link in the top nav
+website: true         # required to publish the note as a web page
+type: homepage        # optional: homepage | listing | book
+                      #   homepage — serves this note's content at the section root URL
+                      #   listing  — auto-generates a post index at the section root URL
+                      #   book     — uses the book template with cover/metadata header
+featured: true        # optional: shows post in the Featured section of the parent listing
+show_search: true     # root homepage only: shows a Search link in the top nav
+show_tags: true       # root homepage only: shows a Tags link in the top nav
 date: 2026-03-21
-updated: 2026-04-01  # optional; shown as "Updated …" in post meta and JSON-LD dateModified
-title: My Post  # optional; overrides H1 in body and filename
-slug: my-post   # optional; auto-generated from title if omitted
-priority: 0     # featured posts only; 0 = top, then 1, 2… (date breaks ties)
-summary: "..."  # shown on listing pages; auto-derived from content if omitted
-menu_order: 1   # pin this post to the top nav; lower = further left; appended after section links
-author: "Jane Doe"   # optional; shown in post meta and JSON-LD (string or list)
-labels:         # content labels — shown as clickable badges on the post page and used for /label/<name> archive pages and search filtering; separate from engine tags
-  - python
-  - philosophy
+updated: 2026-04-01   # optional; shown as "Updated …" in post meta and JSON-LD dateModified
+title: My Post        # optional; overrides H1 in body and filename
+slug: my-post         # optional; auto-generated from title if omitted
+priority: 0           # featured posts only; 0 = top, then 1, 2… (date breaks ties)
+summary: "..."        # shown on listing pages; auto-derived from content if omitted
+menu_order: 1         # pin this post to the top nav; lower = further left; appended after section links
+author: "Jane Doe"    # optional; shown in post meta and JSON-LD (string or list)
+tags:                 # user content tags — shown as clickable badges, used for /tag/<name>
+  - python            #   archive pages, search filtering, related posts, and Dataview FROM queries
+  - philosophy        #   body #hashtags are collected as tags automatically
 ---
 ```
 
@@ -128,7 +129,7 @@ title: '"Hello World" Considered Harmful'   # value → "Hello World" Considered
 title: "No quotes here: just a colon"       # value → No quotes here: just a colon
 ```
 
-**`listing` vs `homepage`:** `listing` renders an auto-generated post index; `homepage` renders the file's own markdown content. If a file has both tags, `listing` wins. A section can only have one of each — if multiple files in the same folder are tagged `listing`, the last one loaded wins (undefined behavior; avoid).
+**`type: listing` vs `type: homepage`:** `listing` renders an auto-generated post index; `homepage` renders the file's own markdown content. A section can only have one of each — if multiple files in the same folder have the same type, the last one loaded wins (undefined behavior; avoid).
 
 **`posts.py` globals:** `ALL_POSTS` (url_path → post dict), `SECTION_ROUTES` (section url → route dict), `WEBSITE_NAME` (from root homepage title).
 

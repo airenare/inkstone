@@ -32,7 +32,7 @@ def inject_globals():
         "nav_sections": top_sections,
         "menu_posts": post_store.MENU_POSTS,
         "show_search": post_store.SHOW_SEARCH,
-        "show_labels": post_store.SHOW_LABELS,
+        "show_tags": post_store.SHOW_TAGS,
         "current_url": request.url,
         "canonical_url": request.base_url,
         "app_version": VERSION,
@@ -144,15 +144,15 @@ def section_rss_feed(section):
     return Response(xml, mimetype="application/rss+xml")
 
 
-@app.route("/labels")
-def labels_index():
+@app.route("/tags")
+def tags_index():
     post_store.maybe_reload()
-    label_counts = {}
+    tag_counts = {}
     for p in post_store.ALL_POSTS.values():
-        for label in p.get("labels", []):
-            label_counts[label] = label_counts.get(label, 0) + 1
-    labels = sorted(label_counts.items())
-    return render_template("labels.html", labels=labels)
+        for tag in p.get("tags", []):
+            tag_counts[tag] = tag_counts.get(tag, 0) + 1
+    tags = sorted(tag_counts.items())
+    return render_template("labels.html", labels=tags)
 
 
 @app.route("/sitemap.xml")
@@ -217,14 +217,14 @@ def _get_adjacent_posts(post, all_posts):
 
 
 def _get_related(post, all_posts, max_results=4):
-    """Return up to max_results related posts sorted by shared-label count."""
-    post_labels = set(post.get("labels") or [])
+    """Return up to max_results related posts sorted by shared-tag count."""
+    post_tags = set(post.get("tags") or [])
     post_section = post.get("section", "")
     scored = []
     for p in all_posts.values():
         if p["url_path"] == post["url_path"]:
             continue
-        shared = len(post_labels & set(p.get("labels") or []))
+        shared = len(post_tags & set(p.get("tags") or []))
         same_section = int(p.get("section", "") == post_section)
         score = shared * 2 + same_section
         if score > 0:
@@ -249,26 +249,26 @@ def _highlight(text, query):
     )
 
 
-@app.route("/label/<label>")
-def label_archive(label):
+@app.route("/tag/<tag>")
+def tag_archive(tag):
     post_store.maybe_reload()
-    label_lower = label.lower()
+    tag_lower = tag.lower()
     posts = sorted(
         (p for p in post_store.ALL_POSTS.values()
-         if label_lower in p.get("labels", [])),
+         if tag_lower in p.get("tags", [])),
         key=lambda p: p["date"] or datetime.min,
         reverse=True,
     )
     if not posts:
         abort(404)
-    # Build per-post prev/next within this label (older ← / → newer)
+    # Build per-post prev/next within this tag (older ← / → newer)
     nav = {}
     for i, p in enumerate(posts):
         nav[p["url_path"]] = {
             "prev": posts[i + 1] if i + 1 < len(posts) else None,  # older
             "next": posts[i - 1] if i > 0 else None,               # newer
         }
-    return render_template("label.html", label=label, posts=posts, label_nav=nav)
+    return render_template("tag.html", tag=tag, posts=posts, tag_nav=nav)
 
 
 @app.route("/search")
@@ -277,15 +277,15 @@ def search():
     q = request.args.get("q", "").strip()
     label_filter = request.args.get("label", "").strip().lower()
 
-    all_labels = sorted(set().union(
-        *(p["labels"] for p in post_store.ALL_POSTS.values())
+    all_tags = sorted(set().union(
+        *(p["tags"] for p in post_store.ALL_POSTS.values())
     ))
 
     results = []
     if q or label_filter:
         q_lower = q.lower()
         for p in post_store.ALL_POSTS.values():
-            if label_filter and label_filter not in p.get("labels", []):
+            if label_filter and label_filter not in p.get("tags", []):
                 continue
             if q_lower and q_lower not in p["title"].lower() \
                     and q_lower not in p["content"]:
@@ -300,8 +300,8 @@ def search():
         "search.html",
         posts=results,
         query=q,
-        selected_label=label_filter,
-        all_labels=all_labels,
+        selected_tag=label_filter,
+        all_tags=all_tags,
     )
 
 
@@ -361,9 +361,7 @@ def serve(path):
     if url_path in post_store.ALL_POSTS:
         post = post_store.ALL_POSTS[url_path]
         back_url = "/" + post["section"] if post["section"] else "/"
-        template = (
-            "book.html" if "📚book" in post.get("tags", set()) else "post.html"
-        )
+        template = "book.html" if post.get("post_type") == "book" else "post.html"
         breadcrumbs = _build_breadcrumbs(url_path, post["title"])
         related = _get_related(post, post_store.ALL_POSTS)
         prev_post, next_post = _get_adjacent_posts(post, post_store.ALL_POSTS)
@@ -396,6 +394,6 @@ if __name__ == "__main__":
         post_store.PRIVATE_ROUTES,
         post_store.MENU_POSTS,
         post_store.SHOW_SEARCH,
-        post_store.SHOW_LABELS,
+        post_store.SHOW_TAGS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

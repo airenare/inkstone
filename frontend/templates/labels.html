@@ -2,26 +2,26 @@
 {% extends "base.html" %}
 
 {% block meta %}
-<meta property="og:title" content="Labels — {{ website_name }}">
+<meta property="og:title" content="Tags — {{ website_name }}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{{ canonical_url }}">
 {% endblock %}
 
 {% block content %}
 
-<h2>Labels</h2>
+<h2>Tags</h2>
 
 {% if labels %}
 <ul class="labels-index">
 {% for label, count in labels %}
 <li>
-  <a href="/label/{{ label }}" class="labels-index-link">{{ label }}</a>
+  <a href="/tag/{{ label }}" class="labels-index-link">{{ label }}</a>
   <span class="labels-index-count">{{ count }}</span>
 </li>
 {% endfor %}
 </ul>
 {% else %}
-<p>No labels yet.</p>
+<p>No tags yet.</p>
 {% endif %}
 
 {% endblock %}
