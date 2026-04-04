@@ -1,5 +1,4 @@
 import html
-import re
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
@@ -7,6 +6,7 @@ from flask import Flask, render_template, abort, request, send_from_directory, \
 
 import posts as post_store
 from config import VAULT_PATH, VERSION
+from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
 
 # =========================================
@@ -53,6 +53,35 @@ def not_found(e):
     return render_template("404.html"), 404
 
 
+def _build_rss_xml(title, link, description, posts, base):
+    """Build a complete RSS XML string from a filtered, sorted post list."""
+    now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    items = []
+    for p in posts:
+        pub = p["date"].strftime("%a, %d %b %Y %H:%M:%S +0000") if p["date"] else ""
+        post_link = base + p["url_path"]
+        items.append(
+            f"    <item>\n"
+            f"      <title>{html.escape(p['title'])}</title>\n"
+            f"      <link>{post_link}</link>\n"
+            f"      <guid>{post_link}</guid>\n"
+            f"      <pubDate>{pub}</pubDate>\n"
+            f"      <description>{html.escape(p['summary'])}</description>\n"
+            f"    </item>"
+        )
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0">\n'
+        "  <channel>\n"
+        f"    <title>{html.escape(title)}</title>\n"
+        f"    <link>{link}</link>\n"
+        f"    <description>{html.escape(description)}</description>\n"
+        f"    <lastBuildDate>{now}</lastBuildDate>\n"
+        + "\n".join(items)
+        + "\n  </channel>\n</rss>"
+    )
+
+
 @app.route("/feed.xml")
 def rss_feed():
     post_store.maybe_reload()
@@ -62,36 +91,8 @@ def rss_feed():
         reverse=True,
     )[:20]
     base = request.url_root.rstrip("/")
-    now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
-    items = []
-    for p in posts:
-        pub = ""
-        if p["date"]:
-            pub = p["date"].strftime("%a, %d %b %Y %H:%M:%S +0000")
-        link = base + p["url_path"]
-        items.append(
-            f"    <item>\n"
-            f"      <title>{html.escape(p['title'])}</title>\n"
-            f"      <link>{link}</link>\n"
-            f"      <guid>{link}</guid>\n"
-            f"      <pubDate>{pub}</pubDate>\n"
-            f"      <description>"
-            f"{html.escape(p['summary'])}"
-            f"</description>\n"
-            f"    </item>"
-        )
-    site_title = html.escape(post_store.WEBSITE_NAME)
-    site_link = base + "/"
-    xml = (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<rss version="2.0">\n'
-        "  <channel>\n"
-        f"    <title>{site_title}</title>\n"
-        f"    <link>{site_link}</link>\n"
-        f"    <description>{site_title}</description>\n"
-        f"    <lastBuildDate>{now}</lastBuildDate>\n"
-        + "\n".join(items)
-        + "\n  </channel>\n</rss>"
+    xml = _build_rss_xml(
+        post_store.WEBSITE_NAME, base + "/", post_store.WEBSITE_NAME, posts, base
     )
     return Response(xml, mimetype="application/rss+xml")
 
@@ -112,34 +113,9 @@ def section_rss_feed(section):
         reverse=True,
     )[:20]
     base = request.url_root.rstrip("/")
-    now = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
-    items = []
-    for p in posts:
-        pub = p["date"].strftime("%a, %d %b %Y %H:%M:%S +0000") if p["date"] else ""
-        link = base + p["url_path"]
-        items.append(
-            f"    <item>\n"
-            f"      <title>{html.escape(p['title'])}</title>\n"
-            f"      <link>{link}</link>\n"
-            f"      <guid>{link}</guid>\n"
-            f"      <pubDate>{pub}</pubDate>\n"
-            f"      <description>{html.escape(p['summary'])}</description>\n"
-            f"    </item>"
-        )
-    feed_title = html.escape(
-        f"{section_title} \u2014 {post_store.WEBSITE_NAME}"
-    )
-    site_link = base + section_url
-    xml = (
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<rss version="2.0">\n'
-        "  <channel>\n"
-        f"    <title>{feed_title}</title>\n"
-        f"    <link>{site_link}</link>\n"
-        f"    <description>{feed_title}</description>\n"
-        f"    <lastBuildDate>{now}</lastBuildDate>\n"
-        + "\n".join(items)
-        + "\n  </channel>\n</rss>"
+    feed_title = f"{section_title} \u2014 {post_store.WEBSITE_NAME}"
+    xml = _build_rss_xml(
+        feed_title, base + section_url, feed_title, posts, base
     )
     return Response(xml, mimetype="application/rss+xml")
 
@@ -177,77 +153,6 @@ def sitemap():
     return Response(xml, mimetype="application/xml")
 
 
-def _build_breadcrumbs(url_path, post_title):
-    """Build breadcrumb list: [(label, url), ..., (current_title, None)]."""
-    crumbs = [("Home", "/")]
-    parts = [p for p in url_path.split("/") if p]
-    for i in range(len(parts) - 1):
-        segment_url = "/" + "/".join(parts[: i + 1])
-        if segment_url in post_store.SECTION_ROUTES:
-            label = post_store.SECTION_ROUTES[segment_url]["post"]["title"]
-        else:
-            label = parts[i].replace("-", " ").title()
-        crumbs.append((label, segment_url))
-    crumbs.append((post_title, None))
-    return crumbs
-
-
-def _get_adjacent_posts(post, all_posts):
-    """Return (prev_post, next_post) ordered by date within the same section.
-
-    prev = older post (lower date), next = newer post (higher date).
-    Posts without a date are excluded from ordering.
-    """
-    section = post["section"]
-    ordered = sorted(
-        [p for p in all_posts.values()
-         if p["section"] == section and p["date"]],
-        key=lambda p: p["date"],
-    )
-    idx = next(
-        (i for i, p in enumerate(ordered)
-         if p["url_path"] == post["url_path"]),
-        None,
-    )
-    if idx is None:
-        return None, None
-    prev_post = ordered[idx - 1] if idx > 0 else None
-    next_post = ordered[idx + 1] if idx < len(ordered) - 1 else None
-    return prev_post, next_post
-
-
-def _get_related(post, all_posts, max_results=4):
-    """Return up to max_results related posts sorted by shared-tag count."""
-    post_tags = set(post.get("tags") or [])
-    post_section = post.get("section", "")
-    scored = []
-    for p in all_posts.values():
-        if p["url_path"] == post["url_path"]:
-            continue
-        shared = len(post_tags & set(p.get("tags") or []))
-        same_section = int(p.get("section", "") == post_section)
-        score = shared * 2 + same_section
-        if score > 0:
-            scored.append((score, p))
-    scored.sort(key=lambda x: (-x[0], -(x[1]["date"].timestamp()
-                                         if x[1]["date"] else 0)))
-    return [p for _, p in scored[:max_results]]
-
-
-def _highlight(text, query):
-    """HTML-escape text, then wrap query matches in <mark>."""
-    if not text:
-        return ""
-    escaped = html.escape(text)
-    if not query:
-        return escaped
-    return re.sub(
-        "(" + re.escape(html.escape(query)) + ")",
-        r"<mark>\1</mark>",
-        escaped,
-        flags=re.IGNORECASE,
-    )
-
 
 @app.route("/tag/<tag>")
 def tag_archive(tag):
@@ -277,9 +182,7 @@ def search():
     q = request.args.get("q", "").strip()
     label_filter = request.args.get("label", "").strip().lower()
 
-    all_tags = sorted(set().union(
-        *(p["tags"] for p in post_store.ALL_POSTS.values())
-    ))
+    all_tags = post_store.ALL_TAGS
 
     results = []
     if q or label_filter:
@@ -292,8 +195,8 @@ def search():
                 continue
             results.append({
                 **p,
-                "highlighted_title": _highlight(p["title"], q),
-                "highlighted_summary": _highlight(p["summary"], q),
+                "highlighted_title": highlight(p["title"], q),
+                "highlighted_summary": highlight(p["summary"], q),
             })
 
     return render_template(
@@ -362,9 +265,9 @@ def serve(path):
         post = post_store.ALL_POSTS[url_path]
         back_url = "/" + post["section"] if post["section"] else "/"
         template = "book.html" if post.get("post_type") == "book" else "post.html"
-        breadcrumbs = _build_breadcrumbs(url_path, post["title"])
-        related = _get_related(post, post_store.ALL_POSTS)
-        prev_post, next_post = _get_adjacent_posts(post, post_store.ALL_POSTS)
+        breadcrumbs = build_breadcrumbs(url_path, post["title"], post_store.SECTION_ROUTES)
+        related = post.get("related", [])
+        prev_post, next_post = get_adjacent_posts(post, post_store.ALL_POSTS)
         return render_template(
             template, post=post, back_url=back_url,
             breadcrumbs=breadcrumbs, related=related,
@@ -395,5 +298,6 @@ if __name__ == "__main__":
         post_store.MENU_POSTS,
         post_store.SHOW_SEARCH,
         post_store.SHOW_TAGS,
+        post_store.ALL_TAGS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

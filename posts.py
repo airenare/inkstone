@@ -9,6 +9,7 @@ import yaml
 
 from config import VAULT_PATH
 from converters import slugify, render_markdown, extract_h1
+from view_helpers import get_related
 
 
 # url_path → post dict (content posts only, not homepage/listing files)
@@ -26,6 +27,8 @@ MENU_POSTS = []
 SHOW_SEARCH = False
 # True when the root homepage has show_tags: true — controls nav tags link
 SHOW_TAGS = False
+# Sorted list of all user content tags across published posts
+ALL_TAGS: list = []
 LAST_SCAN_TIME = 0
 _reload_lock = threading.Lock()
 _last_check_time = 0.0
@@ -52,14 +55,14 @@ SUMMARY_LENGTH = 200
 # FRONTMATTER
 # =========================================
 
-def parse_frontmatter(text):
+def parse_frontmatter(text, filepath="<unknown>"):
     if text.startswith("---"):
         try:
             _, yaml_text, body = text.split("---", 2)
             metadata = yaml.safe_load(yaml_text) or {}
             return metadata, body.strip()
         except Exception as e:
-            print(f"Failed to parse frontmatter: {e}")
+            print(f"Failed to parse frontmatter in {filepath}: {e}")
             return {}, text
     return {}, text
 
@@ -136,7 +139,7 @@ def load_posts():
                 print(f"Skipping {filepath}: {e}", file=sys.stderr)
                 continue
 
-            metadata, md = parse_frontmatter(text)
+            metadata, md = parse_frontmatter(text, filepath)
 
             dv_title = metadata.get("title") or extract_h1(md) or f[:-3]
             dv_date = _parse_date(
@@ -144,7 +147,8 @@ def load_posts():
             )
 
             # Every note gets a slugified URL — web posts will override below
-            dv_slug = metadata.get("slug") or slugify(dv_title)
+            raw_slug = metadata.get("slug")
+            dv_slug = (str(raw_slug).lower() if raw_slug else None) or slugify(dv_title)
             dv_section = _section_from_filepath(filepath)
             dv_url = (
                 ("/" + dv_section + "/" + dv_slug)
@@ -207,7 +211,7 @@ def load_posts():
                 title_raw = None
             title = title_raw or extract_h1(md) or f[:-3]
             slug_raw = metadata.get("slug")
-            slug = (slug_raw if isinstance(slug_raw, str) else None) or slugify(title)
+            slug = (str(slug_raw).lower() if isinstance(slug_raw, str) else None) or slugify(title)
             section = _section_from_filepath(filepath)
 
             if section:
@@ -398,9 +402,18 @@ def load_posts():
         and entry.get("metadata", {}).get("type") not in ("homepage", "listing")
     }
 
+    # ---- Pre-compute related posts (O(n²) at load time, O(1) per request) ----
+    for post_data in all_posts.values():
+        post_data["related"] = get_related(post_data, all_posts)
+
+    # ---- Build sorted tag list for search page dropdown ----
+    all_tags = sorted(
+        set(t for p in all_posts.values() for t in p["tags"])
+    )
+
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, dataview_index,
-            private_routes, menu_posts, show_search, show_tags)
+            private_routes, menu_posts, show_search, show_tags, all_tags)
 
 
 # =========================================
@@ -409,7 +422,7 @@ def load_posts():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, LAST_SCAN_TIME, \
+        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, LAST_SCAN_TIME, \
         _last_check_time
 
     if time.time() - _last_check_time < 2.0:
@@ -434,7 +447,7 @@ def maybe_reload():
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
-             SHOW_SEARCH, SHOW_TAGS) = load_posts()
+             SHOW_SEARCH, SHOW_TAGS, ALL_TAGS) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)
