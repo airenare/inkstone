@@ -81,7 +81,7 @@ A simple `LIST` query renders a `<ul>` instead of a table:
 
 ```dataview
 LIST
-FROM #generative-art
+FROM #blog
 SORT file.name ASC
 ```
 
@@ -92,7 +92,7 @@ SORT file.name ASC
 A `TABLE` with `GROUP BY` renders a heading per group with a sub-table of its rows:
 
 ```dataview
-TABLE date, summary
+TABLE title, date, summary
 FROM #blog
 GROUP BY file.folder
 SORT date DESC
