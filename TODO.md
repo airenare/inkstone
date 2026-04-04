@@ -9,6 +9,20 @@ _(all done — see Done section)_
 
 - **Use only lowercase URLs**
 
+- **Refactor: split `converters.py` → `obsidian_syntax.py`** — `converters.py` is ~1,000 lines with two distinct concerns. Move all Obsidian-specific converter functions into a new `obsidian_syntax.py`: `convert_links`, `convert_callouts`, `render_callout`, `convert_checkboxes`, `convert_highlights`, `convert_block_ids`, `convert_math`, `convert_transclusion`, `convert_media`, and `_extract_heading_section`. Keep `converters.py` as the pipeline coordinator (`render_markdown`, `extract_h1`, `strip_leading_h1`, `slugify`) and import from `obsidian_syntax`. No other files need to change since only `converters.py` is imported externally.
+
+- **Refactor: split `converters.py` → `dataview.py`** — Companion to the above. Move the entire Dataview engine out of `converters.py` into a new `dataview.py`: `_to_str`, `_split_tokens`, `_get_nested`, `_eval_dv_expr`, `_eval_dv_condition`, `_parse_sort_clause`, `_render_dv_value`, `_parse_dv_query`, `_execute_dv_query`, `convert_dataview`, `convert_dataview_inline`. Import them in `converters.py`'s `render_markdown`. Makes the query engine independently testable and easier to extend.
+
+- **Refactor: extract `view_helpers.py` from `app.py`** — `app.py` contains four pure utility functions with no Flask dependency: `_build_breadcrumbs`, `_get_adjacent_posts`, `_get_related`, and `_highlight`. Move them to a new `view_helpers.py` and import in `app.py`. Keeps `app.py` focused on Flask wiring and makes the helpers unit-testable.
+
+- **Refactor: deduplicate RSS feed builders** — `app.py` `rss_feed` (lines ~57–96) and `section_rss_feed` (lines ~99–144) share nearly identical item-building and XML-assembly logic. Extract a private `_build_rss_xml(title, link, description, posts, base)` helper that takes a filtered/sorted post list and returns the full XML string. Both routes call it after their respective filtering. Removes ~40 lines of duplication.
+
+- **Performance: pre-compute related posts at load time** — `app.py` `_get_related` does an O(n) scan of all posts on every post page render. Since tags don't change between reloads, compute related posts inside `load_posts()` in `posts.py` during Pass 2 and store as `post_data["related"]`. In `app.py`'s `serve` route, replace the `_get_related(post, post_store.ALL_POSTS)` call with `post.get("related", [])`.
+
+- **Performance: cache `all_tags` at reload time** — `app.py` `search` route rebuilds the full tag set on every request by iterating all posts. Add a module-level `ALL_TAGS: list = []` to `posts.py`, populate it at the end of `load_posts()` with `sorted(set(t for p in all_posts.values() for t in p["tags"]))`, and return it alongside the other globals. In `app.py`, replace the `set().union(...)` comprehension with `post_store.ALL_TAGS`.
+
+- **Correctness: log filepath in `parse_frontmatter` failures** — `posts.py` `parse_frontmatter` catches all YAML parse errors but doesn't log which file caused the failure, making vault debugging difficult. Add an optional `filepath="<unknown>"` parameter to the function signature and include it in the `print()` error message. Update the two call sites in `load_posts()` to pass `filepath`.
+
 ## Ideas & Features
 
 - **Social / `rel="me"` links** — Add optional `social_links` config (env var or homepage frontmatter) that renders `rel="me"` links in the footer/header for Mastodon verification and social profiles.
