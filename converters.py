@@ -236,6 +236,11 @@ def convert_media(md, md_path):
                             full_path = custom_att
                 if not os.path.exists(full_path):
                     continue
+                vault_real = os.path.realpath(VAULT_PATH)
+                if not os.path.realpath(full_path).startswith(
+                    vault_real + os.sep
+                ):
+                    continue
                 rel = os.path.relpath(full_path, VAULT_PATH)
                 ext = filename.lower().split(".")[-1]
                 if ext in ["mp4", "webm", "mov"]:
@@ -275,6 +280,12 @@ def convert_media(md, md_path):
                     if os.path.exists(custom_att):
                         full_path = custom_att
             if not os.path.exists(full_path):
+                output.append(f"<em>Missing media: {filename}</em>")
+                continue
+            vault_real = os.path.realpath(VAULT_PATH)
+            if not os.path.realpath(full_path).startswith(
+                vault_real + os.sep
+            ):
                 output.append(f"<em>Missing media: {filename}</em>")
                 continue
             rel = os.path.relpath(full_path, VAULT_PATH)
@@ -409,6 +420,9 @@ def convert_transclusion(md, dataview_index):
         key = target.lower()
         filepath = title_map.get(key) or title_map.get(slugify(target).lower())
         if not filepath:
+            return f'<em class="transclusion-missing">Note not found: {target}</em>'
+        vault_real = os.path.realpath(VAULT_PATH)
+        if not os.path.realpath(filepath).startswith(vault_real + os.sep):
             return f'<em class="transclusion-missing">Note not found: {target}</em>'
         try:
             with open(filepath, encoding="utf-8") as fh:

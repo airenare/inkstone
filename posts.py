@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import threading
+import time
 from datetime import datetime, date as date_type
 
 import yaml
@@ -27,6 +28,7 @@ SHOW_SEARCH = False
 SHOW_TAGS = False
 LAST_SCAN_TIME = 0
 _reload_lock = threading.Lock()
+_last_check_time = 0.0
 
 DATE_FORMATS = [
     "%Y-%m-%d",
@@ -407,7 +409,11 @@ def load_posts():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, LAST_SCAN_TIME
+        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, LAST_SCAN_TIME, \
+        _last_check_time
+
+    if time.time() - _last_check_time < 2.0:
+        return
 
     if not _reload_lock.acquire(blocking=False):
         return  # Another thread is already reloading
@@ -423,6 +429,7 @@ def maybe_reload():
                 except OSError:
                     pass
 
+        _last_check_time = time.time()
         if newest > LAST_SCAN_TIME:
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
