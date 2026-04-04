@@ -22,6 +22,9 @@ _(all done — see Done section)_
 
 ## Done
 
+- Security: path traversal guard — `os.path.realpath()` containment check in `convert_media` (slider + single-embed) and `convert_transclusion`
+- Performance: `maybe_reload` debounce — 2 s `_last_check_time` guard skips vault walk on rapid requests
+
 - Dataview LIST type — `LIST [field] FROM #tag` renders a `<ul>` with optional field annotation
 - Dataview GROUP BY flattened display — grouped TABLE/LIST renders a heading per group + sub-table/sub-list
 - Author field on post pages — `author:` frontmatter shown in post meta + JSON-LD (single or list)
