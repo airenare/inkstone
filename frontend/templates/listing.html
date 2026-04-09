@@ -41,13 +41,15 @@
 <section class="regular-posts">
 <h3>All Posts</h3>
 
+<div class="related-grid">
 {% for post in regular %}
-<article class="post-entry">
-    <h3><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
-    <div class="post-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
-    <p class="post-summary">{{ post.summary }}</p>
-</article>
+<a href="{{ post.url_path }}" class="related-card">
+    <div class="related-card-title">{{ post.title }}</div>
+    <div class="related-card-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
+    <div class="related-card-summary">{{ post.summary }}</div>
+</a>
 {% endfor %}
+</div>
 
 {% if total_pages > 1 %}
 <div class="pagination">

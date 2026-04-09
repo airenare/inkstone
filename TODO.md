@@ -25,6 +25,7 @@ _(all done — see Done section)_
 
 ## Ideas & Features
 
+
 - **Social / `rel="me"` links** — Add optional `social_links` config (env var or homepage frontmatter) that renders `rel="me"` links in the footer/header for Mastodon verification and social profiles.
 - **Comment system integration** — Add opt-in Giscus (GitHub Discussions) or utterances embed block at the bottom of `post.html`, configurable via env vars.
 - **Inline Dataview: `dv.pages()` expression** — Extend `convert_dataview_inline` beyond `this.*` fields to support simple cross-note expressions like `` `= dv.pages("#tag").length` ``.
@@ -35,6 +36,8 @@ _(all done — see Done section)_
 - **Mermaid inner background** — Mermaid v11 injects an inline `style` background on the SVG that can't be reliably overridden via CSS or `themeVariables`. The current post-render JS strip in `base.html` is a workaround; needs investigation into the correct Mermaid v11 API to suppress it at initialisation time.
 
 ## Done
+
+- Listing page "All Posts" section: replaced flat `.post-entry` list with `.related-grid` / `.related-card` card grid (same style as "See also")
 
 - Security: path traversal guard — `os.path.realpath()` containment check in `convert_media` (slider + single-embed) and `convert_transclusion`
 - Performance: `maybe_reload` debounce — 2 s `_last_check_time` guard skips vault walk on rapid requests
