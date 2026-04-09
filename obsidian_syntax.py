@@ -493,16 +493,23 @@ def convert_math(md):
 
     $$...$$ block math → <div class="math-block">...</div>
     $...$ inline math  → <span class="math-inline">...</span>
+
+    Skips content inside backtick code spans so that e.g. `$inline$`
+    is not converted.
     """
+    # Alternation trick: match code spans first (group 1) and leave them
+    # untouched; only convert when the math group (group 2) matched.
     md = re.sub(
-        r"\$\$(.+?)\$\$",
-        lambda m: f'<div class="math-block">{m.group(1)}</div>',
+        r"(`+[^`]*`+)|\$\$(.+?)\$\$",
+        lambda m: m.group(0) if m.group(1)
+                  else f'<div class="math-block">{m.group(2)}</div>',
         md,
         flags=re.DOTALL,
     )
     md = re.sub(
-        r"\$([^\$\n]+)\$",
-        lambda m: f'<span class="math-inline">{m.group(1)}</span>',
+        r"(`+[^`]*`+)|\$([^\$\n]+)\$",
+        lambda m: m.group(0) if m.group(1)
+                  else f'<span class="math-inline">{m.group(2)}</span>',
         md,
     )
     return md
