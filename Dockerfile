@@ -24,4 +24,4 @@ RUN if [ -n "$VAULT_REPO" ]; then \
 ENV VAULT_PATH=/vault
 
 EXPOSE 8000
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
+CMD ["gunicorn", "-w", "5", "-b", "0.0.0.0:8000", "app:app"]
