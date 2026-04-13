@@ -23,6 +23,14 @@ _(all done — see Done section)_
 
 - **Correctness: log filepath in `parse_frontmatter` failures** — `posts.py` `parse_frontmatter` catches all YAML parse errors but doesn't log which file caused the failure, making vault debugging difficult. Add an optional `filepath="<unknown>"` parameter to the function signature and include it in the `print()` error message. Update the two call sites in `load_posts()` to pass `filepath`.
 
+## Hosting Platforms to Try
+
+- **Fly.io** — Docker-native, free tier, `fly deploy` from repo root; closest to a real server
+- **Render** — connects to GitHub, auto-deploys on push, free tier with spin-down on idle
+- **Railway** — minimal config, generous free tier, supports `gunicorn` start command directly
+- **Hetzner VPS** — cheapest persistent server (~€4/mo), run via gunicorn + nginx reverse proxy
+- **DigitalOcean** — Droplet or App Platform; App Platform auto-deploys from GitHub like Render
+
 ## Ideas & Features
 
 
