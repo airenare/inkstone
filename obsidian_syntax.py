@@ -484,8 +484,13 @@ def convert_block_ids(md):
 
 
 def convert_highlights(md):
-    """Convert ==highlighted text== to <mark> tags."""
-    return re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", md)
+    """Convert ==highlighted text== to <mark> tags, skipping code spans."""
+    # Split on backtick code spans so we only replace outside them.
+    parts = re.split(r"(`+.+?`+)", md, flags=re.DOTALL)
+    for i, part in enumerate(parts):
+        if not part.startswith("`"):
+            parts[i] = re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", part)
+    return "".join(parts)
 
 
 def convert_math(md):
