@@ -151,17 +151,17 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 | Path | URL | Purpose |
 |------|-----|---------|
 | `Test Website.md` | `/` (homepage) | Site homepage |
-| `The Accidental Existentialist.md` | `/test_post` | Root-level standalone page; pinned to nav via `menu_order: 1` |
+| `The Accidental Existentialist.md` | `/the-accidental-existentialist` | Root-level standalone page; pinned to nav via `menu_order: 1` |
 | `blog/Blog Index.md` | `/blog` (listing) | Blog section index |
-| `blog/test_post_1.md` | `/blog/Test-Post-One` | Featured post with images/callouts/checkboxes |
-| `blog/test_post_2.md` | `/blog/Test-Post-Two` | Featured post with slider/callouts |
-| `blog/Python Ate My Homework.md` | `/blog/Python-Ate-My-Homework` | Regular blog post |
-| `blog/The Philosophy of Semicolons.md` | `/blog/The-Philosophy-of-Semicolons` | Regular blog post |
+| `blog/test_post_1.md` | `/blog/test-post-one` | Featured post with images/callouts/checkboxes |
+| `blog/test_post_2.md` | `/blog/test-post-two` | Featured post with slider/callouts |
+| `blog/Python Ate My Homework.md` | `/blog/python-ate-my-homework` | Regular blog post |
+| `blog/The Philosophy of Semicolons.md` | `/blog/the-philosophy-of-semicolons` | Regular blog post |
 | `gallery/Gallery Index.md` | `/gallery` (listing) | Gallery section index with intro |
-| `gallery/Neon Dreams.md` | `/gallery/Neon-Dreams` | Gallery post |
-| `gallery/Pixel Sunset.md` | `/gallery/Pixel-Sunset` | Gallery post |
-| `gallery/Recursive Landscapes.md` | `/gallery/Recursive-Landscapes` | Gallery post |
-| `gallery/arts/Watercolor Algorithms.md` | `/gallery/arts/Watercolor-Algorithms` | Subfolder post with wiki-links |
+| `gallery/Neon Dreams.md` | `/gallery/neon-dreams` | Gallery post |
+| `gallery/Pixel Sunset.md` | `/gallery/pixel-sunset` | Gallery post |
+| `gallery/Recursive Landscapes.md` | `/gallery/recursive-landscapes` | Gallery post |
+| `gallery/arts/Watercolor Algorithms.md` | `/gallery/arts/watercolor-algorithms` | Subfolder post with wiki-links |
 
 ## Workflow Rules
 
