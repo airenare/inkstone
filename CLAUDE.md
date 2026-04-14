@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Project Does
 
-Obsidian Blog Engine converts Obsidian vault markdown notes into a web-accessible blog. URL structure is derived from vault folder hierarchy. Files in `VAULT/blog/` are served at `/blog/slug`, files in `VAULT/gallery/` at `/gallery/slug`, and files in the vault root at `/slug`.
+OnyxFolio converts Obsidian vault markdown notes into a web-accessible blog. URL structure is derived from vault folder hierarchy. Files in `VAULT/blog/` are served at `/blog/slug`, files in `VAULT/gallery/` at `/gallery/slug`, and files in the vault root at `/slug`.
 
 ## Running the Server
 
@@ -18,8 +18,8 @@ The project dependencies live in `/home/air/venv/3.14/`. Use that Python when ru
 /home/air/venv/3.14/bin/gunicorn -b 0.0.0.0:8000 app:app
 
 # Docker
-docker build -t obsidian-blog .
-docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault obsidian-blog
+docker build -t onyxfolio .
+docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault onyxfolio
 ```
 
 Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory. If `VAULT_PATH` is unset or missing, the app falls back to `./BlogPages` automatically.
