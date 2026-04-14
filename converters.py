@@ -1,4 +1,4 @@
-"""Markdown rendering pipeline for the Obsidian Blog Engine.
+"""Markdown rendering pipeline for OnyxFolio.
 
 This module is the only one imported externally.  It re-exports the
 utilities that other modules (posts.py) need and wires all the converter
