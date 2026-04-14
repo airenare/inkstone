@@ -26,20 +26,24 @@ Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directo
 
 ## Architecture
 
-The app is split across four modules with a strict one-way import chain:
+The app is split across seven modules with a strict one-way import chain:
 
 ```
-config.py  ←  converters.py  ←  posts.py  ←  app.py
+config.py  ←  obsidian_syntax.py  ←  converters.py  ←  posts.py  ←  app.py
+                   dataview.py    ↗                          view_helpers.py ↗
 ```
 
 | File | Responsibility |
 |------|---------------|
 | `config.py` | Loads `.env`, sets `VAULT_PATH`, `ATTACHMENTS_PATH` |
-| `converters.py` | All markdown conversion functions + `render_markdown()` pipeline |
+| `obsidian_syntax.py` | Obsidian-specific converters: wiki-links, embeds, callouts, checkboxes, highlights, math, block IDs, transclusion, `slugify` |
+| `dataview.py` | Server-side Dataview query engine: TABLE/LIST/GROUP BY/WHERE/SORT/LIMIT |
+| `converters.py` | Pipeline coordinator: imports from `obsidian_syntax` + `dataview`, wires `render_markdown()` |
 | `posts.py` | Two-pass `load_posts()`, `maybe_reload()`, `ALL_POSTS`, `SECTION_ROUTES` |
-| `app.py` | Flask app init, context processor, single catch-all route |
+| `view_helpers.py` | Pure view utilities (no Flask): `_build_breadcrumbs`, `_get_adjacent_posts`, `_get_related`, `_highlight` |
+| `app.py` | Flask app init, context processor, routes |
 
-New features should follow this chain — `app.py` imports from `posts.py`, never the reverse.
+New features should follow this chain — `app.py` imports from `posts.py` and `view_helpers.py`, never the reverse.
 
 ### Data Flow
 
@@ -68,14 +72,15 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 
 ### Markdown Pipeline (order matters)
 
-`render_markdown(md, path, url_index)` in `converters.py`:
+`render_markdown(md, path, url_index)` in `converters.py` (functions live in `obsidian_syntax.py` and `dataview.py`):
 
 1. `strip_leading_h1()` — removes `# Title` since the template renders it
 2. `convert_media()` — `![[file.ext]]` → lightbox image / video / slider gallery
 3. `convert_links(url_index)` — `[[Title]]` → resolved URL using two-pass index
 4. `convert_callouts()` — `> [!type] Title` → `<div class="callout callout-{type}">`
 5. `convert_checkboxes()` — `- [ ]`/`- [x]` → HTML checkbox lists with nesting
-6. `markdown.markdown()` — standard extensions: `fenced_code`, `tables`, `toc`, `md_in_html`, `codehilite`
+6. `convert_dataview()` — ` ```dataview ``` ` blocks executed server-side by `dataview.py`
+7. `markdown.markdown()` — standard extensions: `fenced_code`, `tables`, `toc`, `md_in_html`, `codehilite`
 
 ### Frontend
 
@@ -85,7 +90,9 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 - `frontend/templates/post.html` — individual post; `back_url` points to parent section
 - `frontend/templates/404.html` — custom 404 page
 - `frontend/static/obsidian.css` — dark theme (Catppuccin-inspired) + header/listing styles
+- `frontend/static/omarchy.css` — alternative Omarchy-native theme
 - `frontend/static/callouts.css` — per-type callout styles
+- `frontend/static/omarchy-callouts.css` — callout styles for the Omarchy theme
 - `frontend/static/code.css` — code block styling with language labels
 
 ### Frontmatter Reference
