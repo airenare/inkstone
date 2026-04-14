@@ -23,6 +23,12 @@ _(all done — see Done section)_
 
 - **Correctness: log filepath in `parse_frontmatter` failures** — `posts.py` `parse_frontmatter` catches all YAML parse errors but doesn't log which file caused the failure, making vault debugging difficult. Add an optional `filepath="<unknown>"` parameter to the function signature and include it in the `print()` error message. Update the two call sites in `load_posts()` to pass `filepath`.
 
+## Branding & Identity
+
+- **Domain** — register `onyxfolio.com`, `.dev`, or `.app`
+- **Logo** — design a mark using onyx stone / folio page motif
+- **Footer attribution** — add "Powered by OnyxFolio" (opt-out via env var) to the default theme
+
 ## Hosting Platforms to Try
 
 - **Fly.io** — Docker-native, free tier, `fly deploy` from repo root; closest to a real server
