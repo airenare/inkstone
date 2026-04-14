@@ -3,10 +3,10 @@ website: true
 type: homepage
 show_search: true
 show_tags: true
-title: Obsidian Blog Engine
+title: OnyxFolio
 ---
 
-# Obsidian Blog Engine
+# OnyxFolio
 
 A lightweight blog engine that turns your **Obsidian vault into a website** — no export, no copy-paste. Write in Obsidian, push to GitHub, see it live.
 
