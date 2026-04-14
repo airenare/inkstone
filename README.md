@@ -1,4 +1,6 @@
-# Obsidian Blog Engine
+# OnyxFolio
+
+> Your notes, published.
 
 A lightweight Python/Flask server that turns an **Obsidian vault into a website**. Write in Obsidian, push to GitHub, see it live — no export step, no build pipeline, no CMS.
 
@@ -103,8 +105,8 @@ tags:                 # user content tags — shown as badges, used for /tag/<na
 **Requirements:** Python 3.11+
 
 ```bash
-git clone https://github.com/you/obsidian-blog-engine
-cd obsidian-blog-engine
+git clone https://github.com/airenare/onyxfolio
+cd onyxfolio
 
 pip install -r requirements.txt
 
@@ -122,8 +124,8 @@ The server hot-reloads when vault files change.
 ## Docker
 
 ```bash
-docker build -t obsidian-blog .
-docker run -p 8000:8000 -v /path/to/vault:/vault obsidian-blog
+docker build -t onyxfolio .
+docker run -p 8000:8000 -v /path/to/vault:/vault onyxfolio
 ```
 
 If `/vault` is not mounted or doesn't exist, the server falls back to the bundled `BlogPages/` demo vault.
