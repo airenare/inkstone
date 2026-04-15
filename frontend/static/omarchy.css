@@ -1320,13 +1320,13 @@ audio {
 }
 
 [data-theme="light"] .dataview-table td {
-    background: #fff;
+    background: var(--bg);
     color: var(--text);
     border-color: var(--border);
 }
 
 [data-theme="light"] .dataview-table tr:nth-child(even) td {
-    background: #fff;
+    background: var(--bg-raised);
 }
 
 [data-theme="light"] .dataview-table tr:hover td {

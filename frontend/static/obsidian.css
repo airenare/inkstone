@@ -1319,24 +1319,23 @@ audio {
 
 /* --- Dataview tables --- */
 [data-theme="light"] .dataview-table th {
-    background: #e4e4dc;
-    color: #1a1a2a;
-    border-color: #c8c8d0;
+    background: #d0d0c8;
+    color: #44445a;
+    border-color: #b8b8c0;
 }
 
 [data-theme="light"] .dataview-table td {
-    background: #ffffff;
+    background: #f0f0eb;
     color: #1a1a2a;
     border-color: #d0d0da;
 }
 
-/* No zebra striping flash in light mode */
 [data-theme="light"] .dataview-table tr:nth-child(even) td {
-    background: #ffffff;
+    background: #e8e8e0;
 }
 
 [data-theme="light"] .dataview-table tr:hover td {
-    background: #f0f0eb;
+    background: #ddddd5;
 }
 
 [data-theme="light"] .dataview-table a {
