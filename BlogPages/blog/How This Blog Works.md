@@ -183,6 +183,12 @@ Content line two</div>
 </div>
 ```
 
+→
+
+> [!tip] Title
+> Content line one
+> Content line two
+
 The parser is line-by-line: it detects the `> [!type] Title` header, accumulates `>` prefixed lines as content, and flushes when a non-`>` line arrives. All standard Obsidian callout types are supported (`note`, `tip`, `info`, `warning`, `danger`, `abstract`, `question`, `success`, `failure`, `bug`, `example`, `quote`).
 
 ### Step 5 — `convert_checkboxes()`
