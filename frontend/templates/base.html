@@ -120,31 +120,6 @@ function openLightbox(items,startIndex){
     overlay.appendChild(inner)
 
 
-    // --- CREATE X BUTTON ---
-    const closeBtn = document.createElement("div")
-    closeBtn.className = "lightbox-close-btn"
-    closeBtn.textContent = "✕"
-    overlay.appendChild(closeBtn)
-
-    closeBtn.onclick = e => {
-        e.stopPropagation()
-        close()
-    }
-
-    // Fade in/out logic
-    let fadeTimeout
-
-    function showCloseBtn(){
-        closeBtn.style.opacity = "1"
-        if(fadeTimeout) clearTimeout(fadeTimeout)
-        fadeTimeout = setTimeout(() => closeBtn.style.opacity = "0", 1000)
-    }
-
-    overlay.addEventListener("mousemove", showCloseBtn)
-
-    // Initial show
-    showCloseBtn()
-
 
     function render(){
 

@@ -201,19 +201,6 @@ img{
     text-align:center;
 }
 
-.lightbox-close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    color: #fff;
-    font-size: 28px;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1000;
-    user-select: none;
-}
-
 .slider-gallery {
     position: relative;
     overflow: hidden;
