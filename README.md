@@ -25,7 +25,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 ## Features
 
 - **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes, `==highlights==`, footnotes (`[^1]`) — all rendered without any client-side plugins
-- **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; dark theme matches the site
+- **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; adapts to dark and light theme automatically
 - **Math / LaTeX** — `$inline$` and `$$block$$` rendered via KaTeX; expressions are protected from the markdown parser before rendering
 - **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds a note (or just a heading section) inline with a link back to the source
 - **Anchor links** — `[[Note#Heading]]` resolves to the note's URL with a `#heading-slug` fragment
