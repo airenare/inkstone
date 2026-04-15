@@ -89,6 +89,8 @@ def convert_checkboxes(md):
     lines = md.split("\n")
     out = []
     stack = []
+    fence_marker = None
+    _fence_open = re.compile(r"^(`{3,}|~{3,})")
 
     def close_lists(to_level=0):
         while len(stack) > to_level:
@@ -96,6 +98,23 @@ def convert_checkboxes(md):
             stack.pop()
 
     for line in lines:
+        # Pass fenced code blocks through untouched
+        if fence_marker is None:
+            m = _fence_open.match(line)
+            if m:
+                fence_marker = m.group(1)
+                if stack:
+                    close_lists(0)
+                out.append(line)
+                continue
+        else:
+            out.append(line)
+            if re.match(
+                r"^" + re.escape(fence_marker) + r"`*~*\s*$", line
+            ):
+                fence_marker = None
+            continue
+
         match = re.match(r'^(\s*)- \[([ xX])\] (.*)', line)
 
         if match:
@@ -136,8 +155,31 @@ def convert_callouts(md):
     callout_title = ""
     callout_content = []
     collapsed = None  # None = regular div; True = <details>; False = <details open>
+    fence_marker = None
+    _fence_open = re.compile(r"^(`{3,}|~{3,})")
 
     for line in lines:
+        # Pass fenced code blocks through untouched
+        if fence_marker is None:
+            m = _fence_open.match(line)
+            if m:
+                fence_marker = m.group(1)
+                if callout_open:
+                    out.append(render_callout(
+                        callout_type, callout_title, callout_content, collapsed
+                    ))
+                    callout_open = False
+                    callout_content = []
+                out.append(line)
+                continue
+        else:
+            out.append(line)
+            if re.match(
+                r"^" + re.escape(fence_marker) + r"`*~*\s*$", line
+            ):
+                fence_marker = None
+            continue
+
         if line.lstrip().startswith("> [!"):
             if callout_open:
                 out.append(render_callout(
