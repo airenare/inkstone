@@ -476,20 +476,71 @@ def _execute_dv_query(parsed, dataview_index):
 # =========================================
 
 def convert_dataview(md, dataview_index):
-    """Replace ```dataview ... ``` fenced blocks with rendered HTML."""
-    pattern = re.compile(r"```dataview\n(.*?)\n```", re.DOTALL | re.IGNORECASE)
+    """Replace ```dataview ... ``` fenced blocks with rendered HTML.
 
-    def replace_block(match):
-        parsed = _parse_dv_query(match.group(1))
-        if not parsed:
-            return '<div class="dataview-error">Could not parse query.</div>'
-        try:
-            table_html = _execute_dv_query(parsed, dataview_index)
-            return f'<div class="dataview">\n{table_html}\n</div>'
-        except Exception as e:
-            return f'<div class="dataview-error">Dataview error: {e}</div>'
+    Skips blocks that are nested inside another fenced code block (e.g.
+    a ````markdown example block), so that quoted dataview examples are
+    passed through as literal code rather than executed.
+    """
+    _fence_open = re.compile(r"^(`{3,}|~{3,})(\w*)")
+    lines = md.split("\n")
+    output = []
+    fence_marker = None   # backtick/tilde sequence that opened the current fence
 
-    return pattern.sub(replace_block, md)
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+
+        if fence_marker is None:
+            m = _fence_open.match(line)
+            if m:
+                marker, lang = m.group(1), m.group(2).lower()
+                if lang == "dataview":
+                    # Consume the dataview block and render it
+                    i += 1
+                    buf = []
+                    while i < len(lines) and not lines[i].startswith(marker):
+                        buf.append(lines[i])
+                        i += 1
+                    # i is on the closing marker line (or past end)
+                    query_text = "\n".join(buf)
+                    parsed = _parse_dv_query(query_text)
+                    if not parsed:
+                        output.append(
+                            '<div class="dataview-error">'
+                            "Could not parse query.</div>"
+                        )
+                    else:
+                        try:
+                            table_html = _execute_dv_query(
+                                parsed, dataview_index
+                            )
+                            output.append(
+                                f'<div class="dataview">\n{table_html}\n</div>'
+                            )
+                        except Exception as e:
+                            output.append(
+                                f'<div class="dataview-error">'
+                                f"Dataview error: {e}</div>"
+                            )
+                else:
+                    # Some other fenced block — enter pass-through mode
+                    fence_marker = marker
+                    output.append(line)
+            else:
+                output.append(line)
+        else:
+            # Inside a non-dataview fence: pass through until closing marker
+            output.append(line)
+            # Closing line must start with the same (or longer) fence sequence
+            if re.match(
+                r"^" + re.escape(fence_marker) + r"`*~*\s*$", line
+            ):
+                fence_marker = None
+
+        i += 1
+
+    return "\n".join(output)
 
 
 def convert_dataview_inline(md, note_ctx):
