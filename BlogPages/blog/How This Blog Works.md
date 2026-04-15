@@ -201,6 +201,12 @@ Converts Obsidian checkbox lists to HTML with proper nesting. Indentation level 
     - [ ] Unchecked child
 ```
 
+→
+
+- [ ] Unchecked parent
+    - [x] Checked child
+    - [ ] Unchecked child
+
 The parser tracks a `stack` of open `<ul>` tags and opens or closes them as the indent level changes. Each checkbox becomes a disabled `<input type="checkbox">` so the visual state is preserved without any interactivity.
 
 ### Step 6 — `markdown.Markdown().convert()`
@@ -241,6 +247,15 @@ WHERE !contains(tags, "listing")
 SORT date DESC
 ```
 ````
+
+→
+
+```dataview
+TABLE file.link AS Title, date AS Date
+FROM #blog
+WHERE !contains(tags, "listing")
+SORT date DESC
+```
 
 …is parsed and executed against `dataview_index` — the same index built in Pass 1 that contains every `.md` file in the vault, whether published or not.
 
