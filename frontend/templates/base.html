@@ -48,20 +48,29 @@ href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-ni
 
 <script type="module">
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"
-mermaid.initialize({
-    startOnLoad: false,
-    theme: "dark",
-    themeVariables: { background: "transparent", edgeLabelBackground: "transparent" }
-})
-document.addEventListener("DOMContentLoaded", async () => {
-    document.querySelectorAll("code.language-mermaid").forEach(code => {
-        const div = document.createElement("div")
-        div.className = "mermaid"
-        div.textContent = code.textContent
-        code.closest("pre").replaceWith(div)
-    })
-    await mermaid.run()
-    // Strip any inline background styles Mermaid injects on the SVG element
+
+function mermaidConfig() {
+    const light = document.documentElement.getAttribute("data-theme") === "light"
+    return {
+        startOnLoad: false,
+        theme: light ? "base" : "dark",
+        themeVariables: light ? {
+            background: "transparent",
+            edgeLabelBackground: "transparent",
+            primaryColor: "#d8d8d0",
+            primaryTextColor: "#1a1a2a",
+            primaryBorderColor: "#8a8a80",
+            lineColor: "#44445a",
+            secondaryColor: "#d0d0c8",
+            tertiaryColor: "#e0e0d8",
+        } : {
+            background: "transparent",
+            edgeLabelBackground: "transparent",
+        }
+    }
+}
+
+function fixSvgBg() {
     document.querySelectorAll(".mermaid svg").forEach(svg => {
         svg.style.background = "transparent"
         svg.querySelectorAll("rect").forEach(r => {
@@ -71,7 +80,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         })
     })
-})
+}
+
+async function renderMermaid() {
+    mermaid.initialize(mermaidConfig())
+    // Convert any unprocessed code blocks to .mermaid divs, storing source
+    document.querySelectorAll("code.language-mermaid").forEach(code => {
+        const div = document.createElement("div")
+        div.className = "mermaid"
+        div.dataset.mermaidSrc = code.textContent
+        div.textContent = code.textContent
+        code.closest("pre").replaceWith(div)
+    })
+    // Reset already-rendered diagrams so mermaid re-processes them
+    document.querySelectorAll(".mermaid[data-processed]").forEach(div => {
+        if (div.dataset.mermaidSrc) {
+            div.removeAttribute("data-processed")
+            div.textContent = div.dataset.mermaidSrc
+        }
+    })
+    await mermaid.run()
+    fixSvgBg()
+}
+
+document.addEventListener("DOMContentLoaded", renderMermaid)
+
+// Re-render whenever the theme attribute changes
+new MutationObserver(renderMermaid).observe(
+    document.documentElement,
+    { attributes: true, attributeFilter: ["data-theme"] }
+)
 </script>
 
 </head>

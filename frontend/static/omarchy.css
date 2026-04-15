@@ -1035,6 +1035,15 @@ mark {
 
 .math-inline .katex { font-size: 1em; }
 
+/* --- Math block & Mermaid light theme --- */
+[data-theme="light"] .math-block {
+    background: var(--bg-raised);
+    color: var(--text);
+}
+[data-theme="light"] .mermaid {
+    background: var(--bg-raised);
+}
+
 
 /* =========================================
    AUDIO EMBEDS

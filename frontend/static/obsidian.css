@@ -1397,8 +1397,13 @@ audio {
 [data-theme="light"] .transclusion-body    { color: #44445a; }
 
 /* --- Math block & Mermaid --- */
-[data-theme="light"] .math-block { background: #eeeee7; }
-[data-theme="light"] .mermaid    { background: #eeeee7; }
+[data-theme="light"] .math-block {
+    background: var(--bg-raised);
+    color: var(--text);
+}
+[data-theme="light"] .mermaid {
+    background: var(--bg-raised);
+}
 
 /* --- Private note page --- */
 [data-theme="light"] .private-badge {
