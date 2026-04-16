@@ -29,6 +29,26 @@ SHOW_SEARCH = False
 SHOW_TAGS = False
 # Sorted list of all user content tags across published posts
 ALL_TAGS: list = []
+# Active theme name — set from the root homepage 'theme' frontmatter field
+SITE_THEME: str = "obsidian"
+
+_VALID_THEMES = {"obsidian", "omarchy"}
+
+
+def _resolve_theme(value, context=""):
+    """Return a valid theme name, falling back to 'obsidian' with a warning."""
+    if not value:
+        return "obsidian"
+    name = str(value).strip().lower()
+    if name not in _VALID_THEMES:
+        print(
+            f"WARNING: Unknown theme '{name}'"
+            + (f" in {context}" if context else "")
+            + ". Falling back to 'obsidian'.",
+            file=sys.stderr,
+        )
+        return "obsidian"
+    return name
 LAST_SCAN_TIME = 0
 _reload_lock = threading.Lock()
 _last_check_time = 0.0
@@ -116,6 +136,7 @@ def load_posts():
     all_posts = {}
     section_routes = {}
     website_name = "My Blog"
+    site_theme = "obsidian"
     menu_posts = []
     show_search = False
     show_tags = False
@@ -358,6 +379,9 @@ def load_posts():
                 website_name = title
                 show_search = bool(metadata.get("show_search"))
                 show_tags = bool(metadata.get("show_tags"))
+                site_theme = _resolve_theme(
+                    metadata.get("theme"), filepath
+                )
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,
@@ -424,7 +448,7 @@ def load_posts():
     )
 
     menu_posts.sort(key=lambda x: x["menu_order"])
-    return (all_posts, section_routes, website_name, dataview_index,
+    return (all_posts, section_routes, website_name, site_theme, dataview_index,
             private_routes, menu_posts, show_search, show_tags, all_tags)
 
 
@@ -433,7 +457,7 @@ def load_posts():
 # =========================================
 
 def maybe_reload():
-    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, DATAVIEW_INDEX, \
+    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, LAST_SCAN_TIME, \
         _last_check_time
 
@@ -457,7 +481,7 @@ def maybe_reload():
         _last_check_time = time.time()
         if newest > LAST_SCAN_TIME:
             print("Reloading vault...")
-            (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME,
+            (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS) = load_posts()
             LAST_SCAN_TIME = newest

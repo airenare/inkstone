@@ -5,7 +5,7 @@ from flask import Flask, render_template, abort, request, send_from_directory, \
     Response
 
 import posts as post_store
-from config import VAULT_PATH, VERSION, THEME
+from config import VAULT_PATH, VERSION
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
 
@@ -36,7 +36,7 @@ def inject_globals():
         "current_url": request.url,
         "canonical_url": request.base_url,
         "app_version": VERSION,
-        "theme_css": f"theme-{THEME}.css",
+        "theme_css": f"theme-{post_store.SITE_THEME}.css",
     }
 
 
@@ -209,6 +209,14 @@ def search():
     )
 
 
+def _page_theme_css(post):
+    """Return theme_css for a page if it overrides the site theme, else None."""
+    raw = post.get("metadata", {}).get("theme")
+    if not raw:
+        return None
+    return f"theme-{post_store._resolve_theme(raw, post.get('url_path', ''))}.css"
+
+
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve(path):
@@ -249,6 +257,9 @@ def serve(path):
             page = min(page, total_pages)
             regular_page = regular[(page - 1) * page_size: page * page_size]
 
+            extra = {}
+            if page_theme := _page_theme_css(route["post"]):
+                extra["theme_css"] = page_theme
             return render_template(
                 "listing.html",
                 featured=featured,
@@ -256,10 +267,14 @@ def serve(path):
                 listing=route["post"],
                 page=page,
                 total_pages=total_pages,
+                **extra,
             )
 
         else:  # homepage
-            return render_template("index.html", homepage=route["post"])
+            extra = {}
+            if page_theme := _page_theme_css(route["post"]):
+                extra["theme_css"] = page_theme
+            return render_template("index.html", homepage=route["post"], **extra)
 
     # 2. Regular posts
     if url_path in post_store.ALL_POSTS:
@@ -269,10 +284,14 @@ def serve(path):
         breadcrumbs = build_breadcrumbs(url_path, post["title"], post_store.SECTION_ROUTES)
         related = post.get("related", [])
         prev_post, next_post = get_adjacent_posts(post, post_store.ALL_POSTS)
+        extra = {}
+        if page_theme := _page_theme_css(post):
+            extra["theme_css"] = page_theme
         return render_template(
             template, post=post, back_url=back_url,
             breadcrumbs=breadcrumbs, related=related,
             prev_post=prev_post, next_post=next_post,
+            **extra,
         )
 
     # 3. Private note placeholder
@@ -294,6 +313,7 @@ if __name__ == "__main__":
         post_store.ALL_POSTS,
         post_store.SECTION_ROUTES,
         post_store.WEBSITE_NAME,
+        post_store.SITE_THEME,
         post_store.DATAVIEW_INDEX,
         post_store.PRIVATE_ROUTES,
         post_store.MENU_POSTS,
