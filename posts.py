@@ -125,7 +125,8 @@ def load_posts():
     url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
     dataview_index = {}  # filepath → dataview context (all vault notes)
 
-    for root, _, files in os.walk(VAULT_PATH):
+    for root, dirs, files in os.walk(VAULT_PATH):
+        dirs[:] = [d for d in dirs if d.lower() != "templates"]
         for f in files:
             if not f.endswith(".md"):
                 continue
