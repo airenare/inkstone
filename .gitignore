@@ -1,4 +1,5 @@
 .env
+.envrc
 .obsidian/
 __pycache__/
 /.vscode
