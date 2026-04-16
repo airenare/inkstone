@@ -1376,3 +1376,5 @@ audio {
 [data-theme="light"] .breadcrumbs,
 [data-theme="light"] .breadcrumbs a,
 [data-theme="light"] .breadcrumb-current { color: var(--text-dim); }
+
+[data-theme="light"] #site-footer { color: var(--text-dim); }
