@@ -219,12 +219,23 @@ def load_posts():
             else:
                 url_path = "/" + slug
 
+            # Homepage/listing files are served at the section URL, not their
+            # computed url_path — index them under the section URL so that
+            # [[SectionHomepage]] wiki-links resolve correctly.
+            note_type_p1 = (metadata.get("type") or "").strip().lower()
+            section_url_p1 = ("/" + section) if section else "/"
+            index_url = (
+                section_url_p1
+                if note_type_p1 in ("homepage", "listing")
+                else url_path
+            )
+
             # Store all keys lowercase so wiki-link lookup is case-insensitive
-            url_index[slugify(title).lower()] = url_path
+            url_index[slugify(title).lower()] = index_url
             # Also index by filename and slug so [[Filename|Display]] links
             # resolve even when the title differs from the file name.
-            url_index[slugify(f[:-3]).lower()] = url_path
-            url_index[slug.lower()] = url_path
+            url_index[slugify(f[:-3]).lower()] = index_url
+            url_index[slug.lower()] = index_url
             # aliases frontmatter: list of alternate names that resolve to this post
             aliases = metadata.get("aliases") or []
             if isinstance(aliases, str):
