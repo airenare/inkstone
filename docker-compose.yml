@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        VAULT_REPO: ${VAULT_REPO:-}
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
