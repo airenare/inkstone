@@ -456,6 +456,13 @@ def load_posts():
 # AUTO RELOAD
 # =========================================
 
+def force_reload():
+    """Reset scan timestamps so maybe_reload() reloads on the next request."""
+    global LAST_SCAN_TIME, _last_check_time
+    LAST_SCAN_TIME = 0
+    _last_check_time = 0
+
+
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, LAST_SCAN_TIME, \

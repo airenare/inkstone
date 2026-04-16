@@ -2,8 +2,9 @@ services:
   app:
     build:
       context: .
-      args:
-        VAULT_REPO: ${VAULT_REPO:-}
+    environment:
+      - VAULT_REPO=${VAULT_REPO:-}
+      - WEBHOOK_SECRET=${WEBHOOK_SECRET:-}
     ports:
       - "8000:8000"
     restart: unless-stopped

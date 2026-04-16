@@ -29,3 +29,6 @@ if ATTACHMENTS_PATH and not os.path.isdir(ATTACHMENTS_PATH):
     )
     ATTACHMENTS_PATH = None
 
+VAULT_REPO = os.getenv("VAULT_REPO") or None
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET") or None
+

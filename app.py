@@ -1,11 +1,14 @@
+import hashlib
+import hmac
 import html
+import subprocess
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
     Response
 
 import posts as post_store
-from config import VAULT_PATH, VERSION
+from config import VAULT_PATH, VERSION, WEBHOOK_SECRET
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
 
@@ -43,6 +46,36 @@ def inject_globals():
 # =========================================
 # ROUTES
 # =========================================
+
+@app.route("/webhook", methods=["POST"])
+def vault_webhook():
+    if WEBHOOK_SECRET:
+        sig = request.headers.get("X-Hub-Signature-256", "")
+        expected = "sha256=" + hmac.new(
+            WEBHOOK_SECRET.encode(), request.data, hashlib.sha256
+        ).hexdigest()
+        if not hmac.compare_digest(sig, expected):
+            abort(403)
+    else:
+        print("WARNING: /webhook called but WEBHOOK_SECRET is not set.", flush=True)
+
+    import os
+    if os.path.isdir(os.path.join(VAULT_PATH, ".git")):
+        try:
+            result = subprocess.run(
+                ["git", "-C", VAULT_PATH, "pull", "--ff-only"],
+                capture_output=True, text=True, timeout=60,
+            )
+            if result.returncode != 0:
+                print(f"git pull failed: {result.stderr}", flush=True)
+                return Response(result.stderr, status=500)
+            print(f"git pull: {result.stdout.strip()}", flush=True)
+        except subprocess.TimeoutExpired:
+            return Response("git pull timed out", status=500)
+
+    post_store.force_reload()
+    return Response("ok", status=200)
+
 
 @app.route("/attachments/<path:path>")
 def attachments(path):
