@@ -8,7 +8,9 @@ Import graph (no cycles):
   config  ←  obsidian_syntax  ←  converters  ←  posts  ←  app
                 dataview      ↗
 """
+import html as _html_module
 import os
+import re
 
 import markdown
 
@@ -36,6 +38,35 @@ __all__ = [
 ]
 
 
+_MERMAID_TOKEN = "ONYXMERMAID{i}ONYXEND"
+
+
+def _extract_mermaid(md):
+    """Pull ```mermaid blocks out before codehilite can strip their class."""
+    blocks = []
+
+    def replacer(m):
+        blocks.append(m.group(1))
+        return f"\n\n{_MERMAID_TOKEN.format(i=len(blocks) - 1)}\n\n"
+
+    md = re.sub(r"```mermaid\n(.*?)```", replacer, md, flags=re.DOTALL)
+    return md, blocks
+
+
+def _restore_mermaid(html_str, blocks):
+    """Replace tokens with <div class="mermaid"> elements."""
+    for i, src in enumerate(blocks):
+        escaped = _html_module.escape(src)
+        div = (
+            f'<div class="mermaid" data-mermaid-src="{escaped}">'
+            f"{escaped}</div>"
+        )
+        html_str = html_str.replace(
+            f"<p>{_MERMAID_TOKEN.format(i=i)}</p>", div
+        )
+    return html_str
+
+
 def render_markdown(md, path, url_index=None, dataview_index=None,
                     note_metadata=None):
     md = strip_leading_h1(md)
@@ -55,6 +86,8 @@ def render_markdown(md, path, url_index=None, dataview_index=None,
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
 
+    md, mermaid_blocks = _extract_mermaid(md)
+
     md_obj = markdown.Markdown(
         extensions=["fenced_code", "tables", "toc", "md_in_html", "codehilite",
                     "footnotes"],
@@ -62,5 +95,7 @@ def render_markdown(md, path, url_index=None, dataview_index=None,
     )
     html_str = md_obj.convert(md)
     toc = md_obj.toc if md_obj.toc_tokens else ""
+
+    html_str = _restore_mermaid(html_str, mermaid_blocks)
 
     return html_str, toc
