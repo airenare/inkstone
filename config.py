@@ -28,3 +28,12 @@ if ATTACHMENTS_PATH and not os.path.isdir(ATTACHMENTS_PATH):
         file=sys.stderr,
     )
     ATTACHMENTS_PATH = None
+
+_VALID_THEMES = {"obsidian", "omarchy"}
+THEME = os.getenv("THEME", "obsidian")
+if THEME not in _VALID_THEMES:
+    print(
+        f"WARNING: Unknown THEME '{THEME}', falling back to 'obsidian'.",
+        file=sys.stderr,
+    )
+    THEME = "obsidian"

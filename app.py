@@ -5,7 +5,7 @@ from flask import Flask, render_template, abort, request, send_from_directory, \
     Response
 
 import posts as post_store
-from config import VAULT_PATH, VERSION
+from config import VAULT_PATH, VERSION, THEME
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
 
@@ -36,6 +36,7 @@ def inject_globals():
         "current_url": request.url,
         "canonical_url": request.base_url,
         "app_version": VERSION,
+        "theme_css": f"theme-{THEME}.css",
     }
 
 

@@ -1,34 +1,88 @@
 /* =========================
-   OMARCHY CALLOUTS — Catppuccin Mocha
+   THEME: OMARCHY — Catppuccin Mocha/Latte
    ========================= */
 
-.callout {
-    margin: 1.6em 0;
-    padding: 16px 18px;
-    border-radius: 8px;
-    background: #313244;
-    border-left: 4px solid #89b4fa;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+
+/* DARK VARIABLE OVERRIDES */
+
+:root {
+    --bg:                  #1e1e2e;
+    --bg-raised:           #181825;
+    --bg-card:             #313244;
+    --bg-stripe:           #26263a;
+    --bg-hover:            #2d2d44;
+    --bg-interactive:      #313244;
+    --border:              #45475a;
+    --border-subtle:       #313244;
+    --text:                #cdd6f4;
+    --text-muted:          #a6adc8;
+    --text-dim:            #585b70;
+    --accent:              #89b4fa;
+    --site-title:          #cdd6f4;
+    --mark-bg:             #f9e2af33;
+    --mark-fg:             #f9e2af;
+    --code-bg:             #11111b;
+    --inline-code-bg:      #313244;
+    --inline-code-text:    #94e2d5;
+    --banner-gradient:     transparent, rgba(30,30,46,0.5), #1e1e2e;
+    --banner-meta-color:   rgba(205, 214, 244, 0.75);
+    --tag-color:           #94e2d5;
+    --h1-color:            #f38ba8;
+    --h2-color:            #a6e3a1;
+    --h3-color:            #f9e2af;
+    --h4-color:            #89b4fa;
+    --h5-color:            #f5c2e7;
+    --h6-color:            #cba6f7;
+    --callout-base-bg:     #313244;
+    --callout-base-border: #89b4fa;
 }
 
-.callout-title {
-    font-weight: 600;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+
+/* LIGHT VARIABLE OVERRIDES — Catppuccin Latte */
+
+[data-theme="light"] {
+    --bg:                  #eff1f5;
+    --bg-raised:           #e6e9ef;
+    --bg-card:             #dce0e8;
+    --bg-stripe:           #ccd0da;
+    --bg-hover:            #c6cbde;
+    --bg-interactive:      #ccd0da;
+    --border:              #9ca0b0;
+    --border-subtle:       #bcc0cc;
+    --text:                #4c4f69;
+    --text-muted:          #6c6f85;
+    --text-dim:            #9ca0b0;
+    --accent:              #1e66f5;
+    --site-title:          #4c4f69;
+    --mark-bg:             #df8e1d33;
+    --mark-fg:             #7c5800;
+    --code-bg:             #dce0e8;
+    --inline-code-bg:      #ccd0da;
+    --inline-code-text:    #179299;
+    --banner-gradient:     transparent, rgba(239,241,245,0.5), #eff1f5;
+    --banner-meta-color:   rgba(76, 79, 105, 0.75);
+    --tag-color:           #179299;
+    --h1-color:            #d20f39;
+    --h2-color:            #40a02b;
+    --h3-color:            #df8e1d;
+    --h4-color:            #1e66f5;
+    --h5-color:            #ea76cb;
+    --h6-color:            #8839ef;
+    --callout-base-bg:     #dce0e8;
+    --callout-base-border: #1e66f5;
 }
 
-.callout-title-text { font-size: 0.95rem; }
 
-.callout-content { color: #cdd6f4; }
+/* LAYOUT TWEAKS */
 
-.callout-content p { margin: 0.4em 0; }
+.post-nav { align-items: center; }
 
 
 /* =========================
-   TYPE COLORS
+   CALLOUT TYPE COLORS
    ========================= */
+
+/* DARK */
 
 .callout-note {
     background: #1e2d44;
@@ -109,44 +163,7 @@
 }
 
 
-/* =========================
-   ICONS
-   ========================= */
-
-.callout-icon {
-    margin-right: 8px;
-    font-size: 1rem;
-    line-height: 1;
-}
-
-.callout-note .callout-icon::before     { content: "📝"; }
-.callout-abstract .callout-icon::before { content: "📄"; }
-.callout-info .callout-icon::before     { content: "ℹ️"; }
-.callout-todo .callout-icon::before     { content: "✅"; }
-.callout-tip .callout-icon::before      { content: "💡"; }
-.callout-success .callout-icon::before  { content: "✔️"; }
-.callout-question .callout-icon::before { content: "❓"; }
-.callout-warning .callout-icon::before  { content: "⚠️"; }
-
-.callout-danger .callout-icon::before,
-.callout-failure .callout-icon::before,
-.callout-bug .callout-icon::before { content: "⛔"; }
-
-.callout-example .callout-icon::before  { content: "📌"; }
-.callout-quote .callout-icon::before    { content: "💬"; }
-
-
-/* =========================
-   LIGHT MODE (Catppuccin Latte)
-   ========================= */
-
-[data-theme="light"] .callout {
-    background: #dce0e8;
-    border-left-color: #1e66f5;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-[data-theme="light"] .callout-content { color: #4c4f69; }
+/* LIGHT */
 
 [data-theme="light"] .callout-note {
     background: #ccd7f5;

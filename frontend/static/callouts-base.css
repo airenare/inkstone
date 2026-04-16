@@ -1,0 +1,93 @@
+/* =========================
+   CALLOUT STRUCTURE
+   ========================= */
+
+.callout {
+    margin: 1.6em 0;
+    padding: 16px 18px;
+    border-radius: 8px;
+    background: var(--callout-base-bg);
+    border-left: 4px solid var(--callout-base-border);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+
+.callout-title {
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.callout-title-text { font-size: 0.95rem; }
+
+.callout-content { color: var(--text); }
+
+.callout-content p { margin: 0.4em 0; }
+
+
+/* =========================
+   ICONS
+   ========================= */
+
+.callout-icon {
+    margin-right: 8px;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.callout-note .callout-icon::before     { content: "📝"; }
+.callout-abstract .callout-icon::before { content: "📄"; }
+.callout-info .callout-icon::before     { content: "ℹ️"; }
+.callout-todo .callout-icon::before     { content: "✅"; }
+.callout-tip .callout-icon::before      { content: "💡"; }
+.callout-success .callout-icon::before  { content: "✔️"; }
+.callout-question .callout-icon::before { content: "❓"; }
+.callout-warning .callout-icon::before  { content: "⚠️"; }
+
+.callout-danger .callout-icon::before,
+.callout-failure .callout-icon::before,
+.callout-bug .callout-icon::before { content: "⛔"; }
+
+.callout-example .callout-icon::before  { content: "📌"; }
+.callout-quote .callout-icon::before    { content: "💬"; }
+
+
+/* =========================
+   COLLAPSIBLE CALLOUTS
+   ========================= */
+
+details.callout > summary {
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+details.callout > summary::-webkit-details-marker {
+    display: none;
+}
+
+details.callout > summary::after {
+    content: " ▸";
+    font-size: 0.75em;
+    opacity: 0.6;
+}
+
+details.callout[open] > summary::after {
+    content: " ▾";
+}
+
+[data-theme="light"] details.callout > summary { color: inherit; }
+
+
+/* =========================
+   LIGHT MODE BASE
+   ========================= */
+
+[data-theme="light"] .callout {
+    background: var(--callout-base-bg);
+    border-left-color: var(--callout-base-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+[data-theme="light"] .callout-content { color: inherit; }
