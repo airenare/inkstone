@@ -378,24 +378,11 @@ nav a.nav-active {
     font-weight: 600;
 }
 
-/* Header controls (hamburger + toggle) grouped together */
+/* Header controls (theme toggle) */
 .header-controls {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-/* Hamburger — hidden on desktop */
-.nav-hamburger {
-    display: none;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-    border-radius: 6px;
-    padding: 2px 8px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    line-height: 1.6;
 }
 
 /* =========================================
@@ -407,33 +394,54 @@ nav a.nav-active {
         padding: 1rem;
     }
 
+    /* Switch header to flex so nav wraps onto its own row */
     .header-inner {
-        grid-template-columns: 1fr auto;
-    }
-
-    nav {
-        display: none;
-        grid-column: 1 / -1;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0;
-        padding: 0.5rem 0;
-        border-top: 1px solid var(--border);
-        margin-top: 0.5rem;
-    }
-
-    nav.nav-open {
         display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.25rem 0.5rem;
     }
 
+    /* Site title stretches to fill row 1 beside the toggle */
+    .header-inner h1 {
+        flex: 1;
+    }
+
+    /* Theme toggle stays pinned to the right on row 1 */
+    .header-controls {
+        flex: 0 0 auto;
+    }
+
+    /* Nav fills full width → wraps to its own row below title */
+    nav {
+        flex: 0 0 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.2rem 0.1rem;
+        padding: 0.25rem 0 0;
+    }
+
+    /* Nav links: auto width (not full-width) */
     nav a {
-        width: 100%;
-        padding: 0.5em 0.75em;
-        border-radius: 6px;
+        width: auto;
+        padding: 0.3em 0.7em;
     }
 
-    .nav-hamburger {
-        display: block;
+    /* Breadcrumbs: stay horizontal, truncate current page */
+    .breadcrumbs {
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    .breadcrumb-current {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
     }
 
     .related-grid {
@@ -452,18 +460,6 @@ nav a.nav-active {
 
     .post-nav-prev::before { content: "← "; }
     .post-nav-next::after  { content: " →"; }
-
-    .breadcrumbs {
-        flex-wrap: nowrap;
-        overflow: hidden;
-    }
-
-    .breadcrumb-current {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        min-width: 0;
-    }
 }
 
 /* =========================================
@@ -1685,7 +1681,7 @@ ul.dataview-list li {
         line-height: 1.5;
     }
 
-    header, nav, .theme-toggle, .nav-hamburger,
+    header, nav, .theme-toggle,
     .toc-block, .related-posts, .post-nav,
     .breadcrumbs, .post-tags, .pagination,
     footer, .lightbox, .slider-gallery .slider-arrow,
