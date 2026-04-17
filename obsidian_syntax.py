@@ -63,9 +63,11 @@ def convert_links(md, url_index=None):
 
     url_index: dict of {slugify(title): url_path} built during two-pass loading.
     Falls back to /slugified-title if the title is not found in the index.
+    Skips content inside fenced code blocks and inline code spans.
     """
-    # Capture optional #heading or ^block-id, then optional |display
-    pattern = r"\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
+    _link_re = re.compile(
+        r"\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
+    )
 
     def repl(match):
         target = match.group(1).strip()
@@ -78,7 +80,12 @@ def convert_links(md, url_index=None):
         anchor = ("#" + slugify(anchor_text).lower()) if anchor_text else ""
         return f"[{display}]({base}{anchor})"
 
-    return re.sub(pattern, repl, md)
+    # Split on fenced code blocks and inline code spans; only convert outside them
+    parts = re.split(r"(```[\s\S]*?```|`+[\s\S]*?`+)", md)
+    for i, part in enumerate(parts):
+        if not part.startswith("`"):
+            parts[i] = _link_re.sub(repl, part)
+    return "".join(parts)
 
 
 # =========================================
