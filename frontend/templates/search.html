@@ -10,7 +10,7 @@
 <input type="text" name="q" value="{{ query }}" placeholder="Search…">
 
 {% if all_tags %}
-<select name="label">
+<select name="tag">
 <option value="">All tags</option>
 {% for t in all_tags %}
 <option value="{{ t }}"{% if t == selected_tag %} selected{% endif %}>{{ t }}</option>

@@ -251,15 +251,39 @@ def render_callout(type_, title, content, collapsed=None):
 # OBSIDIAN MEDIA PARSER
 # =========================================
 
+_MEDIA_EXTS = {
+    "jpg", "jpeg", "png", "gif", "webp", "svg", "bmp",
+    "mp4", "webm", "mov",
+    "mp3", "ogg", "wav", "flac", "m4a",
+}
+_FENCE_RE = re.compile(r"^(`{3,}|~{3,})")
+
+
+def _resolve_attachment(filename, folder):
+    """Return full path to attachment or None if not found anywhere."""
+    for base in (
+        os.path.join(folder, "_attachments"),
+        os.path.join(VAULT_PATH, "_attachments"),
+        ATTACHMENTS_PATH or "",
+    ):
+        if not base:
+            continue
+        p = os.path.join(base, filename)
+        if os.path.exists(p):
+            return p
+    return None
+
+
 def convert_media(md, md_path):
     folder = os.path.dirname(md_path)
     pattern = r'!\[\[([^|\]]+)(?:\|([0-9x]+))?\]\]'
+    vault_real = os.path.realpath(VAULT_PATH)
 
     lines = md.split("\n")
     output = []
-
     gallery = []
     slider = []
+    fence_marker = None
 
     def flush_gallery():
         if not gallery:
@@ -287,6 +311,23 @@ def convert_media(md, md_path):
         return html
 
     for line in lines:
+        # Fence tracking — skip content inside code blocks
+        m = _FENCE_RE.match(line)
+        if m:
+            if fence_marker is None:
+                fence_marker = m.group(1)
+            elif line.startswith(fence_marker):
+                fence_marker = None
+            if gallery:
+                output.append(flush_gallery())
+            output.append(line)
+            continue
+        if fence_marker is not None:
+            if gallery:
+                output.append(flush_gallery())
+            output.append(line)
+            continue
+
         matches = re.findall(pattern, line)
 
         # Slider: multiple embeds on one line separated by spaces
@@ -294,29 +335,20 @@ def convert_media(md, md_path):
             slider.clear()
             for filename, caption in matches:
                 filename = filename.strip()
-                full_path = os.path.join(folder, "_attachments", filename)
-                if not os.path.exists(full_path):
-                    vault_att = os.path.join(VAULT_PATH, "_attachments", filename)
-                    if os.path.exists(vault_att):
-                        full_path = vault_att
-                    elif ATTACHMENTS_PATH:
-                        custom_att = os.path.join(ATTACHMENTS_PATH, filename)
-                        if os.path.exists(custom_att):
-                            full_path = custom_att
-                if not os.path.exists(full_path):
+                full_path = _resolve_attachment(filename, folder)
+                if not full_path:
                     continue
-                vault_real = os.path.realpath(VAULT_PATH)
                 if not os.path.realpath(full_path).startswith(
                     vault_real + os.sep
                 ):
                     continue
                 rel = os.path.relpath(full_path, VAULT_PATH)
-                ext = filename.lower().split(".")[-1]
-                if ext in ["mp4", "webm", "mov"]:
+                ext = filename.lower().rsplit(".", 1)[-1]
+                if ext in {"mp4", "webm", "mov"}:
                     slider.append(
                         f'<video src="/attachments/{rel}" controls loading="lazy"></video>'
                     )
-                elif ext in ["mp3", "ogg", "wav", "flac", "m4a"]:
+                elif ext in {"mp3", "ogg", "wav", "flac", "m4a"}:
                     slider.append(
                         f'<audio src="/attachments/{rel}" controls></audio>'
                     )
@@ -337,31 +369,27 @@ def convert_media(md, md_path):
         elif len(matches) == 1 and line.strip().startswith("![["):
             filename, caption = matches[0]
             filename = filename.strip()
-            full_path = os.path.join(folder, "_attachments", filename)
-            if not os.path.exists(full_path):
-                vault_att = os.path.join(VAULT_PATH, "_attachments", filename)
-                if os.path.exists(vault_att):
-                    full_path = vault_att
-                elif ATTACHMENTS_PATH:
-                    custom_att = os.path.join(ATTACHMENTS_PATH, filename)
-                    if os.path.exists(custom_att):
-                        full_path = custom_att
-            if not os.path.exists(full_path):
-                output.append(f"<em>Missing media: {filename}</em>")
+            full_path = _resolve_attachment(filename, folder)
+            if not full_path:
+                # Not a media file — leave for convert_transclusion if no ext
+                ext_guess = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+                if ext_guess in _MEDIA_EXTS:
+                    output.append(f"<em>Missing media: {filename}</em>")
+                else:
+                    if gallery:
+                        output.append(flush_gallery())
+                    output.append(line)
                 continue
-            vault_real = os.path.realpath(VAULT_PATH)
-            if not os.path.realpath(full_path).startswith(
-                vault_real + os.sep
-            ):
+            if not os.path.realpath(full_path).startswith(vault_real + os.sep):
                 output.append(f"<em>Missing media: {filename}</em>")
                 continue
             rel = os.path.relpath(full_path, VAULT_PATH)
-            ext = filename.lower().split(".")[-1]
-            if ext in ["mp4", "webm", "mov"]:
+            ext = filename.lower().rsplit(".", 1)[-1]
+            if ext in {"mp4", "webm", "mov"}:
                 gallery.append(
                     f'<video src="/attachments/{rel}" controls loading="lazy"></video>'
                 )
-            elif ext in ["mp3", "ogg", "wav", "flac", "m4a"]:
+            elif ext in {"mp3", "ogg", "wav", "flac", "m4a"}:
                 gallery.append(
                     f'<audio src="/attachments/{rel}" controls></audio>'
                 )
@@ -516,19 +544,32 @@ def convert_transclusion(md, dataview_index):
 # =========================================
 
 def convert_block_ids(md):
-    """Replace trailing ^block-id markers with anchor spans."""
-    return re.sub(
-        r" \^([A-Za-z0-9_-]+)\s*$",
-        lambda m: f' <span id="{m.group(1).lower()}"></span>',
-        md,
-        flags=re.MULTILINE,
-    )
+    """Replace trailing ^block-id markers with anchor spans, skipping code blocks."""
+    _block_id_re = re.compile(r" \^([A-Za-z0-9_-]+)\s*$")
+    fence_marker = None
+    lines = md.split("\n")
+    out = []
+    for line in lines:
+        m = _FENCE_RE.match(line)
+        if m:
+            if fence_marker is None:
+                fence_marker = m.group(1)
+            elif line.startswith(fence_marker):
+                fence_marker = None
+            out.append(line)
+            continue
+        if fence_marker is None:
+            line = _block_id_re.sub(
+                lambda m: f' <span id="{m.group(1).lower()}"></span>', line
+            )
+        out.append(line)
+    return "\n".join(out)
 
 
 def convert_highlights(md):
-    """Convert ==highlighted text== to <mark> tags, skipping code spans."""
-    # Split on backtick code spans so we only replace outside them.
-    parts = re.split(r"(`+.+?`+)", md, flags=re.DOTALL)
+    """Convert ==highlighted text== to <mark> tags, skipping code blocks/spans."""
+    # Split on fenced code blocks first, then inline code spans.
+    parts = re.split(r"(```[\s\S]*?```|`+[\s\S]*?`+)", md)
     for i, part in enumerate(parts):
         if not part.startswith("`"):
             parts[i] = re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", part)
@@ -541,22 +582,26 @@ def convert_math(md):
     $$...$$ block math → <div class="math-block">...</div>
     $...$ inline math  → <span class="math-inline">...</span>
 
-    Skips content inside backtick code spans so that e.g. `$inline$`
-    is not converted.
+    Skips content inside fenced code blocks and backtick code spans.
     """
-    # Alternation trick: match code spans first (group 1) and leave them
-    # untouched; only convert when the math group (group 2) matched.
-    md = re.sub(
-        r"(`+[^`]*`+)|\$\$(.+?)\$\$",
-        lambda m: m.group(0) if m.group(1)
-                  else f'<div class="math-block">{m.group(2)}</div>',
-        md,
-        flags=re.DOTALL,
-    )
-    md = re.sub(
-        r"(`+[^`]*`+)|\$([^\$\n]+)\$",
-        lambda m: m.group(0) if m.group(1)
-                  else f'<span class="math-inline">{m.group(2)}</span>',
-        md,
-    )
-    return md
+    # Split on fenced blocks and inline code spans; only process outside them.
+    parts = re.split(r"(```[\s\S]*?```|`+[\s\S]*?`+)", md)
+    result = []
+    for part in parts:
+        if part.startswith("`"):
+            result.append(part)
+            continue
+        # block math first (so $$ isn't matched twice by inline)
+        part = re.sub(
+            r"\$\$(.+?)\$\$",
+            lambda m: f'<div class="math-block">{m.group(1)}</div>',
+            part,
+            flags=re.DOTALL,
+        )
+        part = re.sub(
+            r"\$([^\$\n]+)\$",
+            lambda m: f'<span class="math-inline">{m.group(1)}</span>',
+            part,
+        )
+        result.append(part)
+    return "".join(result)

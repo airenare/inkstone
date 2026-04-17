@@ -426,6 +426,18 @@ nav a.nav-active {
 
     .post-nav-prev::before { content: "← "; }
     .post-nav-next::after  { content: " →"; }
+
+    .breadcrumbs {
+        flex-wrap: nowrap;
+        overflow: hidden;
+    }
+
+    .breadcrumb-current {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width: 0;
+    }
 }
 
 /* =========================================

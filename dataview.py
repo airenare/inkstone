@@ -190,6 +190,44 @@ def _eval_dv_condition(condition, ctx):
     if condition.startswith("(") and condition.endswith(")"):
         return _eval_dv_condition(condition[1:-1], ctx)
 
+    # Comparison operators: field OP value (=, !=, >, <, >=, <=)
+    m = re.match(
+        r'^([A-Za-z_][\w.]*)\s*(!=|>=|<=|=|>|<)\s*(.+)$', condition
+    )
+    if m:
+        field, op, raw_val = m.group(1), m.group(2), m.group(3).strip()
+        lhs = _eval_dv_expr(field, ctx)
+        # Parse rhs: "string", true/false, or number
+        if raw_val.startswith('"') and raw_val.endswith('"'):
+            rhs = raw_val[1:-1]
+            lhs = str(lhs) if lhs is not None else ""
+        elif raw_val.lower() == "true":
+            rhs = True
+        elif raw_val.lower() == "false":
+            rhs = False
+        else:
+            try:
+                rhs = float(raw_val)
+                lhs = float(lhs) if lhs is not None else 0.0
+            except (ValueError, TypeError):
+                rhs = raw_val
+                lhs = str(lhs) if lhs is not None else ""
+        try:
+            if op == "=":
+                return lhs == rhs
+            if op == "!=":
+                return lhs != rhs
+            if op == ">":
+                return lhs > rhs
+            if op == "<":
+                return lhs < rhs
+            if op == ">=":
+                return lhs >= rhs
+            if op == "<=":
+                return lhs <= rhs
+        except TypeError:
+            return False
+
     print(
         f"WARNING: Dataview: unrecognised WHERE condition: {condition!r}",
         file=sys.stderr,

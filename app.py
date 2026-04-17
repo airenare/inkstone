@@ -214,7 +214,7 @@ def tag_archive(tag):
 def search():
     post_store.maybe_reload()
     q = request.args.get("q", "").strip()
-    label_filter = request.args.get("label", "").strip().lower()
+    label_filter = request.args.get("tag", "").strip().lower()
 
     all_tags = post_store.ALL_TAGS
 
