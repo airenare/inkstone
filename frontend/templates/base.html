@@ -11,6 +11,12 @@
 
 <link rel="canonical" href="{{ canonical_url }}">
 
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='favicon-32.png') }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16.png') }}">
+<link rel="apple-touch-icon" sizes="192x192" href="{{ url_for('static', filename='favicon-192.png') }}">
+<link rel="shortcut icon" href="/favicon.ico">
+
 {% block meta %}
 <meta property="og:title" content="{{ website_name }}">
 <meta property="og:type" content="website">
@@ -118,7 +124,7 @@ new MutationObserver(renderMermaid).observe(
 
 <header>
 <div class="header-inner">
-<h1><a href="/">{{ website_name }}</a></h1>
+<h1><a href="/">{% if header_icon %}<img src="{{ header_icon }}" alt="" class="site-icon" aria-hidden="true">{% endif %}{{ header_site_title or website_name }}</a></h1>
 <nav id="main-nav">{% for url in nav_sections %}<a href="{{ url }}"{% if request.path == url or request.path.startswith(url + '/') %} class="nav-active"{% endif %}>{{ url.lstrip("/") | title }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}"{% if request.path == p.url_path %} class="nav-active"{% endif %}>{{ p.title }}</a>{% endfor %}{% if show_tags %}<a href="/tags"{% if request.path == '/tags' %} class="nav-active"{% endif %}>Tags</a>{% endif %}{% if show_search %}<a href="/search"{% if request.path == '/search' %} class="nav-active"{% endif %}>Search</a>{% endif %}</nav>
 <div class="header-controls">
 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">☀</button>

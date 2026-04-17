@@ -1,6 +1,7 @@
 import hashlib
 import hmac
 import html
+import os
 import subprocess
 from datetime import datetime, timezone
 
@@ -23,6 +24,32 @@ app = Flask(
 )
 
 
+def _resolve_icon_override(url_path):
+    """Walk up the URL hierarchy to find the nearest icon/site_title override.
+
+    Returns {"icon": str|None, "site_title": str|None} for the most specific
+    ancestor (including the page itself) that has set either field, or both
+    values None if no ancestor has set anything.
+    """
+    overrides = post_store.ICON_OVERRIDES
+    # Check from most-specific (current URL) up to root "/"
+    parts = url_path.rstrip("/").split("/")
+    # Generate candidate paths from most- to least-specific
+    candidates = []
+    for i in range(len(parts), 0, -1):
+        candidates.append("/".join(parts[:i]) or "/")
+    candidates.append("/")
+    for candidate in candidates:
+        if candidate in overrides:
+            ov = overrides[candidate]
+            icon = ov.get("icon")
+            st = ov.get("site_title")
+            # Build icon URL: vault-relative path served via /attachments/
+            icon_url = f"/attachments/{icon}" if icon else None
+            return {"header_icon": icon_url, "header_site_title": st}
+    return {"header_icon": None, "header_site_title": None}
+
+
 @app.context_processor
 def inject_globals():
     # Top-level sections (direct children of root that have a section route)
@@ -30,6 +57,7 @@ def inject_globals():
         url for url in post_store.SECTION_ROUTES
         if url != "/" and url.count("/") == 1
     )
+    icon_ctx = _resolve_icon_override(request.path)
     return {
         "website_name": post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
@@ -40,6 +68,8 @@ def inject_globals():
         "canonical_url": request.base_url,
         "app_version": VERSION,
         "theme_css": f"theme-{post_store.SITE_THEME}.css",
+        "header_icon": icon_ctx["header_icon"],
+        "header_site_title": icon_ctx["header_site_title"],
     }
 
 
@@ -59,7 +89,6 @@ def vault_webhook():
     else:
         print("WARNING: /webhook called but WEBHOOK_SECRET is not set.", flush=True)
 
-    import os
     if os.path.isdir(os.path.join(VAULT_PATH, ".git")):
         try:
             result = subprocess.run(
@@ -80,6 +109,25 @@ def vault_webhook():
 @app.route("/attachments/<path:path>")
 def attachments(path):
     return send_from_directory(VAULT_PATH, path)
+
+
+# Favicon: vault root overrides (favicon.ico / favicon.png / favicon.svg),
+# falling back to the built-in OnyxFolio default.
+_FAVICON_CANDIDATES = ["favicon.ico", "favicon.png", "favicon.svg"]
+
+
+@app.route("/favicon.ico")
+@app.route("/favicon.png")
+@app.route("/favicon.svg")
+def favicon():
+    for name in _FAVICON_CANDIDATES:
+        vault_favicon = os.path.join(VAULT_PATH, name)
+        if os.path.isfile(vault_favicon):
+            return send_from_directory(VAULT_PATH, name)
+    # Default: serve the built-in OnyxFolio SVG logo
+    return send_from_directory(
+        app.static_folder, "logo.svg", mimetype="image/svg+xml"
+    )
 
 
 @app.errorhandler(404)

@@ -27,6 +27,9 @@ MENU_POSTS = []
 SHOW_SEARCH = False
 # True when the root homepage has show_tags: true — controls nav tags link
 SHOW_TAGS = False
+# url_path → {"icon": vault-relative path, "site_title": str} for pages that set
+# a header icon or custom site title; used for cascade inheritance at request time.
+ICON_OVERRIDES: dict = {}
 # Sorted list of all user content tags across published posts
 ALL_TAGS: list = []
 # Active theme name — set from the root homepage 'theme' frontmatter field
@@ -447,9 +450,26 @@ def load_posts():
         set(t for p in all_posts.values() for t in p["tags"])
     )
 
+    # ---- Build icon/site-title override map for cascade inheritance ----
+    # Covers all section routes (homepage/listing) and individual posts.
+    icon_overrides = {}
+    for url_path, post_data in {
+        **{r["post"]["url_path"]: r["post"] for r in section_routes.values()},
+        **all_posts,
+    }.items():
+        meta = post_data.get("metadata", {})
+        icon = meta.get("icon") or None
+        st = meta.get("site_title") or None
+        if icon or st:
+            icon_overrides[url_path] = {
+                "icon": icon,
+                "site_title": st,
+            }
+
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
-            private_routes, menu_posts, show_search, show_tags, all_tags)
+            private_routes, menu_posts, show_search, show_tags, all_tags,
+            icon_overrides)
 
 
 # =========================================
@@ -465,8 +485,8 @@ def force_reload():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, LAST_SCAN_TIME, \
-        _last_check_time
+        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, \
+        LAST_SCAN_TIME, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
         return
@@ -490,7 +510,7 @@ def maybe_reload():
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
-             SHOW_SEARCH, SHOW_TAGS, ALL_TAGS) = load_posts()
+             SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)

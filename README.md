@@ -50,6 +50,9 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/` and then `ATTACHMENTS_PATH` from `.env`
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD structured data
 - **Date last modified** — `updated:` or `modified:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
+- **Favicon** — default OnyxFolio favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
+- **Site icon** — set `icon: path/to/image` in any note's frontmatter to show an image beside the site title; cascades to all child pages unless overridden
+- **Custom header title** — set `site_title: My Brand` in frontmatter to change the displayed title in the header; also cascades to child pages
 - **Mobile nav** — nav links wrap below the site title on narrow viewports (≤ 600 px); breadcrumbs stay on one horizontal line
 - **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
 - **Search** — full-text search across all published posts at `/search`
@@ -92,6 +95,10 @@ aliases:
   - alternate name    # extra wiki-link targets that resolve to this post
 author: "Jane Doe"    # optional; shown in post meta and JSON-LD (string or list)
 updated: 2026-04-01   # optional; shown as "Updated …" when different from date
+icon: _attachments/logo.png  # optional; image shown beside the site title in the header;
+                              #   cascades to all child pages unless overridden at a lower level
+site_title: "My Brand"       # optional; replaces the website name displayed in the header;
+                              #   cascades to child pages the same way as icon
 tags:                 # user content tags — shown as badges, used for /tag/<name> archive pages,
   - python            #   search filtering, related posts, and Dataview FROM queries
   - philosophy        #   body #hashtags are also collected as tags automatically

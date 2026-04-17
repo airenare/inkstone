@@ -346,6 +346,20 @@ header {
     color: var(--site-title);
     text-decoration: none;
     font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+}
+
+/* Icon shown beside the site title when set via frontmatter */
+.site-icon {
+    /* Cap height — slightly taller than uppercase letters */
+    height: 1.25em;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+    flex-shrink: 0;
+    border-radius: 3px;
 }
 
 nav {

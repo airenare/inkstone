@@ -1,0 +1,55 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="3" stdDeviation="5" flood-color="#11111b" flood-opacity=".7"/>
+    </filter>
+    <clipPath id="table-clip">
+      <polygon points="100,56 138,78 138,122 100,144 62,122 62,78"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer hex facets (pointed-top, r=82) -->
+  <!-- Vertices: T(100,18) TR(171,59) BR(171,141) B(100,182) BL(29,141) TL(29,59) -->
+
+  <!-- Top-left facet -->
+  <polygon points="100,100 29,59 100,18" fill="#2a2740"/>
+  <!-- Top-right facet -->
+  <polygon points="100,100 100,18 171,59" fill="#312e50"/>
+  <!-- Right facet -->
+  <polygon points="100,100 171,59 171,141" fill="#3a3660"/>
+  <!-- Bottom-right facet -->
+  <polygon points="100,100 171,141 100,182" fill="#2d2a4a"/>
+  <!-- Bottom-left facet -->
+  <polygon points="100,100 100,182 29,141" fill="#252240"/>
+  <!-- Left facet -->
+  <polygon points="100,100 29,141 29,59" fill="#1e1c38"/>
+
+  <!-- Outer hex outline -->
+  <polygon points="100,18 171,59 171,141 100,182 29,141 29,59"
+           fill="none" stroke="#4a4766" stroke-width="1.5" filter="url(#shadow)"/>
+
+  <!-- Facet edge lines (from center to each vertex) -->
+  <line x1="100" y1="100" x2="100" y2="18"   stroke="#4a4766" stroke-width=".8" opacity=".7"/>
+  <line x1="100" y1="100" x2="171" y2="59"   stroke="#4a4766" stroke-width=".8" opacity=".7"/>
+  <line x1="100" y1="100" x2="171" y2="141"  stroke="#4a4766" stroke-width=".8" opacity=".7"/>
+  <line x1="100" y1="100" x2="100" y2="182"  stroke="#4a4766" stroke-width=".8" opacity=".7"/>
+  <line x1="100" y1="100" x2="29"  y2="141"  stroke="#4a4766" stroke-width=".8" opacity=".7"/>
+  <line x1="100" y1="100" x2="29"  y2="59"   stroke="#4a4766" stroke-width=".8" opacity=".7"/>
+
+  <!-- Inner table hex (pointed-top, r=44) -->
+  <!-- Vertices: T(100,56) TR(138,78) BR(138,122) B(100,144) BL(62,122) TL(62,78) -->
+  <polygon points="100,56 138,78 138,122 100,144 62,122 62,78"
+           fill="#1b1930" stroke="#4a4766" stroke-width="1.3"/>
+
+  <!-- Folio content, clipped to inner table -->
+  <g clip-path="url(#table-clip)">
+    <!-- Header bar: centred on x=100, y=83–92 -->
+    <rect x="72" y="83" width="56" height="9" rx="4.5" fill="#f38ba8" opacity=".95"/>
+    <!-- Margin rule: mauve, body lines only, y=97–122 -->
+    <line x1="69" y1="97" x2="69" y2="122" stroke="#cba6f7" stroke-width="1.5" opacity=".6"/>
+    <!-- Body lines: left-aligned at x=77, tapering -->
+    <rect x="77" y="97"  width="52" height="5.5" rx="2.75" fill="#6c7086" opacity=".9"/>
+    <rect x="77" y="106" width="40" height="5.5" rx="2.75" fill="#6c7086" opacity=".85"/>
+    <rect x="77" y="115" width="28" height="5.5" rx="2.75" fill="#6c7086" opacity=".75"/>
+  </g>
+</svg>

@@ -3,11 +3,11 @@
 
 ## High Priority
 
-- **The webpage should have a frontmatter field for setting the icon** - a logo, avatar or a simple image that will be shown to the left of the website title. Its height must be almost the same height as the capital letters of the font of the website title, maybe slightly larger, and overall should look in harmony with the style of the Title. 
+- ✅ **The webpage should have a frontmatter field for setting the icon** - a logo, avatar or a simple image that will be shown to the left of the website title. Its height must be almost the same height as the capital letters of the font of the website title, maybe slightly larger, and overall should look in harmony with the style of the Title. 
 
-- **Custom website title and icon (when it's implemented) for any page** - When needed, the title of the website and the icon (top left corner) can be changed to a specified value (frontmatter fields). If the icon and title is set for the specific page of the website, all the down-stream pages must inherit it, unless there is a section or a note, that overrides it. This way, the title and icon set for the homepage will be inherited by all down-stream pages, unless some page overrides it with its own, making all it's child-notes inherit these settings.
+- ✅ **Custom website title and icon (when it's implemented) for any page** - When needed, the title of the website and the icon (top left corner) can be changed to a specified value (frontmatter fields). If the icon and title is set for the specific page of the website, all the down-stream pages must inherit it, unless there is a section or a note, that overrides it. This way, the title and icon set for the homepage will be inherited by all down-stream pages, unless some page overrides it with its own, making all it's child-notes inherit these settings.
 
-- **Favicon setting** - Engine will have a default favicon of the OnyxFolio, but user can change it by simply putting the favicon file to the root of their vault directory, which will override the default one.
+- ✅ **Favicon setting** - Engine will have a default favicon of the OnyxFolio, but user can change it by simply putting the favicon file to the root of their vault directory, which will override the default one.
 
 
 - **Include version** - in the footer 'built with OnyxFolio (v X.X.X)'
@@ -62,6 +62,9 @@
 ## Done
 
 - **Mobile navigation** - ✅ Hamburger removed; nav wraps below site title; breadcrumbs fixed to horizontal single line.
+- Favicon: default OnyxFolio logo served at `/favicon.ico|.png|.svg`; user override by placing favicon file in vault root
+- Site icon (`icon:` frontmatter): image shown beside site title; cascades down to child pages
+- Custom header title (`site_title:` frontmatter): overrides displayed website name in header; cascades to child pages
 
 - Listing page "All Posts" section: replaced flat `.post-entry` list with `.related-grid` / `.related-card` card grid (same style as "See also")
 
