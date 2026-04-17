@@ -3,6 +3,10 @@
 
 ## High Priority
 
+- **Mobile navigation** - needs fixing. Hamburger menu is ok, but need to see other options. Breadcrumbs are all glitchy and ugly on the vertical screen (they need to be presented in a line, not in a column).
+
+- **Include version** - in the footer 'built with OnyxFolio'
+
 - **Fix the codeblocks for media embeds** - /onyxfolio/docs/media-embeds use real pictures for the showcase
 
 ## Medium Priority
