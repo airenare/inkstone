@@ -3,7 +3,38 @@
 
 ## High Priority
 
-_(all done — see Done section)_
+- **Fix the HTML leak** 
+
+- **"How it works" flowchart to use mermaid diagram** - /onyxfolio/deployment page
+
+- **Check wikilinks syntax** - /onyxfolio/docs/wiki-links if it matches obsidian's syntax. If not, add obsidian link style, also to the documentation - [[Link | DIsplay text]]
+
+- **Fix the mobile version breadcrumbs** - Currently broken, takes too much vertical space. Needs to be a single line of backlinks.
+
+- **Add callout previews after each callout codeblock** - /onyxfolio/docs/callouts
+
+- **Fix the codeblocks for media embeds** - /onyxfolio/docs/media-embeds and also use real pictures for the showcase
+
+- **Note Transclusion is not working** - on this page /onyxfolio/docs/note-transclusion
+
+- **Check the html leaked in the codeblocks** - here /onyxfolio/docs/obsidian-syntax
+
+- **Fix formulae and diagrams** - /onyxfolio/docs/math-and-diagrams
+
+- **Dataview Filtering** - needs codeblocks to show what were the queries /onyxfolio/docs/tags
+
+- **Refactor 'label' -> 'tag'** in search: How to search on page /onyxfolio/docs/search
+
+- **Use other TABLE and LIST queries** - so that tables and lists are not that long on the page /onyxfolio/docs/dataview, and also add the codeblocks before each query showing what the query was. Probably use LIMIT in actual query that will generate list or table, but don't show it in the codeblock.
+
+- **Show the rendered code blocks** - below the markdown enclosing codeblock /onyxfolio/docs/code-blocks
+
+- **Links to documentations** for items here /onyxfolio/features
+
+- **Add obsidian style [[links]] and [[link | shown tex]] in 'Works with any Markdown editor' section of /onyxfolio page
+
+
+- **Update documentations** - reflect recent changes regarding linking personal repo, webhooks, etc.
 
 ## Medium Priority
 
