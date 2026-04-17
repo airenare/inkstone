@@ -1,151 +1,149 @@
-# TODO / Backlog
+# OnyxFolio — Backlog
 
+---
 
-## High Priority
+## Immediate  *(small, pick up and finish in one session)*
 
-- ✅ **The webpage should have a frontmatter field for setting the icon** - a logo, avatar or a simple image that will be shown to the left of the website title. Its height must be almost the same height as the capital letters of the font of the website title, maybe slightly larger, and overall should look in harmony with the style of the Title. 
+- **Version in footer** — `base.html` footer currently reads "built with OnyxFolio" with no version.
+  Change to `built with OnyxFolio v{{ app_version }}`. One-line template edit.
 
-- ✅ **Custom website title and icon (when it's implemented) for any page** - When needed, the title of the website and the icon (top left corner) can be changed to a specified value (frontmatter fields). If the icon and title is set for the specific page of the website, all the down-stream pages must inherit it, unless there is a section or a note, that overrides it. This way, the title and icon set for the homepage will be inherited by all down-stream pages, unless some page overrides it with its own, making all it's child-notes inherit these settings.
+- **Footer attribution opt-out** — some users will want to remove the attribution.
+  Read a `HIDE_ATTRIBUTION` env var in `config.py`; pass as `hide_attribution` to the context
+  processor; wrap the footer `<span>` in `{% if not hide_attribution %}`. Default: attribution shown.
 
-- ✅ **Favicon setting** - Engine will have a default favicon of the OnyxFolio, but user can change it by simply putting the favicon file to the root of their vault directory, which will override the default one.
+- **Fix media-embeds docs page** — `/onyxfolio/docs/media-embeds` uses placeholder text instead of
+  real images. Replace with actual `![[...]]` embeds from `_attachments/` so the page demonstrates
+  what it documents.
 
+---
 
-- **Include version** - in the footer 'built with OnyxFolio (v X.X.X)'
+## Upcoming  *(defined features, ready to implement)*
 
+- **Social / `rel="me"` links** — useful for Mastodon verification and portfolio sites.
+  Add optional `social_links:` list to the root homepage frontmatter (or `.env` / `SOCIAL_LINKS`):
+  ```yaml
+  social_links:
+    - label: Mastodon
+      url: https://mastodon.social/@you
+    - label: GitHub
+      url: https://github.com/you
+  ```
+  Render as `<a rel="me" href="...">` in the footer. Pass list through context processor (similar to
+  `menu_posts`). No `rel="me"` on links that don't point to social profiles — keep it opt-in per link.
 
-## Medium Priority
+- **Comment system (Giscus)** — opt-in Giscus embed at the bottom of `post.html` and `book.html`.
+  Three env vars needed: `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID`.
+  When all three are set, inject the `<script>` block and pass a `giscus_config` dict to the template.
+  Giscus automatically adapts to dark/light via `data-theme`; wire it to the existing theme toggle JS.
 
-- **Fix the codeblocks for media embeds** - /onyxfolio/docs/media-embeds use real pictures for the showcase
+- **Inline Dataview `dv.pages()` expression** — extend `convert_dataview_inline` in `dataview.py`
+  beyond `this.*` to handle `` `= dv.pages("#tag").length` `` and similar cross-note expressions.
+  The pattern is: detect `dv.pages(selector)` in the expression, run a filtered count/list against
+  `DATAVIEW_INDEX`, return the result. Start with `.length` and `FROM #tag`; keep scope narrow.
 
-- **Use only lowercase URLs** - check if it's done.
+---
 
-- **Refactor: split `converters.py` → `obsidian_syntax.py`** — `converters.py` is ~1,000 lines with two distinct concerns. Move all Obsidian-specific converter functions into a new `obsidian_syntax.py`: `convert_links`, `convert_callouts`, `render_callout`, `convert_checkboxes`, `convert_highlights`, `convert_block_ids`, `convert_math`, `convert_transclusion`, `convert_media`, and `_extract_heading_section`. Keep `converters.py` as the pipeline coordinator (`render_markdown`, `extract_h1`, `strip_leading_h1`, `slugify`) and import from `obsidian_syntax`. No other files need to change since only `converters.py` is imported externally.
+## Polish & Bugs
 
-- **Refactor: split `converters.py` → `dataview.py`** — Companion to the above. Move the entire Dataview engine out of `converters.py` into a new `dataview.py`: `_to_str`, `_split_tokens`, `_get_nested`, `_eval_dv_expr`, `_eval_dv_condition`, `_parse_sort_clause`, `_render_dv_value`, `_parse_dv_query`, `_execute_dv_query`, `convert_dataview`, `convert_dataview_inline`. Import them in `converters.py`'s `render_markdown`. Makes the query engine independently testable and easier to extend.
+- **Mermaid inner background** — Mermaid v11 injects an inline `style="background: ..."` on the
+  SVG element that overwrites the transparent background. The current `fixSvgBg()` post-render strip
+  in `base.html` is a workaround. Investigate the correct Mermaid v11 initialisation API:
+  `mermaid.initialize({ htmlLabels: false, ... })` or `suppressErrorRendering`. Goal: remove the
+  JS workaround and let Mermaid initialise cleanly.
 
-- **Refactor: extract `view_helpers.py` from `app.py`** — `app.py` contains four pure utility functions with no Flask dependency: `_build_breadcrumbs`, `_get_adjacent_posts`, `_get_related`, and `_highlight`. Move them to a new `view_helpers.py` and import in `app.py`. Keeps `app.py` focused on Flask wiring and makes the helpers unit-testable.
+- **Lowercase URLs audit** — slugify already lowercases; verify that vault folders with mixed-case
+  names (e.g. `Blog/`, `Gallery/`) produce lowercase section URLs in practice. If not, apply
+  `.lower()` to each path segment in `_section_from_filepath`. Mark done once confirmed.
 
-- **Refactor: deduplicate RSS feed builders** — `app.py` `rss_feed` (lines ~57–96) and `section_rss_feed` (lines ~99–144) share nearly identical item-building and XML-assembly logic. Extract a private `_build_rss_xml(title, link, description, posts, base)` helper that takes a filtered/sorted post list and returns the full XML string. Both routes call it after their respective filtering. Removes ~40 lines of duplication.
+---
 
-- **Performance: pre-compute related posts at load time** — `app.py` `_get_related` does an O(n) scan of all posts on every post page render. Since tags don't change between reloads, compute related posts inside `load_posts()` in `posts.py` during Pass 2 and store as `post_data["related"]`. In `app.py`'s `serve` route, replace the `_get_related(post, post_store.ALL_POSTS)` call with `post.get("related", [])`.
+## Ideas  *(not committed — explore when the time is right)*
 
-- **Performance: cache `all_tags` at reload time** — `app.py` `search` route rebuilds the full tag set on every request by iterating all posts. Add a module-level `ALL_TAGS: list = []` to `posts.py`, populate it at the end of `load_posts()` with `sorted(set(t for p in all_posts.values() for t in p["tags"]))`, and return it alongside the other globals. In `app.py`, replace the `set().union(...)` comprehension with `post_store.ALL_TAGS`.
+- **Canvas file rendering** — Obsidian `.canvas` files are JSON graphs of nodes and edges.
+  Render as a read-only visual board: parse the JSON, position `<div>`s or draw SVG to mirror
+  the layout. Useful for publishing mind-maps and project boards. Effort: high; reward: unique.
 
-- **Correctness: log filepath in `parse_frontmatter` failures** — `posts.py` `parse_frontmatter` catches all YAML parse errors but doesn't log which file caused the failure, making vault debugging difficult. Add an optional `filepath="<unknown>"` parameter to the function signature and include it in the `print()` error message. Update the two call sites in `load_posts()` to pass `filepath`.
+- **`dv.pages()` full expression support** — after the `.length` case above, consider supporting
+  richer expressions: field access (`dv.pages("#tag").file.name`), sorting, limiting. Makes inline
+  Dataview genuinely powerful. Keep it server-side; no client JS needed.
 
-## Branding & Identity
+- **Private note access control** — currently private notes show a "not published" placeholder.
+  An opt-in password/token gate (HTTP Basic or a query-param token) would let authors share
+  drafts without publishing them. Niche use case, worth noting.
+
+---
+
+## Business / External
 
 - **Domain** — register `onyxfolio.com`, `.dev`, or `.app`
-- **Logo** — design a mark using onyx stone / folio page motif
-- **Footer attribution** — add "Powered by OnyxFolio" (opt-out via env var) to the default theme
 
-## Hosting Platforms to Try
+- **Hosting** — try in order of simplicity:
+  1. **Fly.io** — Docker-native, `fly deploy` from repo root, free tier
+  2. **Render** — GitHub auto-deploy, free tier (spin-down on idle)
+  3. **Railway** — minimal config, generous free tier, `gunicorn` start command
+  4. **Hetzner VPS** — €4/mo, persistent, gunicorn + nginx reverse proxy
+  5. **DigitalOcean App Platform** — auto-deploy from GitHub like Render
 
-- **Fly.io** — Docker-native, free tier, `fly deploy` from repo root; closest to a real server
-- **Render** — connects to GitHub, auto-deploys on push, free tier with spin-down on idle
-- **Railway** — minimal config, generous free tier, supports `gunicorn` start command directly
-- **Hetzner VPS** — cheapest persistent server (~€4/mo), run via gunicorn + nginx reverse proxy
-- **DigitalOcean** — Droplet or App Platform; App Platform auto-deploys from GitHub like Render
-
-## Ideas & Features
-
-
-- **Social / `rel="me"` links** — Add optional `social_links` config (env var or homepage frontmatter) that renders `rel="me"` links in the footer/header for Mastodon verification and social profiles.
-- **Comment system integration** — Add opt-in Giscus (GitHub Discussions) or utterances embed block at the bottom of `post.html`, configurable via env vars.
-- **Inline Dataview: `dv.pages()` expression** — Extend `convert_dataview_inline` beyond `this.*` fields to support simple cross-note expressions like `` `= dv.pages("#tag").length` ``.
-- **Canvas file rendering** — Obsidian `.canvas` files are JSON; render them as a read-only visual board (SVG or simple positioned-div layout) so they can be included in the blog.
-
-## Bugs & Findings
-
-- **Mermaid inner background** — Mermaid v11 injects an inline `style` background on the SVG that can't be reliably overridden via CSS or `themeVariables`. The current post-render JS strip in `base.html` is a workaround; needs investigation into the correct Mermaid v11 API to suppress it at initialisation time.
+---
 
 ## Done
 
-- **Mobile navigation** - ✅ Hamburger removed; nav wraps below site title; breadcrumbs fixed to horizontal single line.
-- Favicon: default OnyxFolio logo served at `/favicon.ico|.png|.svg`; user override by placing favicon file in vault root
-- Site icon (`icon:` frontmatter): image shown beside site title; cascades down to child pages
-- Custom header title (`site_title:` frontmatter): overrides displayed website name in header; cascades to child pages
+**v1.21.0 — Branding**
+- Logo: hex gem SVG (Catppuccin Mocha, onyx facets + folio heart)
+- Favicon: default OnyxFolio logo; vault-root override (`favicon.ico/png/svg`)
+- `icon:` frontmatter: image beside site title (1.25em height); cascades to child pages
+- `site_title:` frontmatter: overrides displayed website name; cascades to child pages
 
-- Listing page "All Posts" section: replaced flat `.post-entry` list with `.related-grid` / `.related-card` card grid (same style as "See also")
+**v1.20.x — Mobile nav**
+- Hamburger removed; nav wraps below site title on narrow viewports
+- Breadcrumbs fixed to single horizontal line on mobile
+- Theme toggle pinned to top-right corner on mobile via flex order
 
-- Security: path traversal guard — `os.path.realpath()` containment check in `convert_media` (slider + single-embed) and `convert_transclusion`
-- Performance: `maybe_reload` debounce — 2 s `_last_check_time` guard skips vault walk on rapid requests
+**Architecture refactors** *(all shipped, codebase reflects this)*
+- `obsidian_syntax.py` — Obsidian-specific converters extracted from `converters.py`
+- `dataview.py` — full Dataview query engine extracted from `converters.py`
+- `view_helpers.py` — `build_breadcrumbs`, `get_adjacent_posts`, `get_related`, `highlight` extracted from `app.py`
+- `_build_rss_xml()` — deduplicated RSS builder shared by global and section feed routes
+- Related posts pre-computed at load time (`post_data["related"]`); O(1) per request
+- `ALL_TAGS` cached at reload time; no per-request rebuild
+- `parse_frontmatter` logs the failing filepath on YAML errors
 
-- Dataview LIST type — `LIST [field] FROM #tag` renders a `<ul>` with optional field annotation
-- Dataview GROUP BY flattened display — grouped TABLE/LIST renders a heading per group + sub-table/sub-list
-- Author field on post pages — `author:` frontmatter shown in post meta + JSON-LD (single or list)
-- Date last modified — `updated:`/`modified:` frontmatter shown in post meta and JSON-LD `dateModified`
-- Next/prev within label — label archive pages show inline older/newer links per post entry
-- Responsive mobile nav — nav wraps below site title, breadcrumbs stay horizontal, no hamburger
-- Print stylesheet — `@media print` hides nav/chrome, resets colours, appends link URLs
-- Next / previous post navigation ("← Older" / "Newer →") on post and book pages
-- Collapsible callouts: `> [!type]-` collapses, `> [!type]+` expands; rendered as `<details>`
-- Fixed `lstrip("> ")` over-stripping callout titles — now uses regex to strip only the blockquote prefix
-- Visible image captions: `![[photo.jpg|Caption]]` renders `<figure>` + `<figcaption>`
-- `![[Note#Heading]]` partial transclusion — only embeds content under the specified heading
-- Dataview `LIMIT N` clause now applied as a post-sort slice
-- Section RSS feeds: `/blog/feed.xml`, `/gallery/feed.xml`, etc.
-- Labels index page at `/labels` with post counts; opt-in via `labels` tag on root homepage
-- `og:image` on listing pages: uses section banner or first featured post banner
-- `book.html` now has breadcrumbs and "See also" related posts (parity with `post.html`)
-- Vault-wide attachments: falls back to vault root `_attachments/` then `ATTACHMENTS_PATH` from `.env`
-- Fix `requirements.txt`: removed duplicate PyYAML entry, bumped gunicorn to 21.2.0
-- Fix invalid HTML: removed stray `<script>` block between `</head>` and `<body>`
-- Remove `hljs.initLineNumbersOnLoad()` call (extension was never loaded)
-- Search now strips HTML tags before storing `content` field — no more false matches on tag attributes
-- Wiki-link lookup is now case-insensitive (`url_index` keys stored lowercase; `convert_links` looks up lowercase)
-- Image width hint: `![[image.png|200]]` now applies `style="max-width:200px"` to the `<img>` tag
-- `_eval_dv_condition` logs a warning and returns `False` for unrecognised WHERE conditions instead of silently returning `True`
-- Auto-listing post dicts now populated with all safe defaults (`toc`, `reading_time`, `labels`, `metadata`, `banner`, etc.)
-- Fix HTML leak: `convert_block_ids`, `convert_highlights`, `convert_math`, `convert_media` now skip fenced code blocks
-- Fix note transclusion: `convert_media` no longer consumes `![[Note Title]]` patterns without media extensions — leaves them for `convert_transclusion`
-- Dataview WHERE operators: added `=`, `!=`, `>`, `<`, `>=`, `<=` comparison support
-- Mobile breadcrumbs: `flex-wrap: nowrap` + `overflow: hidden` keeps them single-line on small viewports
-- Search tag filter: renamed URL param `label` → `tag` in route + template; updated Search.md docs
-- Deployment page: replaced ASCII flow diagram with Mermaid flowchart
-- Wiki-Links docs: documented space before pipe `[[Link | Display]]`
-- Callouts docs: added live callout previews after each code block example
-- Code Blocks docs: added rendered example after basic usage code block
-- Math and Diagrams docs: added live inline + block math and Mermaid diagram examples
-- Dataview docs: restructured with ````markdown codeblocks before each live query + LIMIT on all queries
-- Tags docs: added ````markdown codeblocks before live Dataview filtering examples
-- Features page: added `[[wiki-links]]` to all feature bullet points linking to the relevant docs page
-- OnyxFolio homepage: added `[[wiki-links | display text]]` examples in Works with any editor section
+**Features**
+- Listing page "All Posts": card grid layout (matches "See also" style)
+- Dataview LIST type — `LIST [field] FROM #tag`
+- Dataview GROUP BY — heading per group + sub-table/sub-list
+- Dataview WHERE operators: `=`, `!=`, `>`, `<`, `>=`, `<=`
+- Dataview `LIMIT N` applied post-sort
+- Dataview inline queries — `` `= this.field` ``
+- Author field — `author:` frontmatter in post meta + JSON-LD
+- `updated:` / `modified:` — "Updated …" in post meta + JSON-LD `dateModified`
+- Next/prev within tag archive pages
+- Next / previous post navigation (← Older / Newer →)
+- Collapsible callouts (`> [!type]-` / `> [!type]+`)
+- Visible image captions (`![[photo.jpg|Caption]]` → `<figcaption>`)
+- `![[Note#Heading]]` partial transclusion
+- Section RSS feeds (`/blog/feed.xml`, etc.)
+- Tags index (`/tags`), tag archive pages (`/tag/<name>`)
+- `og:image` on listing pages
+- `book.html` breadcrumbs + "See also"
+- Vault-wide attachments fallback chain
+- Wiki-link lookup case-insensitive
+- Image width hint (`![[img.png|200]]`)
+- Auto-listing post dicts with safe defaults
+- HTML-strip before code-block conversion (no bleed-through)
+- Note transclusion fix (no false media matches)
+- Mobile breadcrumbs: single-line, overflow hidden
+- Search tag filter param renamed `label` → `tag`
+- Print stylesheet
+- Security: path traversal guard in media + transclusion
+- Performance: `maybe_reload` 2s debounce
 
-- Write a README.md
-- RSS feed (`/feed.xml`)
-- OpenGraph / Twitter Card meta tags
-- Custom 404 page
-- Sitemap (`/sitemap.xml`)
-- `menu_order` frontmatter for pinning pages to the top nav
+**Foundation**
+- README, RSS feed, OpenGraph/Twitter Card, custom 404, sitemap, canonical URLs
+- `menu_order` nav pinning, breadcrumb navigation, reading time, pagination
+- Search with tag filter and result highlighting, JSON-LD structured data
+- Dark/light mode toggle, `==highlight==`, footnotes, Mermaid, KaTeX
+- Note transclusion, audio embeds, `aliases`, block references
+- Banner images, book template, private note placeholders
+- Auto-generated section listings, label archive pages
 - PolyForm Noncommercial 1.0.0 license
-- Canonical URL tags (`<link rel="canonical">`)
-- Table of contents (collapsible block at top of post)
-- Reading time estimate (on post pages and listing cards)
-- Pagination on listing pages (20 posts per page)
-- Search result highlighting (matches highlighted in title + summary)
-- Tag archive pages (`/tag/<tag>`) with links from post pages
-- Search link in top nav (opt-in via `search` tag on root homepage)
-- Tag filter dropdown on search page
-- Breadcrumb navigation on post pages
-- Bug fixes: reload lock, unchecked file reads, VAULT_PATH stderr warning, wiki-link pipe aliases
-- JSON-LD structured data (Article, Book, WebSite schemas)
-- `==highlight==` syntax → `<mark>` tags
-- Footnotes — `[^1]` / `[^note]` syntax via Python-Markdown `footnotes` extension
-- Mermaid diagrams — ` ```mermaid ``` ` blocks rendered via client-side Mermaid.js
-- Math / LaTeX — `$inline$` and `$$block$$` via KaTeX
-- Note transclusion — `![[Note Title]]` embeds note content inline
-- `[[Link#Heading]]` anchor links
-- Audio embeds — `![[audio.mp3]]` → `<audio>` element
-- `aliases` frontmatter — alternate wiki-link names
-- Related posts — "See also" section scored by shared labels and section
-- Dark / light mode toggle — CSS variables, localStorage persistence
-- Inline body labels — `#hashtag` in note body collected as labels
-- Dataview inline queries — `` `= this.field` `` in prose
-- Block references — `^block-id` anchor targets; `[[Note^id]]` links
-- Private note placeholder pages — vault notes that exist but aren't published show a friendly "not published" page
-- Book template — `📚book` tag renders a dedicated book-review layout with cover, metadata, and JSON-LD Book schema
-- Banner images — `banner`/`banner_x`/`banner_y` frontmatter renders a full-width hero on post pages
-- Dataview TABLE queries — `dataview` fenced blocks execute against the vault index
-- Label archive pages (`/label/<name>`) with links from post pages
-- Auto-generated section listing routes for folders with no explicit index file
