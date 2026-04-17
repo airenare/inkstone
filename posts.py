@@ -56,6 +56,25 @@ LAST_SCAN_TIME = 0
 _reload_lock = threading.Lock()
 _last_check_time = 0.0
 
+# Matches fenced code blocks (``` or ~~~, with optional language label)
+_FENCED_CODE_RE = re.compile(
+    r"^(`{3,}|~{3,})[^\n]*\n.*?\n\1[ \t]*$",
+    re.MULTILINE | re.DOTALL,
+)
+# Matches inline code spans (single or multi backtick)
+_INLINE_CODE_RE = re.compile(r"`+.+?`+", re.DOTALL)
+
+
+def _strip_code(md):
+    """Return md with fenced code blocks and inline code replaced by spaces.
+
+    Used before hashtag extraction so that e.g. CSS colour literals
+    like #f5a623 inside code blocks are not collected as body tags.
+    """
+    md = _FENCED_CODE_RE.sub("", md)
+    md = _INLINE_CODE_RE.sub("", md)
+    return md
+
 DATE_FORMATS = [
     "%Y-%m-%d",
     "%Y-%m-%d %H:%M",
@@ -192,7 +211,7 @@ def load_posts():
             body_hashtags = set(
                 t.lower()
                 for t in re.findall(
-                    r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", md
+                    r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", _strip_code(md)
                 )
             )
             dv_tags = sorted(fm_tags | body_hashtags)
@@ -333,8 +352,12 @@ def load_posts():
         except Exception:
             fm_tags = set()
         # Also collect #hashtag mentions from the raw markdown body
+        # Run on code-stripped text so CSS colour literals etc. are excluded
         body_hashtags = set(
-            t.lower() for t in re.findall(r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", md)
+            t.lower()
+            for t in re.findall(
+                r"(?<!\w)#([A-Za-z][A-Za-z0-9_-]*)", _strip_code(md)
+            )
         )
         tags = sorted(fm_tags | body_hashtags)
         dataview_index[filepath]["tags"] = tags

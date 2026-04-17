@@ -112,8 +112,15 @@ def attachments(path):
 
 
 # Favicon: vault root overrides (favicon.ico / favicon.png / favicon.svg),
-# falling back to the built-in OnyxFolio default.
+# falling back to the built-in OnyxFolio defaults in frontend/static/.
 _FAVICON_CANDIDATES = ["favicon.ico", "favicon.png", "favicon.svg"]
+
+# Map each route to the static fallback filename and MIME type
+_FAVICON_DEFAULTS = {
+    "/favicon.ico": ("favicon.ico", "image/x-icon"),
+    "/favicon.png": ("favicon-32.png", "image/png"),
+    "/favicon.svg": ("logo.svg", "image/svg+xml"),
+}
 
 
 @app.route("/favicon.ico")
@@ -124,10 +131,9 @@ def favicon():
         vault_favicon = os.path.join(VAULT_PATH, name)
         if os.path.isfile(vault_favicon):
             return send_from_directory(VAULT_PATH, name)
-    # Default: serve the built-in OnyxFolio SVG logo
-    return send_from_directory(
-        app.static_folder, "logo.svg", mimetype="image/svg+xml"
-    )
+    # Default: serve the matching built-in asset with the correct MIME type
+    static_name, mime = _FAVICON_DEFAULTS[request.path]
+    return send_from_directory(app.static_folder, static_name, mimetype=mime)
 
 
 @app.errorhandler(404)
@@ -401,5 +407,6 @@ if __name__ == "__main__":
         post_store.SHOW_SEARCH,
         post_store.SHOW_TAGS,
         post_store.ALL_TAGS,
+        post_store.ICON_OVERRIDES,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)
