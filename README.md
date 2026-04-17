@@ -50,7 +50,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/` and then `ATTACHMENTS_PATH` from `.env`
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD structured data
 - **Date last modified** — `updated:` or `modified:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
-- **Mobile nav** — collapsible hamburger menu on narrow viewports (≤ 600 px); desktop layout unchanged
+- **Mobile nav** — nav links wrap below the site title on narrow viewports (≤ 600 px); breadcrumbs stay on one horizontal line
 - **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
 - **Search** — full-text search across all published posts at `/search`
 - **Auto-listings** — sections with no explicit index file get an auto-generated listing page

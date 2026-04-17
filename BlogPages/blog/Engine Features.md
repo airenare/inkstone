@@ -103,7 +103,7 @@ LIMIT 6
 
 ## Mobile Nav
 
-Shrink this window below 600 px. The nav links collapse into a hamburger ☰ menu that toggles open on tap. The site name and theme toggle always stay visible.
+Shrink this window below 600 px. The nav links wrap below the site title. The theme toggle stays pinned to the top-right corner.
 
 ---
 

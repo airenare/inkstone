@@ -59,7 +59,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Dataview LIMIT clause** — `LIMIT N` in a `dataview` block now trims results after sorting
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD
 - **Date last modified** — `updated:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
-- **Mobile nav** — collapsible hamburger menu on narrow screens; desktop layout unchanged
+- **Mobile nav** — nav links wrap below the site title on narrow screens; breadcrumbs stay on one line
 - **Print stylesheet** — clean `@media print` styles for printing or saving as PDF
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
 

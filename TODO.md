@@ -3,7 +3,7 @@
 
 ## High Priority
 
-- **Mobile navigation** - needs fixing. Hamburger menu is ok, but need to see other options. Breadcrumbs are all glitchy and ugly on the vertical screen (they need to be presented in a line, not in a column).
+- **Mobile navigation** - ✅ Hamburger removed; nav wraps below site title; breadcrumbs fixed to horizontal single line.
 
 - **Include version** - in the footer 'built with OnyxFolio'
 
@@ -65,7 +65,7 @@
 - Author field on post pages — `author:` frontmatter shown in post meta + JSON-LD (single or list)
 - Date last modified — `updated:`/`modified:` frontmatter shown in post meta and JSON-LD `dateModified`
 - Next/prev within label — label archive pages show inline older/newer links per post entry
-- Responsive mobile nav — hamburger button, slide-down menu, single-column layout under 600 px
+- Responsive mobile nav — nav wraps below site title, breadcrumbs stay horizontal, no hamburger
 - Print stylesheet — `@media print` hides nav/chrome, resets colours, appends link URLs
 - Next / previous post navigation ("← Older" / "Newer →") on post and book pages
 - Collapsible callouts: `> [!type]-` collapses, `> [!type]+` expands; rendered as `<details>`
