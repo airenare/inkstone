@@ -3,15 +3,21 @@
 
 ## High Priority
 
-- **Mobile navigation** - ✅ Hamburger removed; nav wraps below site title; breadcrumbs fixed to horizontal single line.
+- **The webpage should have a frontmatter field for setting the icon** - a logo, avatar or a simple image that will be shown to the left of the website title. Its height must be almost the same height as the capital letters of the font of the website title, maybe slightly larger, and overall should look in harmony with the style of the Title. 
 
-- **Include version** - in the footer 'built with OnyxFolio'
+- **Custom website title and icon (when it's implemented) for any page** - When needed, the title of the website and the icon (top left corner) can be changed to a specified value (frontmatter fields). If the icon and title is set for the specific page of the website, all the down-stream pages must inherit it, unless there is a section or a note, that overrides it. This way, the title and icon set for the homepage will be inherited by all down-stream pages, unless some page overrides it with its own, making all it's child-notes inherit these settings.
 
-- **Fix the codeblocks for media embeds** - /onyxfolio/docs/media-embeds use real pictures for the showcase
+- **Favicon setting** - Engine will have a default favicon of the OnyxFolio, but user can change it by simply putting the favicon file to the root of their vault directory, which will override the default one.
+
+
+- **Include version** - in the footer 'built with OnyxFolio (v X.X.X)'
+
 
 ## Medium Priority
 
-- **Use only lowercase URLs**
+- **Fix the codeblocks for media embeds** - /onyxfolio/docs/media-embeds use real pictures for the showcase
+
+- **Use only lowercase URLs** - check if it's done.
 
 - **Refactor: split `converters.py` → `obsidian_syntax.py`** — `converters.py` is ~1,000 lines with two distinct concerns. Move all Obsidian-specific converter functions into a new `obsidian_syntax.py`: `convert_links`, `convert_callouts`, `render_callout`, `convert_checkboxes`, `convert_highlights`, `convert_block_ids`, `convert_math`, `convert_transclusion`, `convert_media`, and `_extract_heading_section`. Keep `converters.py` as the pipeline coordinator (`render_markdown`, `extract_h1`, `strip_leading_h1`, `slugify`) and import from `obsidian_syntax`. No other files need to change since only `converters.py` is imported externally.
 
@@ -54,6 +60,8 @@
 - **Mermaid inner background** — Mermaid v11 injects an inline `style` background on the SVG that can't be reliably overridden via CSS or `themeVariables`. The current post-render JS strip in `base.html` is a workaround; needs investigation into the correct Mermaid v11 API to suppress it at initialisation time.
 
 ## Done
+
+- **Mobile navigation** - ✅ Hamburger removed; nav wraps below site title; breadcrumbs fixed to horizontal single line.
 
 - Listing page "All Posts" section: replaced flat `.post-entry` list with `.related-grid` / `.related-card` card grid (same style as "See also")
 
