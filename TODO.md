@@ -4,6 +4,9 @@
 
 ## Immediate  *(small, pick up and finish in one session)*
 
+- ✅ **Multilingual support** — filename suffix `_RU`/`_FR`/etc. → `/{slug}/{lang}` URLs; language
+  toggle in header, hreflang meta, redirect for missing translations, "not yet translated" page (v1.22.0)
+
 - ✅ **Version in footer** — `v{{ app_version }}` in footer span (v1.21.2)
   Change to `built with OnyxFolio v{{ app_version }}`. One-line template edit.
 
