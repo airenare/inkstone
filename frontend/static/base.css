@@ -1221,6 +1221,38 @@ audio {
    DARK / LIGHT MODE TOGGLE
    ========================================= */
 
+/* Language toggle */
+.lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.lang-option {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.2em 0.5em;
+    border-radius: 5px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1.6;
+}
+
+.lang-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.lang-option.lang-active {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+    cursor: default;
+    pointer-events: none;
+}
+
 .theme-toggle {
     background: none;
     border: 1px solid var(--border);

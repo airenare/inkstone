@@ -1,7 +1,7 @@
 
 <!DOCTYPE html>
 <!-- onyxfolio v{{ app_version }} -->
-<html lang="en">
+<html lang="{{ current_lang }}">
 <head>
 
 <meta charset="utf-8">
@@ -16,6 +16,13 @@
 <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='favicon-16.png') }}">
 <link rel="apple-touch-icon" sizes="192x192" href="{{ url_for('static', filename='favicon-192.png') }}">
 <link rel="shortcut icon" href="/favicon.ico">
+
+{% if lang_variants and lang_variants|length > 1 %}
+{% for lc, lu in lang_variants.items() %}
+<link rel="alternate" hreflang="{{ lc }}" href="{{ request.host_url.rstrip('/') }}{{ lu }}">
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ request.host_url.rstrip('/') }}{{ lang_variants.get(default_lang, '/') }}">
+{% endif %}
 
 {% block meta %}
 <meta property="og:title" content="{{ website_name }}">
@@ -127,6 +134,9 @@ new MutationObserver(renderMermaid).observe(
 <h1><a href="/">{% if header_icon %}<img src="{{ header_icon }}" alt="" class="site-icon" aria-hidden="true">{% endif %}{{ header_site_title or website_name }}</a></h1>
 <nav id="main-nav">{% for url in nav_sections %}<a href="{{ url }}"{% if request.path == url or request.path.startswith(url + '/') %} class="nav-active"{% endif %}>{{ url.lstrip("/") | title }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}"{% if request.path == p.url_path %} class="nav-active"{% endif %}>{{ p.title }}</a>{% endfor %}{% if show_tags %}<a href="/tags"{% if request.path == '/tags' %} class="nav-active"{% endif %}>Tags</a>{% endif %}{% if show_search %}<a href="/search"{% if request.path == '/search' %} class="nav-active"{% endif %}>Search</a>{% endif %}</nav>
 <div class="header-controls">
+{% if lang_variants and lang_variants|length > 1 %}
+<div class="lang-toggle" aria-label="Switch language">{% for lc, lu in lang_variants.items() %}<a href="{{ lu }}" class="lang-option{% if lc == current_lang %} lang-active{% endif %}" aria-label="{{ lc|upper }}">{{ lc|upper }}</a>{% endfor %}</div>
+{% endif %}
 <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode">☀</button>
 </div>
 </div>

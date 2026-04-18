@@ -6,7 +6,7 @@ import subprocess
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
-    Response
+    Response, redirect
 
 import posts as post_store
 from config import VAULT_PATH, VERSION, WEBHOOK_SECRET
@@ -22,6 +22,18 @@ app = Flask(
     template_folder="frontend/templates",
     static_folder="frontend/static",
 )
+
+
+def _detect_current_lang(path):
+    """Return the language code if the last path segment is a known non-default
+    language code, otherwise return DEFAULT_LANG."""
+    if not path or path == "/":
+        return post_store.DEFAULT_LANG
+    last = path.rstrip("/").rsplit("/", 1)[-1]
+    if (last in post_store.AVAILABLE_LANGS
+            and last != post_store.DEFAULT_LANG):
+        return last
+    return post_store.DEFAULT_LANG
 
 
 def _resolve_icon_override(url_path):
@@ -57,16 +69,43 @@ def _resolve_icon_override(url_path):
 
 @app.context_processor
 def inject_globals():
-    # Top-level sections (direct children of root that have a section route)
-    top_sections = sorted(
-        url for url in post_store.SECTION_ROUTES
-        if url != "/" and url.count("/") == 1
-    )
+    current_lang = _detect_current_lang(request.path)
+    multilingual = len(post_store.AVAILABLE_LANGS) > 1
+
+    # Language-aware top-level nav sections
+    if not multilingual or current_lang == post_store.DEFAULT_LANG:
+        top_sections = sorted(
+            url for url, route in post_store.SECTION_ROUTES.items()
+            if url not in ("/", f"/{current_lang}")
+            and url.count("/") == 1
+            and route.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG
+        )
+    else:
+        # Non-default language: show sections at /{section}/{lang}
+        top_sections = sorted(
+            url for url, route in post_store.SECTION_ROUTES.items()
+            if route.get("lang") == current_lang
+            and url.count("/") == 2
+        )
+
+    # Language-aware menu posts; fall back to default lang if none found
+    lang_menu = [p for p in post_store.MENU_POSTS
+                 if p.get("lang", post_store.DEFAULT_LANG) == current_lang]
+    if not lang_menu and current_lang != post_store.DEFAULT_LANG:
+        lang_menu = [p for p in post_store.MENU_POSTS
+                     if p.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG]
+
+    # Language variants for the toggle: base_url → {lang: url}
+    base_url = request.path.rstrip("/") or "/"
+    if multilingual and current_lang != post_store.DEFAULT_LANG:
+        base_url = base_url.rsplit("/", 1)[0] or "/"
+    lang_variants = post_store.LANG_GROUPS.get(base_url, {}) if multilingual else {}
+
     icon_ctx = _resolve_icon_override(request.path)
     return {
         "website_name": post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
-        "menu_posts": post_store.MENU_POSTS,
+        "menu_posts": lang_menu,
         "show_search": post_store.SHOW_SEARCH,
         "show_tags": post_store.SHOW_TAGS,
         "current_url": request.url,
@@ -75,6 +114,10 @@ def inject_globals():
         "theme_css": f"theme-{post_store.SITE_THEME}.css",
         "header_icon": icon_ctx["header_icon"],
         "header_site_title": icon_ctx["header_site_title"],
+        "current_lang": current_lang,
+        "default_lang": post_store.DEFAULT_LANG,
+        "available_langs": post_store.AVAILABLE_LANGS,
+        "lang_variants": lang_variants,
     }
 
 
@@ -393,6 +436,29 @@ def serve(path):
         back_url = parent if parent else "/"
         return render_template("private.html", entry=entry, back_url=back_url)
 
+    # 4. Multilingual fallbacks (only when multiple languages are configured)
+    if len(post_store.AVAILABLE_LANGS) > 1:
+        last_seg = url_path.rstrip("/").rsplit("/", 1)[-1]
+        base = url_path.rstrip("/").rsplit("/", 1)[0] or "/"
+
+        # 4a. Requested a lang variant that has no translation → redirect to default
+        if (last_seg in post_store.AVAILABLE_LANGS
+                and last_seg != post_store.DEFAULT_LANG
+                and (base in post_store.ALL_POSTS
+                     or base in post_store.SECTION_ROUTES)):
+            return redirect(base, 302)
+
+        # 4b. Base URL exists only in non-default languages → "not translated" page
+        if url_path in post_store.LANG_GROUPS:
+            variants = post_store.LANG_GROUPS[url_path]
+            if post_store.DEFAULT_LANG not in variants and variants:
+                return render_template(
+                    "not_translated.html",
+                    lang_variants=variants,
+                    current_lang=post_store.DEFAULT_LANG,
+                    default_lang=post_store.DEFAULT_LANG,
+                ), 200
+
     abort(404)
 
 
@@ -413,5 +479,8 @@ if __name__ == "__main__":
         post_store.SHOW_TAGS,
         post_store.ALL_TAGS,
         post_store.ICON_OVERRIDES,
+        post_store.DEFAULT_LANG,
+        post_store.AVAILABLE_LANGS,
+        post_store.LANG_GROUPS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

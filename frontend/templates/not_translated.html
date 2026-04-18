@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<article class="private-note">
+
+<h1>Not yet translated</h1>
+
+<div class="private-badge">
+<span class="private-lock">🌐</span>
+<span>Translation unavailable</span>
+</div>
+
+<p class="private-message">
+This page is not yet available in <strong>{{ default_lang | upper }}</strong>.
+</p>
+
+{% if lang_variants %}
+<p class="private-message">Read it in:</p>
+<ul class="not-translated-langs">
+{% for lang_code, lang_url in lang_variants.items() %}
+<li><a href="{{ lang_url }}">{{ lang_code | upper }} →</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+</article>
+
+{% endblock %}

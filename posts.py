@@ -23,6 +23,12 @@ DATAVIEW_INDEX = {}
 PRIVATE_ROUTES = {}
 # posts pinned to the top nav via menu_order frontmatter, sorted by menu_order
 MENU_POSTS = []
+# Default language code (from root homepage `language:` frontmatter, e.g. "en")
+DEFAULT_LANG: str = "en"
+# All language codes found in vault, default first (e.g. ["en", "ru"])
+AVAILABLE_LANGS: list = []
+# base_url → {lang_code: url_path} — powers the language toggle and fallback logic
+LANG_GROUPS: dict = {}
 # True when the root homepage has the "search" tag — controls nav search link
 SHOW_SEARCH = False
 # True when the root homepage has show_tags: true — controls nav tags link
@@ -74,6 +80,27 @@ def _strip_code(md):
     md = _FENCED_CODE_RE.sub("", md)
     md = _INLINE_CODE_RE.sub("", md)
     return md
+
+# Matches exactly 2 uppercase letters as a filename language suffix, e.g. _RU _EN _FR
+_LANG_SUFFIX_RE = re.compile(r"^(.+)_([A-Z]{2})$")
+
+
+def _extract_lang(stem, frontmatter_lang=None):
+    """Return (base_stem, lang_code). base_stem has any _XX suffix stripped.
+
+    frontmatter_lang (from `lang:` frontmatter) takes precedence over suffix.
+    Returns lang_code=None when no language is detected — caller should
+    substitute the vault's default_lang.
+    """
+    if frontmatter_lang:
+        m = _LANG_SUFFIX_RE.match(stem)
+        base = m.group(1) if m else stem
+        return base, str(frontmatter_lang).strip().lower()
+    m = _LANG_SUFFIX_RE.match(stem)
+    if m:
+        return m.group(1), m.group(2).lower()
+    return stem, None
+
 
 DATE_FORMATS = [
     "%Y-%m-%d",
@@ -162,6 +189,28 @@ def load_posts():
     menu_posts = []
     show_search = False
     show_tags = False
+
+    # ---- Pre-scan vault root for the homepage to detect default language ----
+    default_lang = "en"
+    _vault_abs = os.path.abspath(VAULT_PATH)
+    try:
+        for _fname in os.listdir(_vault_abs):
+            if not _fname.endswith(".md"):
+                continue
+            _fp = os.path.join(_vault_abs, _fname)
+            if not os.path.isfile(_fp):
+                continue
+            try:
+                with open(_fp, encoding="utf-8") as _fh:
+                    _meta, _ = parse_frontmatter(_fh.read(), _fp)
+                if (_meta.get("type") or "").strip().lower() == "homepage":
+                    _raw = _meta.get("language", "en")
+                    default_lang = str(_raw).strip().lower()
+                    break
+            except OSError:
+                pass
+    except OSError:
+        pass
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
@@ -254,14 +303,27 @@ def load_posts():
                 )
                 title_raw = None
             title = title_raw or extract_h1(md) or f[:-3]
+
+            # Language detection: filename suffix (_RU) or frontmatter `lang:`
+            stem = f[:-3]
+            base_stem, file_lang = _extract_lang(stem, metadata.get("lang"))
+            lang = file_lang if file_lang else default_lang
+
             slug_raw = metadata.get("slug")
-            slug = (str(slug_raw).lower() if isinstance(slug_raw, str) else None) or slugify(title)
+            # Slug falls back to base_stem (suffix stripped) when slugify(title)
+            # produces an empty string, e.g. for non-ASCII Cyrillic-only titles.
+            slug = (
+                (str(slug_raw).lower() if isinstance(slug_raw, str) else None)
+                or slugify(title)
+                or slugify(base_stem)
+            )
             section = _section_from_filepath(filepath)
 
-            if section:
-                url_path = "/" + section + "/" + slug
+            base_url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
+            if lang != default_lang:
+                url_path = base_url_path + "/" + lang
             else:
-                url_path = "/" + slug
+                url_path = base_url_path
 
             # Homepage/listing files are served at the section URL, not their
             # computed url_path — index them under the section URL so that
@@ -295,11 +357,11 @@ def load_posts():
             )
 
             candidates.append((filepath, f, metadata, md, title, slug,
-                                section, url_path))
+                                section, url_path, lang, base_url_path))
 
     # ---- Pass 2: render markdown with resolved wiki-links + dataview ----
     for (filepath, f, metadata, md, title, slug,
-         section, url_path) in candidates:
+         section, url_path, lang, base_url_path) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
         updated = _parse_date(
@@ -312,6 +374,11 @@ def load_posts():
         priority = float("inf") if priority_raw is None else int(priority_raw)
 
         section_url = ("/" + section) if section else "/"
+        # Non-default language homepages/listings get a lang-suffixed section URL
+        # e.g. "/blog" → "/blog/ru"  and  "/" → "/ru"
+        if lang != default_lang:
+            section_url = (section_url.rstrip("/") + "/" + lang) if section \
+                else ("/" + lang)
         note_type = (metadata.get("type") or "").strip().lower()
         is_homepage = note_type == "homepage"
         is_listing = note_type == "listing"
@@ -364,6 +431,8 @@ def load_posts():
 
         post_data = {
             "url_path": url_path,
+            "base_url_path": base_url_path,
+            "lang": lang,
             "section": section,
             "section_url": section_url,
             "slug": slug,
@@ -392,6 +461,7 @@ def load_posts():
                 "title": title,
                 "url_path": url_path,
                 "menu_order": int(menu_order_raw),
+                "lang": lang,
             })
 
         if is_listing:
@@ -399,9 +469,10 @@ def load_posts():
                 "type": "listing",
                 "post": post_data,
                 "section": section,
+                "lang": lang,
             }
         elif is_homepage:
-            if section == "":
+            if section == "" and lang == default_lang:
                 website_name = title
                 show_search = bool(metadata.get("show_search"))
                 show_tags = bool(metadata.get("show_tags"))
@@ -411,6 +482,7 @@ def load_posts():
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,
+                "lang": lang,
             }
         else:
             all_posts[url_path] = post_data
@@ -473,6 +545,44 @@ def load_posts():
         set(t for p in all_posts.values() for t in p["tags"])
     )
 
+    # ---- Build LANG_GROUPS: base_url → {lang: url_path} ----
+    # For regular posts: base_url = base_url_path (slug-derived, no lang suffix)
+    # For homepage/listing: the served URL is section_url, not url_path (which
+    # is slug-based and may contain Cyrillic).  Strip the lang suffix from
+    # section_url to get the base key.
+    lang_groups = {}
+    _all_pd = {
+        **{r["post"]["url_path"]: r["post"] for r in section_routes.values()},
+        **all_posts,
+    }
+    for _pd in _all_pd.values():
+        _lang = _pd.get("lang", default_lang)
+        _ptype = _pd.get("post_type", "")
+        if _ptype in ("homepage", "listing"):
+            _served = _pd.get("section_url") or _pd["url_path"]
+            if _lang != default_lang:
+                # Strip trailing "/" + lang_code to get the base
+                _base = _served.rsplit("/" + _lang, 1)[0] or "/"
+            else:
+                _base = _served
+            _value = _served
+        else:
+            _base = _pd.get("base_url_path") or _pd["url_path"]
+            _value = _pd["url_path"]
+        if _base not in lang_groups:
+            lang_groups[_base] = {}
+        lang_groups[_base][_lang] = _value
+
+    # Collect all language codes; default_lang first, then others sorted
+    _seen = {default_lang}
+    _others = []
+    for _pd in _all_pd.values():
+        _l = _pd.get("lang", default_lang)
+        if _l not in _seen:
+            _seen.add(_l)
+            _others.append(_l)
+    available_langs = [default_lang] + sorted(_others)
+
     # ---- Build icon/site-title override map for cascade inheritance ----
     # Section routes are keyed by their *section URL* (e.g. "/onyxfolio"), not
     # by the homepage file's slug path — that's what the cascade lookup uses.
@@ -493,7 +603,7 @@ def load_posts():
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
             private_routes, menu_posts, show_search, show_tags, all_tags,
-            icon_overrides)
+            icon_overrides, default_lang, available_langs, lang_groups)
 
 
 # =========================================
@@ -510,6 +620,7 @@ def force_reload():
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, \
+        DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, \
         LAST_SCAN_TIME, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
@@ -534,7 +645,8 @@ def maybe_reload():
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
-             SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES) = load_posts()
+             SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
+             DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)

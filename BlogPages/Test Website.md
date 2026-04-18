@@ -1,6 +1,7 @@
 ---
 website: true
 type: homepage
+language: en
 show_search: true
 show_tags: true
 title: OnyxFolio
@@ -62,6 +63,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Mobile nav** — nav links wrap below the site title on narrow screens; breadcrumbs stay on one line
 - **Print stylesheet** — clean `@media print` styles for printing or saving as PDF
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
+- **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md` → `/post/ru`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
 
 ---
 
