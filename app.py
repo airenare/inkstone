@@ -45,7 +45,12 @@ def _resolve_icon_override(url_path):
             icon = ov.get("icon")
             st = ov.get("site_title")
             # Build icon URL: vault-relative path served via /attachments/
-            icon_url = f"/attachments/{icon}" if icon else None
+            # Absolute paths (e.g. /static/logo.svg) and full URLs used as-is;
+            # relative paths are resolved via the /attachments/ route.
+            if icon.startswith("/") or icon.startswith("http"):
+                icon_url = icon
+            else:
+                icon_url = f"/attachments/{icon}"
             return {"header_icon": icon_url, "header_site_title": st}
     return {"header_icon": None, "header_site_title": None}
 
