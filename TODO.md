@@ -4,7 +4,7 @@
 
 ## Immediate  *(small, pick up and finish in one session)*
 
-- **Version in footer** — `base.html` footer currently reads "built with OnyxFolio" with no version.
+- ✅ **Version in footer** — `v{{ app_version }}` in footer span (v1.21.2)
   Change to `built with OnyxFolio v{{ app_version }}`. One-line template edit.
 
 - **Footer attribution opt-out** — some users will want to remove the attribution.
