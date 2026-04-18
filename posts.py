@@ -474,20 +474,21 @@ def load_posts():
     )
 
     # ---- Build icon/site-title override map for cascade inheritance ----
-    # Covers all section routes (homepage/listing) and individual posts.
+    # Section routes are keyed by their *section URL* (e.g. "/onyxfolio"), not
+    # by the homepage file's slug path — that's what the cascade lookup uses.
     icon_overrides = {}
-    for url_path, post_data in {
-        **{r["post"]["url_path"]: r["post"] for r in section_routes.values()},
-        **all_posts,
-    }.items():
+    for section_url, route in section_routes.items():
+        meta = route["post"].get("metadata", {})
+        icon = meta.get("icon") or None
+        st = meta.get("site_title") or None
+        if icon or st:
+            icon_overrides[section_url] = {"icon": icon, "site_title": st}
+    for url_path, post_data in all_posts.items():
         meta = post_data.get("metadata", {})
         icon = meta.get("icon") or None
         st = meta.get("site_title") or None
         if icon or st:
-            icon_overrides[url_path] = {
-                "icon": icon,
-                "site_title": st,
-            }
+            icon_overrides[url_path] = {"icon": icon, "site_title": st}
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
