@@ -353,8 +353,7 @@ header {
 
 /* Icon shown beside the site title when set via frontmatter */
 .site-icon {
-    /* Cap height — slightly taller than uppercase letters */
-    height: 1.25em;
+    height: 2.5em;
     width: auto;
     display: inline-block;
     vertical-align: middle;
