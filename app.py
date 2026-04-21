@@ -388,6 +388,23 @@ def serve(path):
             else:
                 section_posts = list(post_store.ALL_POSTS.values())
 
+            # Deduplicate: for each logical post, show the version matching the
+            # listing's language. Falls back to DEFAULT_LANG if no match.
+            _route_lang = route.get("lang", post_store.DEFAULT_LANG)
+            _by_base = {}
+            for _p in section_posts:
+                _base = _p.get("base_url_path") or _p["url_path"]
+                _by_base.setdefault(_base, {})[_p.get("lang", post_store.DEFAULT_LANG)] = _p
+            _deduped = []
+            for _base, _versions in _by_base.items():
+                if _route_lang in _versions:
+                    _deduped.append(_versions[_route_lang])
+                elif post_store.DEFAULT_LANG in _versions:
+                    _deduped.append(_versions[post_store.DEFAULT_LANG])
+                else:
+                    _deduped.append(next(iter(_versions.values())))
+            section_posts = _deduped
+
             section_posts.sort(
                 key=lambda x: x["date"] or datetime.min, reverse=True
             )
