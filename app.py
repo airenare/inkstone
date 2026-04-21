@@ -497,5 +497,6 @@ if __name__ == "__main__":
         post_store.LANG_GROUPS,
         post_store.SOCIAL_LINKS,
         post_store.WEBSITE_NAMES,
+        post_store.UI_TRANSLATIONS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

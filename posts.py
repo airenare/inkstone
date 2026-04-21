@@ -19,6 +19,8 @@ SECTION_ROUTES = {}
 WEBSITE_NAME = "My Blog"
 # lang_code → site title for that language's root homepage
 WEBSITE_NAMES: dict = {}
+# lang_code → {key: translated_string} — loaded from `type: translations` vault notes
+UI_TRANSLATIONS: dict = {}
 # filepath → {metadata, tags, file} for ALL vault notes (feeds Dataview queries)
 DATAVIEW_INDEX = {}
 # url_path → dataview entry for notes that exist but are NOT published as web pages
@@ -393,6 +395,8 @@ def load_posts():
     except OSError:
         pass
 
+    ui_translations = {}
+
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
     url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
@@ -414,6 +418,16 @@ def load_posts():
                 continue
 
             metadata, md = parse_frontmatter(text, filepath)
+
+            # Detect translation-table notes (don't need website: true)
+            if (metadata.get("type") or "").strip().lower() == "translations":
+                note_lang = str(metadata.get("lang") or "").strip().lower()
+                strings_raw = metadata.get("strings")
+                if note_lang and isinstance(strings_raw, dict):
+                    ui_translations[note_lang] = {
+                        str(k): str(v) for k, v in strings_raw.items()
+                    }
+                continue
 
             dv_title = metadata.get("title") or extract_h1(md) or f[:-3]
             dv_date = _parse_date(
@@ -806,7 +820,7 @@ def load_posts():
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
             private_routes, menu_posts, show_search, show_tags, all_tags,
             icon_overrides, default_lang, available_langs, lang_groups,
-            social_links, website_names)
+            social_links, website_names, ui_translations)
 
 
 # =========================================
@@ -823,7 +837,7 @@ def force_reload():
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, WEBSITE_NAMES, SITE_THEME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, \
-        DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, \
+        DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, UI_TRANSLATIONS, \
         LAST_SCAN_TIME, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
@@ -850,7 +864,7 @@ def maybe_reload():
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
              DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS,
-             SOCIAL_LINKS, WEBSITE_NAMES) = load_posts()
+             SOCIAL_LINKS, WEBSITE_NAMES, UI_TRANSLATIONS) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)
