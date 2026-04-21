@@ -18,6 +18,8 @@ banner_y: 0.45
 
 Every page you read here was written as a plain `.md` file in Obsidian. There is no export step, no CMS, no build pipeline. A small Python server reads the vault directly and serves it as a website. This post is a complete technical walkthrough of how that works — from filesystem walk to rendered HTML.
 
+This is the developer deep-dive — if you want to get your own vault live first, start with [[Start Here]].
+
 > [!abstract] What This Covers
 > Four-module architecture · Two-pass vault loading · The full markdown pipeline · Routing · Hot-reload · Dataview queries · RSS, sitemap, and search. All with code from the actual source files.
 
@@ -384,8 +386,8 @@ Every post, whether homepage, listing, or regular, is stored as a plain dict. Th
 | `toc` | Table of contents HTML string (empty if no headings) |
 | `summary` | Frontmatter `summary:` or first 200 chars of plain text |
 | `reading_time` | `max(1, word_count // 200)` — minutes |
-| `labels` | Sorted, lowercased list from frontmatter `labels:` |
-| `featured` | `True` if `featured` tag is present |
+| `tags` | Sorted, lowercased list from frontmatter `tags:` and inline `#hashtags` |
+| `featured` | `True` if `featured: true` is set in frontmatter |
 | `priority` | Integer sort key for featured ordering |
 | `banner` | URL string, or `None` |
 | `banner_x` / `banner_y` | Float 0–1, CSS `background-position` focal point |
@@ -399,28 +401,30 @@ Every post, whether homepage, listing, or regular, is stored as a plain dict. Th
 
 ```yaml
 ---
-tags:
-  - blog        # required to publish (or "website")
-  - featured    # shows in the Featured section of the parent listing
-  - homepage    # renders this file's content at the section root URL
-  - listing     # auto-generates a post index at the section root URL
-  - search      # root homepage only: adds Search to the top nav
+website: true        # required to publish as a web page
+type: homepage       # optional: homepage | listing | book
+                     #   homepage  — renders this note's content at the section root
+                     #   listing   — auto-generates a post index at the section root
+                     #   book      — uses the book template with cover/metadata header
+featured: true       # optional; highlight in the section's featured area
+priority: 0          # featured posts only; lower = higher rank; date breaks ties
 date: 2026-01-20
 title: My Post
-slug: my-post            # optional; auto-generated from title if omitted
-priority: 0              # featured sort order; 0 = first; date breaks ties
-summary: "..."           # listing card text; auto-derived if omitted
-banner: "https://..."    # banner image URL
-banner_x: 0.5            # horizontal focal point (0 = left, 1 = right)
-banner_y: 0.4            # vertical focal point (0 = top, 1 = bottom)
-menu_order: 1            # pin to top nav; lower = further left
-labels:
+slug: my-post        # optional; auto-generated from title if omitted
+summary: "..."       # listing card text; auto-derived if omitted
+banner: "https://..."
+banner_x: 0.5        # horizontal focal point (0 = left, 1 = right)
+banner_y: 0.4        # vertical focal point (0 = top, 1 = bottom)
+menu_order: 1        # pin to top nav; lower = further left
+show_search: true    # root homepage only: adds Search link to nav
+show_tags: true      # root homepage only: adds Tags link to nav
+language: en         # root homepage only: sets the default site language
+lang: ru             # per-note: marks this note as a specific language variant
+tags:
   - python
   - obsidian
 ---
 ```
-
-`tags` are reserved engine keywords — they change how the server handles the file. `labels` are for readers — they appear as clickable badges on the post page and drive the label filter on the search page and `/label/<name>` archive pages.
 
 > [!warning] Colons in frontmatter values
 > YAML uses `: ` (colon + space) as a key-value separator. If your `title`, `summary`, or any other string field contains a colon, you must wrap the entire value in double quotes — otherwise the YAML parser silently turns it into a nested dict and the post's URL, title, and wiki-links all break.
