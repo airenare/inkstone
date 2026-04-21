@@ -76,10 +76,11 @@ def inject_globals():
     current_lang = _detect_current_lang(request.path)
     multilingual = len(post_store.AVAILABLE_LANGS) > 1
 
-    # Language-aware top-level nav sections
+    # Language-aware top-level nav sections — (url, label) tuples
     if not multilingual or current_lang == post_store.DEFAULT_LANG:
         top_sections = sorted(
-            url for url, route in post_store.SECTION_ROUTES.items()
+            (url, route["post"].get("title", url.lstrip("/").title()))
+            for url, route in post_store.SECTION_ROUTES.items()
             if url not in ("/", f"/{current_lang}")
             and url.count("/") == 1
             and route.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG
@@ -87,7 +88,8 @@ def inject_globals():
     else:
         # Non-default language: show sections at /{section}/{lang}
         top_sections = sorted(
-            url for url, route in post_store.SECTION_ROUTES.items()
+            (url, route["post"].get("title", url.lstrip("/").title()))
+            for url, route in post_store.SECTION_ROUTES.items()
             if route.get("lang") == current_lang
             and url.count("/") == 2
         )
