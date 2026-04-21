@@ -9,7 +9,11 @@ from flask import Flask, render_template, abort, request, send_from_directory, \
     Response, redirect
 
 import posts as post_store
-from config import VAULT_PATH, VERSION, WEBHOOK_SECRET
+from config import (
+    VAULT_PATH, VERSION, WEBHOOK_SECRET,
+    HIDE_ATTRIBUTION,
+    GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID,
+)
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
 
@@ -118,6 +122,13 @@ def inject_globals():
         "default_lang": post_store.DEFAULT_LANG,
         "available_langs": post_store.AVAILABLE_LANGS,
         "lang_variants": lang_variants,
+        "hide_attribution": HIDE_ATTRIBUTION,
+        "social_links": post_store.SOCIAL_LINKS,
+        "giscus_config": {
+            "repo": GISCUS_REPO,
+            "repo_id": GISCUS_REPO_ID,
+            "category_id": GISCUS_CATEGORY_ID,
+        } if GISCUS_REPO and GISCUS_REPO_ID and GISCUS_CATEGORY_ID else None,
     }
 
 
@@ -482,5 +493,6 @@ if __name__ == "__main__":
         post_store.DEFAULT_LANG,
         post_store.AVAILABLE_LANGS,
         post_store.LANG_GROUPS,
+        post_store.SOCIAL_LINKS,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)

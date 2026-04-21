@@ -40,6 +40,9 @@ ICON_OVERRIDES: dict = {}
 ALL_TAGS: list = []
 # Active theme name — set from the root homepage 'theme' frontmatter field
 SITE_THEME: str = "obsidian"
+# Social links from root homepage 'social_links:' frontmatter — list of
+# {label: str, url: str} dicts rendered as <a rel="me"> in the footer.
+SOCIAL_LINKS: list = []
 
 _VALID_THEMES = {"obsidian", "omarchy"}
 
@@ -189,6 +192,7 @@ def load_posts():
     menu_posts = []
     show_search = False
     show_tags = False
+    social_links = []
 
     # ---- Pre-scan vault root for the homepage to detect default language ----
     default_lang = "en"
@@ -479,6 +483,13 @@ def load_posts():
                 site_theme = _resolve_theme(
                     metadata.get("theme"), filepath
                 )
+                raw_social = metadata.get("social_links") or []
+                if isinstance(raw_social, list):
+                    social_links = [
+                        s for s in raw_social
+                        if isinstance(s, dict)
+                        and s.get("label") and s.get("url")
+                    ]
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,
@@ -603,7 +614,8 @@ def load_posts():
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
             private_routes, menu_posts, show_search, show_tags, all_tags,
-            icon_overrides, default_lang, available_langs, lang_groups)
+            icon_overrides, default_lang, available_langs, lang_groups,
+            social_links)
 
 
 # =========================================
@@ -620,7 +632,7 @@ def force_reload():
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, \
-        DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, \
+        DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, \
         LAST_SCAN_TIME, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
@@ -646,7 +658,8 @@ def maybe_reload():
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
-             DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS) = load_posts()
+             DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS,
+             SOCIAL_LINKS) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)

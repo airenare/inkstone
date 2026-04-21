@@ -147,7 +147,14 @@ new MutationObserver(renderMermaid).observe(
 </main>
 
 <footer id="site-footer">
+  {% if social_links %}
+  <div class="social-links">
+    {% for link in social_links %}<a href="{{ link.url }}" rel="me noopener" target="_blank">{{ link.label }}</a>{% endfor %}
+  </div>
+  {% endif %}
+  {% if not hide_attribution %}
   <span>built with <a href="https://github.com/airenare/onyxfolio" target="_blank" rel="noopener">OnyxFolio</a> v{{ app_version }}</span>
+  {% endif %}
 </footer>
 
 <script>

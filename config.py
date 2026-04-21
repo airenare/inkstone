@@ -32,3 +32,12 @@ if ATTACHMENTS_PATH and not os.path.isdir(ATTACHMENTS_PATH):
 VAULT_REPO = os.getenv("VAULT_REPO") or None
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET") or None
 
+# Set to "1", "true", or "yes" to remove the "built with OnyxFolio" footer line.
+HIDE_ATTRIBUTION = os.getenv("HIDE_ATTRIBUTION", "").lower() in ("1", "true", "yes")
+
+# Giscus comment system — all three must be set to enable comments.
+# Get values from https://giscus.app after linking your GitHub repo.
+GISCUS_REPO = os.getenv("GISCUS_REPO") or None
+GISCUS_REPO_ID = os.getenv("GISCUS_REPO_ID") or None
+GISCUS_CATEGORY_ID = os.getenv("GISCUS_CATEGORY_ID") or None
+

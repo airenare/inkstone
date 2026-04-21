@@ -97,4 +97,44 @@
 </nav>
 {% endif %}
 
+{% if giscus_config %}
+<section class="giscus-section">
+<script src="https://giscus.app/client.js"
+    data-repo="{{ giscus_config.repo }}"
+    data-repo-id="{{ giscus_config.repo_id }}"
+    data-category-id="{{ giscus_config.category_id }}"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+</script>
+<script>
+(function () {
+    function giscusTheme() {
+        return document.documentElement.getAttribute("data-theme") === "light"
+            ? "light" : "dark"
+    }
+    function sendTheme(theme) {
+        const frame = document.querySelector(".giscus-frame")
+        if (frame) frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme } } }, "https://giscus.app"
+        )
+    }
+    new MutationObserver(() => sendTheme(giscusTheme())).observe(
+        document.documentElement, { attributes: true, attributeFilter: ["data-theme"] }
+    )
+    window.addEventListener("message", function (e) {
+        if (e.origin !== "https://giscus.app") return
+        if (e.data && e.data.giscus) sendTheme(giscusTheme())
+    })
+})()
+</script>
+</section>
+{% endif %}
+
 {% endblock %}

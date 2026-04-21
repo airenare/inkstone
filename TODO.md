@@ -10,34 +10,17 @@
 - ✅ **Version in footer** — `v{{ app_version }}` in footer span (v1.21.2)
   Change to `built with OnyxFolio v{{ app_version }}`. One-line template edit.
 
-- **Footer attribution opt-out** — some users will want to remove the attribution.
-  Read a `HIDE_ATTRIBUTION` env var in `config.py`; pass as `hide_attribution` to the context
-  processor; wrap the footer `<span>` in `{% if not hide_attribution %}`. Default: attribution shown.
+- ✅ **Footer attribution opt-out** — `HIDE_ATTRIBUTION` env var in `config.py`; injected as `hide_attribution` into context processor; footer span wrapped in `{% if not hide_attribution %}`. Default: attribution shown. (v1.23.0)
 
-- **Fix media-embeds docs page** — `/onyxfolio/docs/media-embeds` uses placeholder text instead of
-  real images. Replace with actual `![[...]]` embeds from `_attachments/` so the page demonstrates
-  what it documents.
+- ✅ **Fix media-embeds docs page** — Created `onyxfolio/docs/_attachments/` with three demo images; added real `![[...]]` single-image, caption, width, gallery, and slider examples to the page. (v1.23.0)
 
 ---
 
 ## Upcoming  *(defined features, ready to implement)*
 
-- **Social / `rel="me"` links** — useful for Mastodon verification and portfolio sites.
-  Add optional `social_links:` list to the root homepage frontmatter (or `.env` / `SOCIAL_LINKS`):
-  ```yaml
-  social_links:
-    - label: Mastodon
-      url: https://mastodon.social/@you
-    - label: GitHub
-      url: https://github.com/you
-  ```
-  Render as `<a rel="me" href="...">` in the footer. Pass list through context processor (similar to
-  `menu_posts`). No `rel="me"` on links that don't point to social profiles — keep it opt-in per link.
+- ✅ **Social / `rel="me"` links** — `social_links:` list on root homepage frontmatter → validated in `posts.py` → `SOCIAL_LINKS` global → injected in context processor → `<a rel="me noopener">` in footer. (v1.23.0)
 
-- **Comment system (Giscus)** — opt-in Giscus embed at the bottom of `post.html` and `book.html`.
-  Three env vars needed: `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID`.
-  When all three are set, inject the `<script>` block and pass a `giscus_config` dict to the template.
-  Giscus automatically adapts to dark/light via `data-theme`; wire it to the existing theme toggle JS.
+- ✅ **Comment system (Giscus)** — opt-in embed in `post.html` and `book.html`. Set `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` env vars to enable. Theme sync via `postMessage` on `data-theme` mutation. (v1.23.0)
 
 - **Inline Dataview `dv.pages()` expression** — extend `convert_dataview_inline` in `dataview.py`
   beyond `this.*` to handle `` `= dv.pages("#tag").length` `` and similar cross-note expressions.
