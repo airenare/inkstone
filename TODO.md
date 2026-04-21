@@ -52,6 +52,8 @@
 
 ## Ideas  *(not committed — explore when the time is right)*
 
+- **System theme option** — add a third theme selector state "System" that follows the OS/browser `prefers-color-scheme` setting (dark or light). Currently the toggle is a binary dark/light switch; System would be the default before the user makes an explicit choice. Implementation: read `window.matchMedia("(prefers-color-scheme: light)").matches` when no `localStorage.theme` is set; add a third button state; remove the saved localStorage entry when "System" is selected to re-enable OS-following behavior.
+
 - **Canvas file rendering** — Obsidian `.canvas` files are JSON graphs of nodes and edges.
   Render as a read-only visual board: parse the JSON, position `<div>`s or draw SVG to mirror
   the layout. Useful for publishing mind-maps and project boards. Effort: high; reward: unique.

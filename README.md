@@ -67,6 +67,8 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **OpenGraph / Twitter Card** — per-page meta tags for rich link previews; uses banner image if set
 - **JSON-LD structured data** — Article, Book, and WebSite schemas for rich Google results
 - **Custom 404** — styled 404 page consistent with the rest of the site
+- **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md` → `/post/ru`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
+- **UI string translations** — create a `type: translations` vault note with a `strings:` YAML dict to translate fixed UI labels (Tags, Search, search page copy) into any language without editing templates
 
 ---
 

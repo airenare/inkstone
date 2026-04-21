@@ -64,6 +64,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Print stylesheet** — clean `@media print` styles for printing or saving as PDF
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
 - **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md` → `/post/ru`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
+- **UI string translations** — create a `type: translations` note (no `website: true` needed) with `lang:` and a `strings:` dict to translate fixed UI labels (Tags, Search, nav items) into any language without editing templates
 
 ---
 
