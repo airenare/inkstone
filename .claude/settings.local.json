@@ -109,7 +109,12 @@
       "Bash(/opt/anaconda3/envs/conda312/bin/python3 -c ' *)",
       "Bash(pkill -f \"app.py --port 8001\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8001/)",
-      "Bash(pkill -f \"python3.*8001\")"
+      "Bash(pkill -f \"python3.*8001\")",
+      "Bash(xargs -I{} dirname {})",
+      "Bash(xargs '-I{}' sh -c 'cd \"{}\" && r=$\\(git remote get-url origin 2>/dev/null\\); echo \"$r -> {}\"')",
+      "Bash(xargs '-I{}' sh -c 'r=$\\(git -C \"{}\" remote get-url origin 2>/dev/null\\); echo \"$r\"')",
+      "Bash(xargs '-I{}' sh -c 'r=$\\(git -C \"{}\" remote get-url origin 2>/dev/null\\); [ \"$r\" = \"https://github.com/airenare/antonbakulin.com.git\" ] && echo \"{}\"')",
+      "Skill(commit-commands:commit)"
     ]
   }
 }

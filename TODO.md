@@ -29,6 +29,11 @@
 
 - **Bases core Obsidian plugin support** - do not render .base files as text notes, they are database presentations which can be shown as a table on the website. This might be useful to show the list of all related notes in one place, or a list of files that can be downloaded or viewed, etc.
 
+- **Obsidian template workflow** - Create a template(s) for obsidian or a plugin or workflow 
+  to automatically create a note with all necessary frontmatter depending on the user's needs. 
+  Check the current status of obsidian workflow, if there is a core plugin for that, or is it 
+  still done using Templater or Quickadd?
+
 ---
 
 ## Polish & Bugs
