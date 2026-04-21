@@ -24,51 +24,74 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ## Features
 
-- **Native Obsidian syntax** — callouts (`> [!tip]`), wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds (`![[file.jpg]]`), checkboxes, `==highlights==`, footnotes (`[^1]`) — all rendered without any client-side plugins
-- **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; adapts to dark and light theme automatically
-- **Math / LaTeX** — `$inline$` and `$$block$$` rendered via KaTeX; expressions are protected from the markdown parser before rendering
-- **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds a note (or just a heading section) inline with a link back to the source
-- **Anchor links** — `[[Note#Heading]]` resolves to the note's URL with a `#heading-slug` fragment
-- **Audio embeds** — `![[audio.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
+### Obsidian-native syntax
+
+- **Callouts** — `> [!tip]` boxes; all standard Obsidian types; collapsible (`> [!type]-`) or pinned open (`> [!type]+`); rendered as native `<details>`
+- **Wiki-links** — `[[Note]]`, `[[Note|alias]]`, `[[Note#Heading]]`, `[[Note^block-id]]` — resolved across all vault sections even when filename, title, and slug differ
+- **Image embeds** — `![[file.jpg]]` on its own line becomes a lightbox-enabled image; multiple on one line become a slider; `![[photo.jpg|Caption]]` renders a `<figcaption>`
+- **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds another note (or just one section) inline
+- **Audio embeds** — `![[file.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
+- **Checkboxes** — `- [ ]` / `- [x]` → HTML checkbox lists with proper nesting
+- **Highlights** — `==text==` → `<mark>` tags
+- **Footnotes** — `[^1]` / `[^note]` syntax with backlinks
+- **Block references** — `^block-id` on a paragraph creates an anchor target; `[[Note^id]]` links scroll to it
 - **Aliases** — `aliases:` frontmatter registers alternate wiki-link names that resolve to the same post
-- **Related posts** — automatic "See also" section at the bottom of each post, scored by shared tags and section
-- **Dark / light mode** — toggle button in the header; preference persisted in `localStorage`
-- **Inline body tags** — `#hashtag` mentions in the note body are collected as tags; merged with frontmatter `tags:`
-- **Dataview inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
-- **Block references** — `^block-id` suffix on paragraphs creates anchor targets; `[[Note^block-id]]` links scroll to them
-- **Dataview queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
-- **Lightbox gallery** — `![[img.jpg]]` on its own line becomes a lightbox-enabled image; multiple images on one line become a slider
-- **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
-- **Banner images** — set `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
-- **Private notes** — notes without a `website` tag are invisible as web pages but fully queryable by Dataview; navigating to their URL shows a styled placeholder with instructions to publish
-- **Hot-reload** — the server watches file modification times and reloads the vault on any change, no restart needed
-- **Next / previous navigation** — "← Older" / "Newer →" links at the bottom of each post, ordered by date within the same section
-- **Collapsible callouts** — `> [!type]- Title` collapses; `> [!type]+` expands — rendered as native HTML `<details>`
-- **Visible image captions** — `![[photo.jpg|Caption]]` renders a `<figcaption>` below the image
-- **Section RSS feeds** — per-section feeds at `/blog/feed.xml`, `/gallery/feed.xml`, etc.
-- **Tags index page** — `/tags` lists all tags with post counts; opt-in via `show_tags: true` on the root homepage
-- **Vault-wide attachments** — media resolution falls back to vault root `_attachments/` and then `ATTACHMENTS_PATH` from `.env`
-- **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD structured data
-- **Date last modified** — `updated:` or `modified:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
+
+### Math & diagrams
+
+- **Mermaid** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; adapts to dark and light theme automatically
+- **LaTeX / KaTeX** — `$inline$` and `$$block$$`; expressions protected from the markdown parser before rendering
+
+### Dataview
+
+- **Table and list queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
+- **Inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
+
+### Publishing & structure
+
+- **Private notes** — notes without `website: true` are invisible as web pages but fully queryable by Dataview; navigating to their URL shows a styled placeholder
+- **Auto-listings** — folders with no explicit index file get an auto-generated listing page automatically
+- **Banner images** — `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
+- **Vault-wide attachments** — media resolution falls back to vault root `_attachments/`, then `ATTACHMENTS_PATH` from `.env`
 - **Favicon** — default OnyxFolio favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
-- **Site icon** — set `icon: path/to/image` in any note's frontmatter to show an image beside the site title; cascades to all child pages unless overridden
-- **Custom header title** — set `site_title: My Brand` in frontmatter to change the displayed title in the header; also cascades to child pages
-- **Mobile nav** — nav links wrap below the site title on narrow viewports (≤ 600 px); breadcrumbs stay on one horizontal line
-- **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
-- **Search** — full-text search across all published posts at `/search`
-- **Auto-listings** — sections with no explicit index file get an auto-generated listing page
+- **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD
+- **Date last modified** — `updated:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
+- **Site icon** — `icon: path/to/image` shows an image beside the site title; cascades to all child pages unless overridden
+- **Custom header title** — `site_title: My Brand` changes the displayed title in the header; also cascades to child pages
+
+### Navigation & discovery
+
+- **Full-text search** — `/search` with tag filter; opt-in via `show_search: true` on the root homepage
+- **Tags** — `tags:` frontmatter + inline `#hashtag` body mentions; clickable badges; `/tag/<name>` archive pages; `/tags` index opt-in via `show_tags: true`
+- **Breadcrumb navigation** — `Home › Section › Post` trail; useful for nested paths like `/gallery/arts/post`
+- **Nav pinning** — `menu_order: N` in any note's frontmatter pins it to the top nav; lower = further left
+- **Related posts** — automatic "See also" section scored by shared tags and section; top four results
+- **Next / previous navigation** — "← Older" / "Newer →" links at the bottom of each post, ordered by date within the same section
 - **Pagination** — listing pages paginate at 20 posts per page
-- **Nav pinning** — add `menu_order: N` to any note's frontmatter to pin it to the top nav (About, Contact, etc.)
-- **Breadcrumb navigation** — posts show a `Home › Section › Post` trail, useful for nested paths like `/gallery/arts/post`
-- **Tag pages** — every user tag gets a `/tag/<name>` archive page; tags on posts are clickable badges
 - **Reading time** — estimated reading time shown on post pages and listing cards
-- **RSS feed** — latest 20 posts served at `/feed.xml`
+
+### SEO & feeds
+
+- **RSS feed** — latest 20 posts at `/feed.xml`; per-section feeds at `/blog/feed.xml`, `/gallery/feed.xml`, etc.
 - **Sitemap** — auto-generated from all published routes at `/sitemap.xml`
 - **OpenGraph / Twitter Card** — per-page meta tags for rich link previews; uses banner image if set
 - **JSON-LD structured data** — Article, Book, and WebSite schemas for rich Google results
+
+### Developer experience
+
+- **Hot-reload** — the server watches file modification times and reloads the vault on any change; no restart needed
+- **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
+- **Dark / light mode** — toggle button in the header; preference persisted in `localStorage`
+- **Inline body tags** — `#hashtag` mentions in the note body are collected as tags; merged with frontmatter `tags:`
+- **Mobile nav** — nav links wrap below the site title on narrow viewports (≤ 600 px)
+- **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
 - **Custom 404** — styled 404 page consistent with the rest of the site
-- **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md` → `/post/ru`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
-- **UI string translations** — create a `type: translations` vault note with a `strings:` YAML dict to translate fixed UI labels (Tags, Search, search page copy) into any language without editing templates
+- **Docker-ready** — pass `VAULT_REPO` as a build arg to clone your private vault at deploy time
+
+### Multilingual
+
+- **Language routing** — add a two-letter suffix to any filename (`Post_RU.md` → `/post/ru`), or set `lang:` in frontmatter; language toggle in header; `hreflang` meta tags; auto-redirect for missing translations; "not yet translated" placeholder for content that exists only in a non-default language
+- **UI string translations** — create a `type: translations` vault note with `lang:` and a `strings:` dict to translate fixed UI labels (Tags, Search, nav items) into any language without editing templates
 
 ---
 
