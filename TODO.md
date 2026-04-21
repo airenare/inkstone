@@ -18,7 +18,7 @@
 
 ## Upcoming  *(defined features, ready to implement)*
 
-- ✅ **Social / `rel="me"` links** — `social_links:` list on root homepage frontmatter → validated in `posts.py` → `SOCIAL_LINKS` global → injected in context processor → `<a rel="me noopener">` in footer. (v1.23.0)
+- ✅ **Social / `rel="me"` links** — per-platform keys on root homepage frontmatter (`github:`, `mastodon:`, `bluesky:`, etc.) → `_SOCIAL_REGISTRY` in `posts.py` extracts handle from URL → inline SVG icon + `@handle` in footer, hover tooltip shows full network name. (v1.24.0)
 
 - ✅ **Comment system (Giscus)** — opt-in embed in `post.html` and `book.html`. Set `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` env vars to enable. Theme sync via `postMessage` on `data-theme` mutation. (v1.23.0)
 

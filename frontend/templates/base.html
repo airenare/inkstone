@@ -149,7 +149,14 @@ new MutationObserver(renderMermaid).observe(
 <footer id="site-footer">
   {% if social_links %}
   <div class="social-links">
-    {% for link in social_links %}<a href="{{ link.url }}" rel="me noopener" target="_blank">{{ link.label }}</a>{% endfor %}
+    {%- for link in social_links %}
+    <a href="{{ link.url }}" rel="{{ link.rel }}" target="_blank"
+       class="social-link" title="{{ link.name }} · {{ link.handle }}"
+       aria-label="{{ link.name }} {{ link.handle }}">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="{{ link.icon }}"/></svg>
+      <span class="social-handle">{{ link.handle }}</span>
+    </a>
+    {%- endfor %}
   </div>
   {% endif %}
   {% if not hide_attribution %}
