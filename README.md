@@ -16,7 +16,7 @@ Your vault's folder structure maps directly to URL paths:
 | `gallery/Neon Dreams.md` | `/gallery/Neon-Dreams` |
 | `books/Anathem.md` | `/books/Anathem` |
 
-A note tagged `homepage` serves its content at the section root (`/`, `/blog`, `/gallery`). A note tagged `listing` renders an auto-generated post index at the section root instead.
+A note with `type: homepage` in its frontmatter serves its content at the section root (`/`, `/blog`, `/gallery`). A note with `type: listing` renders an auto-generated post index at the section root instead.
 
 Notes placed in the **vault root** (no subfolder) are served at `/slug` with no section prefix. They don't appear in any auto-generated listing — ideal for standalone pages like About, Contact, or Uses. Link to them via `[[wiki-links]]` from your content, or pin them to the top nav with `menu_order` in frontmatter.
 
@@ -124,6 +124,9 @@ icon: _attachments/logo.png  # optional; image shown beside the site title in th
                               #   cascades to all child pages unless overridden at a lower level
 site_title: "My Brand"       # optional; replaces the website name displayed in the header;
                               #   cascades to child pages the same way as icon
+language: en          # root homepage only: sets the default site language (e.g. "en", "ru", "fr")
+lang: ru              # per-note: marks this note as a specific language variant; also set
+                      #   automatically by filename suffix (_RU.md → ru, _FR.md → fr)
 tags:                 # user content tags — shown as badges, used for /tag/<name> archive pages,
   - python            #   search filtering, related posts, and Dataview FROM queries
   - philosophy        #   body #hashtags are also collected as tags automatically
@@ -198,18 +201,21 @@ edit note in Obsidian → git push vault → GitHub webhook → Coolify rebuild 
 ## Project structure
 
 ```
-app.py           Flask app, single catch-all route
-config.py        Loads .env, VAULT_PATH, tag constants
-converters.py    Markdown pipeline + Dataview query engine
-posts.py         Two-pass vault loader, ALL_POSTS, SECTION_ROUTES, DATAVIEW_INDEX
+app.py               Flask app, single catch-all route
+config.py            Loads .env, VAULT_PATH, tag constants
+obsidian_syntax.py   Obsidian-specific converters: wiki-links, callouts, embeds, math, block IDs
+dataview.py          Server-side Dataview query engine
+converters.py        Markdown pipeline coordinator; imports obsidian_syntax + dataview
+posts.py             Two-pass vault loader, ALL_POSTS, SECTION_ROUTES, LANG_GROUPS
+view_helpers.py      Pure view utilities: breadcrumbs, adjacent posts, related posts
 frontend/
-  templates/     base, index, post, listing, book, private, search, tag, 404
-  static/        obsidian.css, callouts.css, code.css
-BlogPages/       Bundled demo vault (fallback when no VAULT_PATH set)
+  templates/         base, index, post, listing, book, private, search, tag, 404
+  static/            base.css, callouts-base.css, obsidian.css, omarchy.css, code.css
+BlogPages/           Bundled demo vault (fallback when no VAULT_PATH set)
 Dockerfile
 ```
 
-The import chain is strictly one-way: `config ← converters ← posts ← app`.
+The import chain is strictly one-way: `config ← obsidian_syntax / dataview ← converters ← posts ← app`.
 
 ---
 
@@ -219,13 +225,15 @@ The import chain is strictly one-way: `config ← converters ← posts ← app`.
 
 | URL | Content |
 |---|---|
-| `/` | Engine homepage |
+| `/` | Engine homepage with feature overview |
+| `/start-here` | Getting-started guide — three paths to go live |
 | `/blog` | Blog listing with featured posts |
-| `/blog/Test-Post-One` | Callouts, checkboxes, images |
-| `/blog/Test-Post-Two` | Slider gallery |
-| `/gallery` | Image gallery with lightbox |
+| `/blog/how-this-blog-works` | Architecture deep-dive: two-pass loading, markdown pipeline, routing |
+| `/blog/writing-for-the-web` | Authoring workflow in Obsidian |
+| `/blog/engine-features` | Showcase: related posts, Dataview, block references, dark/light mode |
+| `/gallery` | Image gallery with lightbox and slider |
 | `/books` | Dataview-powered bookshelf |
-| `/books/Project-Hail-Mary` | Example of a private note placeholder |
+| `/books/project-hail-mary` | Example of a private note placeholder |
 
 ---
 
