@@ -17,6 +17,8 @@ ALL_POSTS = {}
 # section root url → {"type": "homepage"|"listing", "post": post_dict, "section": str}
 SECTION_ROUTES = {}
 WEBSITE_NAME = "My Blog"
+# lang_code → site title for that language's root homepage
+WEBSITE_NAMES: dict = {}
 # filepath → {metadata, tags, file} for ALL vault notes (feeds Dataview queries)
 DATAVIEW_INDEX = {}
 # url_path → dataview entry for notes that exist but are NOT published as web pages
@@ -362,6 +364,7 @@ def load_posts():
     all_posts = {}
     section_routes = {}
     website_name = "My Blog"
+    website_names = {}
     site_theme = "obsidian"
     menu_posts = []
     show_search = False
@@ -650,6 +653,8 @@ def load_posts():
                 "lang": lang,
             }
         elif is_homepage:
+            if section == "":
+                website_names[lang] = title
             if section == "" and lang == default_lang:
                 website_name = title
                 show_search = bool(metadata.get("show_search"))
@@ -801,7 +806,7 @@ def load_posts():
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
             private_routes, menu_posts, show_search, show_tags, all_tags,
             icon_overrides, default_lang, available_langs, lang_groups,
-            social_links)
+            social_links, website_names)
 
 
 # =========================================
@@ -816,7 +821,7 @@ def force_reload():
 
 
 def maybe_reload():
-    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DATAVIEW_INDEX, \
+    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, WEBSITE_NAMES, SITE_THEME, DATAVIEW_INDEX, \
         PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, \
         DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, \
         LAST_SCAN_TIME, _last_check_time
@@ -845,7 +850,7 @@ def maybe_reload():
              DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
              DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS,
-             SOCIAL_LINKS) = load_posts()
+             SOCIAL_LINKS, WEBSITE_NAMES) = load_posts()
             LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)

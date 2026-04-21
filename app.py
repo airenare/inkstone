@@ -109,7 +109,7 @@ def inject_globals():
 
     icon_ctx = _resolve_icon_override(request.path)
     return {
-        "website_name": post_store.WEBSITE_NAME,
+        "website_name": post_store.WEBSITE_NAMES.get(current_lang) or post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
         "menu_posts": lang_menu,
         "show_search": post_store.SHOW_SEARCH,
@@ -496,5 +496,6 @@ if __name__ == "__main__":
         post_store.AVAILABLE_LANGS,
         post_store.LANG_GROUPS,
         post_store.SOCIAL_LINKS,
+        post_store.WEBSITE_NAMES,
     ) = post_store.load_posts()
     app.run("127.0.0.1", 8000, debug=True)
