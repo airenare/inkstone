@@ -22,8 +22,7 @@
 <link rel="alternate" hreflang="{{ lc }}" href="{{ request.host_url.rstrip('/') }}{{ lu }}">
 {% endfor %}
 <link rel="alternate" hreflang="x-default" href="{{ request.host_url.rstrip('/') }}{{ lang_variants.get(default_lang, '/') }}">
-{% endif %}
-
+{% if lang_variants and lang_variants|length > 1 %}
 <script>
 (function() {
     var pref = sessionStorage.getItem("preferredLang");
@@ -34,6 +33,7 @@
     if (alt) window.location.replace(alt.href);
 })();
 </script>
+{% endif %}
 
 {% block meta %}
 <meta property="og:title" content="{{ website_name }}">

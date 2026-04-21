@@ -424,6 +424,12 @@ def load_posts():
                 note_lang = str(metadata.get("lang") or "").strip().lower()
                 strings_raw = metadata.get("strings")
                 if note_lang and isinstance(strings_raw, dict):
+                    if note_lang in ui_translations:
+                        print(
+                            f"WARNING: duplicate translation note for lang "
+                            f"'{note_lang}' in {filepath} — overwriting.",
+                            file=sys.stderr,
+                        )
                     ui_translations[note_lang] = {
                         str(k): str(v) for k, v in strings_raw.items()
                     }
