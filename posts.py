@@ -427,6 +427,12 @@ def load_posts():
                     ui_translations[note_lang] = {
                         str(k): str(v) for k, v in strings_raw.items()
                     }
+                else:
+                    print(
+                        f"WARNING: translation note {filepath} skipped "
+                        f"(missing lang: or strings: is not a dict).",
+                        file=sys.stderr,
+                    )
                 continue
 
             dv_title = metadata.get("title") or extract_h1(md) or f[:-3]
