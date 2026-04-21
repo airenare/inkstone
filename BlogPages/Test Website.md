@@ -11,6 +11,9 @@ title: OnyxFolio
 
 A lightweight blog engine that turns your **Obsidian vault into a website** — no export, no copy-paste. Write in Obsidian, push to GitHub, see it live.
 
+> [!tip] New here?
+> See [[Start Here]] to get your own vault live in minutes.
+
 ---
 
 ## What it does
@@ -99,6 +102,12 @@ title: About
 menu_order: 1   # lower = further left in the nav
 ---
 ```
+
+---
+
+## Under the hood
+
+Curious how the engine works? [[How This Blog Works|From Vault to Web: How This Blog Works]] is a full technical walkthrough — two-pass loading, the markdown pipeline, routing, hot-reload, and Dataview.
 
 ---
 
