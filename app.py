@@ -131,6 +131,7 @@ def inject_globals():
             "repo_id": GISCUS_REPO_ID,
             "category_id": GISCUS_CATEGORY_ID,
         } if GISCUS_REPO and GISCUS_REPO_ID and GISCUS_CATEGORY_ID else None,
+        "ui_strings": post_store.UI_TRANSLATIONS.get(current_lang, {}),
     }
 
 
