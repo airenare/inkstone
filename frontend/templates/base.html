@@ -28,7 +28,7 @@
 (function() {
     var pref = sessionStorage.getItem("preferredLang");
     if (!pref) return;
-    var cur = "{{ current_lang }}";
+    var cur = {{ current_lang | tojson }};
     if (cur === pref) return;
     var alt = document.querySelector("link[rel=\"alternate\"][hreflang=\"" + pref + "\"]");
     if (alt) window.location.replace(alt.href);
