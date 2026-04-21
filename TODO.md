@@ -27,6 +27,8 @@
   The pattern is: detect `dv.pages(selector)` in the expression, run a filtered count/list against
   `DATAVIEW_INDEX`, return the result. Start with `.length` and `FROM #tag`; keep scope narrow.
 
+- **Bases core Obsidian plugin support** - do not render .base files as text notes, they are database presentations which can be shown as a table on the website. This might be useful to show the list of all related notes in one place, or a list of files that can be downloaded or viewed, etc.
+
 ---
 
 ## Polish & Bugs
