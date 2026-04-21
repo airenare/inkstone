@@ -57,7 +57,7 @@ The vault is loaded in two passes on startup (and again on any file change). The
 3. Computes `section` from the folder path relative to the vault root
 4. Computes `url_path` from section + slug
 5. Adds every note to `dataview_index` (feeds Dataview queries later)
-6. If the note has a publish tag (`blog` or `website`), adds its slug to `url_index`
+6. If the note has `website: true` in frontmatter, adds its slug to `url_index`
 
 ```python
 url_index[slugify(title)] = url_path
@@ -85,8 +85,8 @@ After rendering, the loader builds a `post_data` dict for each file and routes i
 
 | Destination | Condition |
 |-------------|-----------|
-| `SECTION_ROUTES[section_url]` | File has `listing` tag — auto-generates a post index |
-| `SECTION_ROUTES[section_url]` | File has `homepage` tag — renders its own markdown content |
+| `SECTION_ROUTES[section_url]` | File has `type: listing` — auto-generates a post index |
+| `SECTION_ROUTES[section_url]` | File has `type: homepage` — renders its own markdown content |
 | `ALL_POSTS[url_path]` | Everything else — a regular published post |
 
 `listing` wins over `homepage` if both are present. Files tagged `listing` or `homepage` do not appear in `ALL_POSTS`.
@@ -310,7 +310,7 @@ Special routes are registered separately:
 | `/feed.xml` | Hand-rolled RSS 2.0 XML, latest 20 posts |
 | `/sitemap.xml` | All `SECTION_ROUTES` + `ALL_POSTS` URLs |
 | `/search` | Full-text + label filter across `ALL_POSTS` |
-| `/label/<label>` | Archive page for a single content label |
+| `/tag/<name>` | Archive page for a single content tag |
 
 Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct children of `/`). Posts with `menu_order` in their frontmatter are additionally pinned to the nav — this is the intended mechanism for standalone pages like About or Contact.
 
@@ -531,7 +531,7 @@ After this, `[[vault to web]]` and `[[how the engine works]]` both point to this
 - [x] Image lightbox and slider galleries from `![[embed]]` syntax
 - [x] Video embeds (`.mp4`, `.webm`, `.mov`)
 - [x] Table of contents — auto-generated, collapsible
-- [x] Labels — clickable badges, `/label/<name>` archive pages
+- [x] Tags — clickable badges, `/tag/<name>` archive pages
 - [x] Full-text search with label filtering
 - [x] RSS feed at `/feed.xml`
 - [x] Sitemap at `/sitemap.xml`
