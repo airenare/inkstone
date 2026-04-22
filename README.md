@@ -12,9 +12,9 @@ Your vault's folder structure maps directly to URL paths:
 
 | Vault path | URL |
 |---|---|
-| `blog/My Post.md` | `/blog/My-Post` |
-| `gallery/Neon Dreams.md` | `/gallery/Neon-Dreams` |
-| `books/Anathem.md` | `/books/Anathem` |
+| `blog/My Post.md` | `/blog/my-post` |
+| `gallery/Neon Dreams.md` | `/gallery/neon-dreams` |
+| `books/Anathem.md` | `/books/anathem` |
 
 A note with `type: homepage` in its frontmatter serves its content at the section root (`/`, `/blog`, `/gallery`). A note with `type: listing` renders an auto-generated post index at the section root instead.
 

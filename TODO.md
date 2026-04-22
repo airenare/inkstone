@@ -2,7 +2,19 @@
 
 ---
 
+## BUGS TO BE FIXED ASAP
+
+- **[[Links]] are not rendering properly in the callouts** - they are shown as a text like this: [Start Here](/start-here) on the 'Test Website.md'
+
+- **Footnotes are broken now** - look at Test Website: on the webpage it renders like text "footnotes [^1]"
+
+- **Links are failing to render** for some reason (see the debugging: comments on the homepage)
+
 ## Immediate  *(small, pick up and finish in one session)*
+
+- **Capital letters in urls in the readme and docs** - find all and fix
+
+- **Find all Obsidian references** - and check if it's really obsidian or did I mean 'markdown'. Need to proofread all docs and md notes in both onyxfolio and personal website repo.
 
 - ✅ **Multilingual support** — filename suffix `_RU`/`_FR`/etc. → `/{slug}/{lang}` URLs; language
   toggle in header, hreflang meta, redirect for missing translations, "not yet translated" page (v1.22.0)
