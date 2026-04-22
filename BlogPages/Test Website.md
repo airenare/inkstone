@@ -20,7 +20,7 @@ A lightweight blog engine that turns your **Obsidian vault into a website** — 
 ! Note for debugging: this works here [[Start Here]]
 
 
-> [!note] This work too
+> [!note] This works too
 > <a href="/start-here"> Start Here </a>
 
 
@@ -67,7 +67,7 @@ debug: still working!!!
 
 - **Markdown-native** — callouts, checkboxes, wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds, sliders,  ```
   ==highlights==
-  ```, footnotes (`[^1]`) — all rendered from standard Obsidian syntax
+  ```, footnotes[^1] (`[^1]`) — all rendered from standard Obsidian syntax
 - **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side; adapts to dark and light theme automatically
 - **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX; safe from markdown parser mangling
 - **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds a note (or just one section) inline

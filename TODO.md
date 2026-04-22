@@ -8,7 +8,9 @@
 
 - **Footnotes are broken now** - look at Test Website: on the webpage it renders like text "footnotes [^1]"
 
-- **Links are failing to render** for some reason (see the debugging: comments on the homepage)
+- **Links are failing to render** for some reason (see the debugging: comments on the homepage). They cannot be rendered in the middle of the page, makes me think that something there conflicts with them. Need to find exact culprit.
+
+- ==highlights== needs some work. The way it was written `==highlights==` was triggering inline dataview in obsidian (though it was rendered correct on the website). I had to surround it with tripple backtick, so that inline dataview was not triggered. Webpage rendering was not affected by that.
 
 ## Immediate  *(small, pick up and finish in one session)*
 
