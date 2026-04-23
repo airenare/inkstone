@@ -176,6 +176,7 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 ## Workflow Rules
 
 - **Context retrieval:** At the start of every session, search the `onyxfolio` Pinecone index (namespace `codebase`) with a query relevant to the task at hand — e.g. "routing and data flow" or "how does callout rendering work". Pull 3–5 records. This replaces re-reading source files for architectural questions and keeps context usage low.
+- **Pinecone index maintenance:** After every feature addition, change, or removal — update the `onyxfolio` index (namespace `codebase`) as part of the same work session. Upsert modified records with the new information. If something is removed or replaced, upsert the affected record with a note marking the old behaviour as removed/changed and describing the new behaviour. Never leave the index stale.
 - **Sync before starting:** At the beginning of every task, run `git fetch` and check both (a) whether the remote is ahead and (b) whether there are any unstaged or uncommitted local changes. Report the findings and, if there is anything to resolve, present numbered options (e.g. 1. stash, 2. commit, 3. discard) before proceeding. If the remote is ahead and local is clean, `git pull --rebase` automatically and summarise what changed.
 - **Code style:** Follow PEP 8 — snake_case for variables/functions, 4-space indentation, double quotes for strings, max line length 79 characters.
 - **Before editing:** Always read a file before modifying it.
