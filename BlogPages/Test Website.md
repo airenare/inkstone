@@ -18,30 +18,6 @@ A lightweight blog engine that turns your **Obsidian vault into a website** — 
 
 ---
 
-! Note for debugging: this works here [[Start Here]]
-
-
-> [!note] This works too
-> <a href="/start-here"> Start Here </a>
-
-
-> [!bug] Thes renders like text and won't work
-> [[Start Here]]
-> and
-> [Anton Bakulin](https://antonbakulin.com)
-
-debug:
-
-The lines below works here, but will stop at some point down below!
-
-[[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]], <a href="/test_post">The Accidental Existentialist</a>
-
-And this bug applies to any link in the region where they are not rendered as links!
-
-[[Start Here]] - all good here!
-
----
-
 ## What it does
 
 Your vault folder structure becomes your site's URL structure. A note at `blog/My Post.md` is served at `/blog/my-post`. A note tagged `homepage` becomes the landing page for its section. That's the whole model.
@@ -49,26 +25,11 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 > [!tip] Live demo
 > Everything you see here is rendered directly from Obsidian markdown. The callouts, the wiki-links, the image galleries — all native Obsidian syntax, no plugins required on the reader's side.
 
-debug: still working
-
-[[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]], <a href="/test_post">The Accidental Existentialist</a>
-
-[[Start Here]] - all good here!
-
 ---
 
 ## Features
 
-debug: still working!!!
-
-[[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]], <a href="/test_post">The Accidental Existentialist</a>
-
-[[Start Here]] - all good here!
-
-
-- **Markdown-native** — callouts, checkboxes, wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds, sliders,  ```
-  ==highlights==
-  ```, footnotes[^1] (`[^1]`) — all rendered from standard Obsidian syntax
+- **Markdown-native** — callouts, checkboxes, wiki-links (`[[Note]]` and `[[Note|alias]]`), image embeds, sliders, `==highlights==`, footnotes[^1] (`[^1]`) — all rendered from standard Obsidian syntax
 - **Mermaid diagrams** — fenced ` ```mermaid ``` ` blocks rendered client-side; adapts to dark and light theme automatically
 - **Math / LaTeX** — `$inline$` and `$$block$$` via KaTeX; safe from markdown parser mangling
 - **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds a note (or just one section) inline
@@ -110,15 +71,8 @@ debug: still working!!!
 - **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md` → `/post/ru`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
 - **UI string translations** — create a `type: translations` note (no `website: true` needed) with `lang:` and a `strings:` dict to translate fixed UI labels (Tags, Search, nav items) into any language without editing templates
 
-debug: Now it stopped working all of a sudden!
-[[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]]
-
-[[Start Here]] - No links work anymore
-
-Only html syntax is supported here
-<a href="/test_post">The Accidental Existentialist</a>
-
 ---
+
 ## How publishing works
 
 1. Write notes in Obsidian as usual
@@ -136,14 +90,6 @@ No build step, no static site generator, no CMS. Just markdown files and a Pytho
 - [Gallery](/gallery) — an image gallery with lightbox and slider
 - [Books](/books) — a Dataview-powered bookshelf pulled from individual book notes
 - [[The Accidental Existentialist]] — a root-level standalone page pinned to the nav via `menu_order`
-
----
-
-debug: and it won't work anywhere down below on this page
-
-[[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]]
-
-Again, only html <a href="/test_post">The Accidental Existentialist</a>
 
 ---
 
@@ -169,12 +115,5 @@ Curious how the engine works? [[How This Blog Works|From Vault to Web: How This 
 
 > [!note] This is the demo vault
 > The content in `BlogPages/` ships with the engine as a working example. Point `VAULT_PATH` at your own Obsidian vault to serve your real content.
-
-
-debug: But it starts working here at the end all of a sudden!
-
-[[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]], <a href="/test_post">The Accidental Existentialist</a>
-
-[[Start Here]] - all good here!
 
 [^1]: All features work with standard Obsidian syntax — no third-party plugins required.

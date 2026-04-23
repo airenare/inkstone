@@ -4,13 +4,13 @@
 
 ## BUGS TO BE FIXED ASAP
 
-- **[[Links]] are not rendering properly in the callouts** - they are shown as a text like this: [Start Here](/start-here) on the 'Test Website.md'
+- ✅ **[[Links]] not rendering in callouts** — added `markdown="1"` to outer and inner callout divs so Python-Markdown's `md_in_html` extension processes their content (v1.26.2)
 
-- **Footnotes are broken now** - look at Test Website: on the webpage it renders like text "footnotes [^1]"
+- ✅ **Footnotes broken** — fixed by the same `markdown="1"` + combined-regex code-span fix; `[^1]` now renders as a superscript footnote reference (v1.26.2)
 
-- **Links are failing to render** for some reason (see the debugging: comments on the homepage). They cannot be rendered in the middle of the page, makes me think that something there conflicts with them. Need to find exact culprit.
+- ✅ **Links failing mid-page** — root cause was `convert_links` incorrectly replacing patterns inside inline code spans; rewrote with a combined regex that skips backtick spans (v1.26.2)
 
-- ==highlights== needs some work. The way it was written `==highlights==` was triggering inline dataview in obsidian (though it was rendered correct on the website). I had to surround it with tripple backtick, so that inline dataview was not triggered. Webpage rendering was not affected by that.
+- ✅ **==highlights== triple-backtick workaround** — `convert_highlights` now uses the same combined regex; homepage updated to use `` `==highlights==` `` (v1.26.2)
 
 ## Immediate  *(small, pick up and finish in one session)*
 
