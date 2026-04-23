@@ -189,5 +189,5 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
   - Steps: edit `VERSION`, commit as `chore: bump version to X.Y.Z`, then `git tag vX.Y.Z && git push origin vX.Y.Z`
 - **Blog posts:** `BlogPages/` is the demo vault — it should showcase features well and stay clean. Files may be created, modified, reorganized, or deleted when needed to improve the demo (e.g. removing debug content, regrouping pages, adding better examples). Propose the change first and proceed only after the user agrees.
 - **Memory sync:** Whenever something valuable is saved to the local `~/.claude` memory store, also distill it into this file under the relevant section. This keeps preferences and context in sync across machines.
-- **TODO.md:** Project backlog lives in `TODO.md` at the repo root. Check it when the user asks to implement todos. Move completed items to the Done section after finishing them.
+- **TODO.md:** Project backlog lives in `TODO.md` at the repo root. Check it when the user asks to implement todos. When an item is done, move it to `DONE.md` (grouped by version) — do not leave ✅ items in TODO.md.
 - **Docs sync:** After every feature addition, change, or removal — update both `README.md` and the vault homepage (`BlogPages/Test Website.md`) to reflect the current state. Do this as part of the same commit, not as a separate step.
