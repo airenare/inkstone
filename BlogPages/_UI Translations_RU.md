@@ -17,4 +17,6 @@ strings:
   "Read it in": Читать на
   "Books": Книги
   "Start Here": Начни с этого
+  "Featured": Избранное
+  "All Posts": Все Посты
 ---

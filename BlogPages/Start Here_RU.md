@@ -3,6 +3,7 @@ website: true
 date: 2026-04-21
 menu_order: 0
 title: Запуск
+slug: start-here
 lang: ru
 summary: Запустите OnyxFolio и опубликуйте свою первую заметку — выберите один из трёх способов.
 ---
