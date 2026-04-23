@@ -102,10 +102,11 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 ```yaml
 ---
 website: true         # required to publish the note as a web page
-type: homepage        # optional: homepage | listing | book
+type: homepage        # optional: homepage | listing | book | translations
                       #   homepage — serves this note's content at the section root URL
                       #   listing  — auto-generates a post index at the section root URL
                       #   book     — uses the book template with cover/metadata header
+                      #   translations — UI label overrides for a language (no website: needed)
 featured: true        # optional: shows post in the Featured section of the parent listing
 show_search: true     # root homepage only: shows a Search link in the top nav
 show_tags: true       # root homepage only: shows a Tags link in the top nav
@@ -120,6 +121,13 @@ author: "Jane Doe"    # optional; shown in post meta and JSON-LD (string or list
 tags:                 # user content tags — shown as clickable badges, used for /tag/<name>
   - python            #   archive pages, search filtering, related posts, and Dataview FROM queries
   - philosophy        #   body #hashtags are collected as tags automatically
+language: en          # root homepage only: sets the site default language
+lang: ru              # per-note or filename suffix (_RU.md): marks note as a language variant
+                      #   → served at /{slug}/{lang}; language toggle, hreflang, auto-redirect
+# For type: translations notes only:
+strings:              # dict of English label → translated string (no website: true needed)
+  Search: Поиск
+  Tags: Теги
 ---
 ```
 

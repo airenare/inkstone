@@ -374,6 +374,66 @@ This matters for wiki-links: if you link to a private note, the link renders as 
 
 ---
 
+## Multilingual Content
+
+OnyxFolio supports publishing notes in multiple languages side-by-side. There are two independent mechanisms: content translation (per-note language variants) and UI string translation (labels and fixed strings in templates).
+
+### Content Translation — `_LANG` filename suffix
+
+Add a language suffix to any note's filename to mark it as a translation of the base note:
+
+```
+blog/My Post.md          → /blog/my-post          (default language)
+blog/My Post_RU.md       → /blog/my-post/ru
+blog/My Post_FR.md       → /blog/my-post/fr
+```
+
+The suffix is case-insensitive. Any two-letter ISO code works (`_RU`, `_FR`, `_DE`, `_ZH`, etc.). The base language is set in the root homepage's `language:` frontmatter (defaults to `en` if omitted).
+
+The engine links all variants together:
+- A **language toggle** appears in the header when a page has translations.
+- Navigating to a URL whose language variant doesn't exist auto-redirects to the default, showing a "not yet translated" banner.
+- `hreflang` meta tags are injected for SEO.
+
+You can also set `lang:` explicitly in frontmatter instead of (or in addition to) the filename suffix:
+
+```yaml
+---
+website: true
+lang: ru
+title: Мой Пост
+---
+```
+
+### UI String Translations — `type: translations` note
+
+Fixed strings baked into templates ("Search", "Tags", "min read", etc.) can be translated without editing any template files. Create a note anywhere in the vault with this structure:
+
+```yaml
+---
+type: translations
+lang: ru
+strings:
+  Search: Поиск
+  Tags: Теги
+  "All tags": Все теги
+  "No results": Нет результатов
+  "min read": мин чтения
+  "Not yet translated": Ещё не переведено
+  "Translation unavailable": Перевод недоступен
+  "This page is not yet available in": Эта страница ещё не доступна на языке
+  "Read it in": Читать на
+  Featured: Избранное
+  "All Posts": Все Посты
+---
+```
+
+No `website: true` is needed — the engine loads all translation notes regardless. One note per language. Multiple notes for the same `lang:` will log a warning and the last one loaded wins.
+
+At render time the engine looks up the current page's language, finds the matching translation dict, and replaces each UI string key with its translated value. Keys not found in the dict fall back to the English default.
+
+---
+
 ## The Post Dict
 
 Every post, whether homepage, listing, or regular, is stored as a plain dict. The fields available in templates:
@@ -556,6 +616,9 @@ After this, `[[vault to web]]` and `[[how the engine works]]` both point to this
 - [x] Inline body labels — `#hashtag` in note body collected as labels automatically
 - [x] Dataview inline queries — `` `= this.field` `` evaluated against note frontmatter
 - [x] Block references — `[[Note^block-id]]` links; `^id` markers become anchor spans
+- [x] Multilingual content — `_RU`/`_FR`/etc. filename suffixes → `/{slug}/{lang}` URLs; language toggle, hreflang, auto-redirect for missing translations
+- [x] UI string translations — `type: translations` notes with `lang:` + `strings:` dict override template labels without editing HTML
+- [x] Obsidian Bases — `.base` files with `website: true` rendered as HTML tables; filters, column order, sort, and limit supported
 
 ---
 
