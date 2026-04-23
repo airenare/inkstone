@@ -2,6 +2,10 @@
 
 ---
 
+## v1.27.x (continued)
+
+- ✅ **Obsidian template workflow** — QuickAdd (already bundled in demo vault) is the recommended approach; core Templates plugin is the simpler fallback. Cleaned up `templates/web page template.md` (removed clutter, added `summary` prompt). New doc page `Note Templates.md` in antonbakulin.com vault; added to Documentation index.
+
 ## Audits & Docs
 
 - ✅ **Capital letters in URLs audit** — grepped all `.md` files in repo and antonbakulin.com vault; all internal URLs already lowercase; only external OpenLibrary URLs use uppercase (required by their API). No changes needed.

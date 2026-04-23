@@ -10,8 +10,6 @@
 
 - **Lowercase URLs audit** — `slugify` already lowercases slugs; verify that vault folders with mixed-case names (e.g. `Blog/`, `Gallery/`) produce lowercase section URLs in practice. If not, apply `.lower()` to each path segment in `_section_from_filepath`. Mark done once confirmed.
 
-- **Obsidian template workflow** — investigate and document the recommended way to auto-generate notes with correct frontmatter. Check if Obsidian's core Templates plugin is sufficient or if Templater/QuickAdd adds anything useful.
-
 ---
 
 ## Polish & Bugs
