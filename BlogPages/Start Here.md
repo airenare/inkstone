@@ -77,12 +77,12 @@ That note is now live. Its URL is `/my-first-post` if it's in the vault root, or
 
 ## Vault structure basics
 
-| Vault path | URL |
-|---|---|
-| `Home.md` (with `type: homepage`) | `/` |
-| `blog/Blog.md` (with `type: listing`) | `/blog` |
-| `blog/My Post.md` | `/blog/my-post` |
-| `About.md` | `/about` |
+| Vault path                            | URL             |
+| ------------------------------------- | --------------- |
+| `Home.md` (with `type: homepage`)     | `/`             |
+| `blog/Blog.md` (with `type: listing`) | `/blog`         |
+| `blog/My Post.md`                     | `/blog/my-post` |
+| `About.md`                            | `/about`        |
 
 ---
 

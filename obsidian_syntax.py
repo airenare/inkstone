@@ -69,10 +69,20 @@ def convert_links(md, url_index=None):
         r"\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
     )
 
+    # Combined: code spans (skip) | wiki-links (convert).
+    # Uses backreference \1 so the closing backtick string must have the same
+    # length as the opening — prevents ` ``` ` from being misread as a span.
+    _combined = re.compile(
+        r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)"
+        r"|\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
+    )
+
     def repl(match):
-        target = match.group(1).strip()
-        anchor_text = match.group(2).strip() if match.group(2) else None
-        display = (match.group(3) or
+        if match.group(1) is not None:  # code span — leave untouched
+            return match.group(0)
+        target = match.group(2).strip()
+        anchor_text = match.group(3).strip() if match.group(3) else None
+        display = (match.group(4) or
                    (f"{target} › {anchor_text}" if anchor_text else target)).strip()
         slug = slugify(target).lower()
         url = url_index.get(slug) if url_index else None
@@ -80,12 +90,7 @@ def convert_links(md, url_index=None):
         anchor = ("#" + slugify(anchor_text).lower()) if anchor_text else ""
         return f"[{display}]({base}{anchor})"
 
-    # Split on fenced code blocks and inline code spans; only convert outside them
-    parts = re.split(r"(```[\s\S]*?```|`+[\s\S]*?`+)", md)
-    for i, part in enumerate(parts):
-        if not part.startswith("`"):
-            parts[i] = _link_re.sub(repl, part)
-    return "".join(parts)
+    return _combined.sub(repl, md)
 
 
 # =========================================
@@ -235,21 +240,21 @@ def render_callout(type_, title, content, collapsed=None):
     if collapsed is not None:
         open_attr = "" if collapsed else " open"
         return (
-            f'\n<details{open_attr} class="callout callout-{type_}">\n'
+            f'\n<details{open_attr} class="callout callout-{type_}" markdown="1">\n'
             f'<summary class="callout-title">'
             f'<span class="callout-icon"></span>'
             f'<span class="callout-title-text">{title}</span>'
             f'</summary>\n'
-            f'<div class="callout-content">\n{body}\n</div>\n'
+            f'<div class="callout-content" markdown="1">\n{body}\n</div>\n'
             f'</details>\n'
         )
     return (
-        f'\n<div class="callout callout-{type_}">\n'
+        f'\n<div class="callout callout-{type_}" markdown="1">\n'
         f'<div class="callout-title">'
         f'<span class="callout-icon"></span>'
         f'<span class="callout-title-text">{title}</span>'
         f'</div>\n'
-        f'<div class="callout-content">\n{body}\n</div>\n'
+        f'<div class="callout-content" markdown="1">\n{body}\n</div>\n'
         f'</div>\n'
     )
 
@@ -575,12 +580,17 @@ def convert_block_ids(md):
 
 def convert_highlights(md):
     """Convert ==highlighted text== to <mark> tags, skipping code blocks/spans."""
-    # Split on fenced code blocks first, then inline code spans.
-    parts = re.split(r"(```[\s\S]*?```|`+[\s\S]*?`+)", md)
-    for i, part in enumerate(parts):
-        if not part.startswith("`"):
-            parts[i] = re.sub(r"==([^=\n]+)==", r"<mark>\1</mark>", part)
-    return "".join(parts)
+    _combined = re.compile(
+        r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)"
+        r"|==([^=\n]+)=="
+    )
+
+    def repl(match):
+        if match.group(1) is not None:
+            return match.group(0)
+        return f"<mark>{match.group(2)}</mark>"
+
+    return _combined.sub(repl, md)
 
 
 def convert_math(md):
@@ -591,24 +601,18 @@ def convert_math(md):
 
     Skips content inside fenced code blocks and backtick code spans.
     """
-    # Split on fenced blocks and inline code spans; only process outside them.
-    parts = re.split(r"(```[\s\S]*?```|`+[\s\S]*?`+)", md)
-    result = []
-    for part in parts:
-        if part.startswith("`"):
-            result.append(part)
-            continue
-        # block math first (so $$ isn't matched twice by inline)
-        part = re.sub(
-            r"\$\$(.+?)\$\$",
-            lambda m: f'<div class="math-block">{m.group(1)}</div>',
-            part,
-            flags=re.DOTALL,
-        )
-        part = re.sub(
-            r"\$([^\$\n]+)\$",
-            lambda m: f'<span class="math-inline">{m.group(1)}</span>',
-            part,
-        )
-        result.append(part)
-    return "".join(result)
+    _combined = re.compile(
+        r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)"  # code span — skip
+        r"|\$\$(.+?)\$\$"  # block math
+        r"|\$([^\$\n]+)\$",  # inline math
+        re.DOTALL,
+    )
+
+    def repl(match):
+        if match.group(1) is not None:
+            return match.group(0)
+        if match.group(2) is not None:
+            return f'<div class="math-block">{match.group(2)}</div>'
+        return f'<span class="math-inline">{match.group(3)}</span>'
+
+    return _combined.sub(repl, md)

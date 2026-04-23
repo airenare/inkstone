@@ -3,9 +3,10 @@ website: true
 type: homepage
 language: en
 show_search: true
-show_tags: true
+show_tags: false
 title: OnyxFolio
 theme: omarchy
+icon: /static/logo.svg
 ---
 
 # OnyxFolio
@@ -175,3 +176,5 @@ debug: But it starts working here at the end all of a sudden!
 [[The Accidental Existentialist]],  [[test_post|The Accidental Existentialist]], <a href="/test_post">The Accidental Existentialist</a>
 
 [[Start Here]] - all good here!
+
+[^1]: All features work with standard Obsidian syntax — no third-party plugins required.

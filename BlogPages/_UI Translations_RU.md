@@ -15,4 +15,6 @@ strings:
   "Translation unavailable": Перевод недоступен
   "This page is not yet available in": Эта страница ещё не доступна на языке
   "Read it in": Читать на
+  "Books": Книги
+  "Start Here": Начни с этого
 ---

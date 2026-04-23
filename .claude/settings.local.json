@@ -114,7 +114,11 @@
       "Bash(xargs '-I{}' sh -c 'cd \"{}\" && r=$\\(git remote get-url origin 2>/dev/null\\); echo \"$r -> {}\"')",
       "Bash(xargs '-I{}' sh -c 'r=$\\(git -C \"{}\" remote get-url origin 2>/dev/null\\); echo \"$r\"')",
       "Bash(xargs '-I{}' sh -c 'r=$\\(git -C \"{}\" remote get-url origin 2>/dev/null\\); [ \"$r\" = \"https://github.com/airenare/antonbakulin.com.git\" ] && echo \"{}\"')",
-      "Skill(commit-commands:commit)"
+      "Skill(commit-commands:commit)",
+      "Bash(/home/air/venv/3.14/bin/python3 app.py)",
+      "Bash(curl -s http://localhost:8000/)",
+      "Bash(pkill -f \"app.py\")",
+      "Bash(/home/air/venv/3.14/bin/python3 *)"
     ]
   }
 }
