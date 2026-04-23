@@ -2,6 +2,11 @@
 
 ---
 
+## Audits & Docs
+
+- ✅ **Capital letters in URLs audit** — grepped all `.md` files in repo and antonbakulin.com vault; all internal URLs already lowercase; only external OpenLibrary URLs use uppercase (required by their API). No changes needed.
+- ✅ **Obsidian references audit** — reviewed all "Obsidian" mentions in both repos; all correctly refer to either the Obsidian app or Obsidian-specific syntax (callouts, wiki-links, embeds, Dataview). No generic "markdown" mislabelling found.
+
 ## v1.27.x
 
 - ✅ **Obsidian Bases `.base` file support** — `.base` files with `website: true` parsed (YAML), filtered against vault, rendered as HTML tables. Supports `file.hasTag()`, `file.inFolder()`, property comparisons, `and`/`or`/`not`, `order`, `sort`, `limit`. New module `bases.py`; integrated in `posts.py` as pass 3. (v1.27.0)

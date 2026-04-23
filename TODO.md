@@ -4,14 +4,6 @@
 
 ---
 
-## Bugs
-
-- **Capital letters in URLs in the readme and docs** — find all and fix
-
-- **Find all Obsidian references** — check if it means Obsidian-specific or just markdown. Proofread all docs and md notes in both the OnyxFolio repo and personal website repo.
-
----
-
 ## Immediate  *(small, pick up and finish in one session)*
 
 - **Inline Dataview `dv.pages()` expression** — extend `convert_dataview_inline` in `dataview.py` beyond `this.*` to handle `` `= dv.pages("#tag").length` `` and similar cross-note expressions. Detect `dv.pages(selector)`, run filtered count/list against `DATAVIEW_INDEX`. Start with `.length` and `FROM #tag`; keep scope narrow.
