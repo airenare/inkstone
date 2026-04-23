@@ -1,0 +1,18 @@
+website: true
+title: All Blog Posts
+summary: A database view of all blog posts.
+
+filters:
+  and:
+    - file.inFolder("blog")
+
+views:
+  - type: table
+    name: Table
+    order:
+      - date
+      - tags
+      - summary
+    sort:
+      - column: date
+        direction: DESC

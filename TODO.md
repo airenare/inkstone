@@ -41,7 +41,7 @@
   The pattern is: detect `dv.pages(selector)` in the expression, run a filtered count/list against
   `DATAVIEW_INDEX`, return the result. Start with `.length` and `FROM #tag`; keep scope narrow.
 
-- **Bases core Obsidian plugin support** - do not render .base files as text notes, they are database presentations which can be shown as a table on the website. This might be useful to show the list of all related notes in one place, or a list of files that can be downloaded or viewed, etc.
+- ✅ **Bases core Obsidian plugin support** — `.base` files with `website: true` are parsed (YAML), filtered against the vault, and rendered as HTML tables. Supports `file.hasTag()`, `file.inFolder()`, property comparisons, `and`/`or`/`not` combinators, `order`, `sort`, `limit`. New module `bases.py`; integrated in `posts.py` as pass 3. (v1.27.0)
 
 - **Obsidian template workflow** - Create a template(s) for obsidian or a plugin or workflow 
   to automatically create a note with all necessary frontmatter depending on the user's needs. 

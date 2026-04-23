@@ -118,7 +118,19 @@
       "Bash(/home/air/venv/3.14/bin/python3 app.py)",
       "Bash(curl -s http://localhost:8000/)",
       "Bash(pkill -f \"app.py\")",
-      "Bash(/home/air/venv/3.14/bin/python3 *)"
+      "Bash(/home/air/venv/3.14/bin/python3 *)",
+      "mcp__plugin_pinecone_pinecone__search-records",
+      "WebSearch",
+      "WebFetch(domain:help.obsidian.md)",
+      "WebFetch(domain:obsidian.md)",
+      "WebFetch(domain:deepwiki.com)",
+      "WebFetch(domain:ryn-cx.github.io)",
+      "WebFetch(domain:obsidian.rocks)",
+      "WebFetch(domain:chughkabir.com)",
+      "WebFetch(domain:forum.obsidian.md)",
+      "WebFetch(domain:retypeapp.github.io)",
+      "Bash(curl -s http://localhost:8000/blog/all-blog-posts)",
+      "Bash(curl -s http://localhost:8000/blog)"
     ]
   }
 }

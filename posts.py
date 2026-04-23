@@ -10,6 +10,7 @@ import yaml
 from config import VAULT_PATH
 from converters import slugify, render_markdown, extract_h1
 from view_helpers import get_related
+from bases import parse_base_config, render_base_view
 
 
 # url_path → post dict (content posts only, not homepage/listing files)
@@ -399,12 +400,37 @@ def load_posts():
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
+    candidates_base = []  # (.base files with website: true)
     url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
     dataview_index = {}  # filepath → dataview context (all vault notes)
 
     for root, dirs, files in os.walk(VAULT_PATH):
         dirs[:] = [d for d in dirs if d.lower() != "templates"]
         for f in files:
+            if f.endswith(".base"):
+                filepath = os.path.join(root, f)
+                try:
+                    with open(filepath, encoding="utf-8") as fh:
+                        text = fh.read()
+                except OSError as e:
+                    print(f"Skipping {filepath}: {e}", file=sys.stderr)
+                    continue
+                base_config = parse_base_config(text, filepath)
+                if not base_config.get("website"):
+                    continue
+                stem = f[:-5]  # strip .base
+                title = base_config.get("title") or stem
+                slug = slugify(str(base_config.get("slug") or title))
+                section = _section_from_filepath(filepath)
+                url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
+                url_index[slugify(title).lower()] = url_path
+                url_index[slugify(stem).lower()] = url_path
+                url_index[slug.lower()] = url_path
+                candidates_base.append(
+                    (filepath, f, base_config, title, slug, section, url_path)
+                )
+                continue
+
             if not f.endswith(".md"):
                 continue
 
@@ -714,6 +740,52 @@ def load_posts():
             }
         else:
             all_posts[url_path] = post_data
+
+    # ---- Pass 3: render .base database views ----
+    for (filepath, f, base_config, title, slug, section, url_path) in candidates_base:
+        html = render_base_view(base_config, dataview_index)
+        date = _parse_date(base_config.get("date"), filepath)
+        raw_tags = base_config.get("tags") or []
+        try:
+            tags = sorted(str(t).lower() for t in raw_tags)
+        except Exception:
+            tags = []
+        author_raw = base_config.get("author")
+        if isinstance(author_raw, str):
+            author = [author_raw] if author_raw.strip() else []
+        elif isinstance(author_raw, list):
+            author = [str(a) for a in author_raw if a]
+        else:
+            author = []
+        section_url = ("/" + section) if section else "/"
+        summary = base_config.get("summary") or ""
+        post_data = {
+            "url_path": url_path,
+            "base_url_path": url_path,
+            "lang": default_lang,
+            "section": section,
+            "section_url": section_url,
+            "slug": slug,
+            "title": title,
+            "date": date,
+            "updated": None,
+            "author": author,
+            "html": html,
+            "toc": "",
+            "reading_time": 0,
+            "post_type": "base",
+            "tags": tags,
+            "content": "",
+            "summary": summary,
+            "priority": float("inf"),
+            "featured": bool(base_config.get("featured")),
+            "banner": base_config.get("banner"),
+            "banner_x": base_config.get("banner_x"),
+            "banner_y": base_config.get("banner_y"),
+            "metadata": base_config,
+        }
+        all_posts[url_path] = post_data
+        print(f"Loaded base: {title} | {url_path}")
 
     # ---- Auto-generate listing routes for sections with no explicit index ----
     for post_data in all_posts.values():
