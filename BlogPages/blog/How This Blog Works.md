@@ -407,28 +407,34 @@ title: Мой Пост
 
 ### UI String Translations — `type: translations` note
 
-Fixed strings baked into templates ("Search", "Tags", "min read", etc.) can be translated without editing any template files. Create a note anywhere in the vault with this structure:
+Fixed strings baked into templates ("Search", "Tags", "min read", etc.) can be translated without editing any template files. Create a note anywhere in the vault with a minimal frontmatter and the string pairs in the body:
+
+**Frontmatter:**
 
 ```yaml
 ---
 type: translations
 lang: ru
-strings:
-  Search: Поиск
-  Tags: Теги
-  "All tags": Все теги
-  "No results": Нет результатов
-  "min read": мин чтения
-  "Not yet translated": Ещё не переведено
-  "Translation unavailable": Перевод недоступен
-  "This page is not yet available in": Эта страница ещё не доступна на языке
-  "Read it in": Читать на
-  Featured: Избранное
-  "All Posts": Все Посты
 ---
 ```
 
-No `website: true` is needed — the engine loads all translation notes regardless. One note per language. Multiple notes for the same `lang:` will log a warning and the last one loaded wins.
+**Note body:**
+
+```yaml
+Search: Поиск
+Tags: Теги
+"All tags": Все теги
+"No results": Нет результатов
+"min read": мин чтения
+"Not yet translated": Ещё не переведено
+"Translation unavailable": Перевод недоступен
+"This page is not yet available in": Эта страница ещё не доступна на языке
+"Read it in": Читать на
+Featured: Избранное
+"All Posts": Все Посты
+```
+
+The strings live in a fenced `yaml` block in the body rather than in frontmatter — the multi-line dict format is much easier to edit in Obsidian this way. No `website: true` is needed. One note per language; multiple notes for the same `lang:` log a warning and the last one loaded wins.
 
 At render time the engine looks up the current page's language, finds the matching translation dict, and replaces each UI string key with its translated value. Keys not found in the dict fall back to the English default.
 
@@ -617,7 +623,7 @@ After this, `[[vault to web]]` and `[[how the engine works]]` both point to this
 - [x] Dataview inline queries — `` `= this.field` `` evaluated against note frontmatter
 - [x] Block references — `[[Note^block-id]]` links; `^id` markers become anchor spans
 - [x] Multilingual content — `_RU`/`_FR`/etc. filename suffixes → `/{slug}/{lang}` URLs; language toggle, hreflang, auto-redirect for missing translations
-- [x] UI string translations — `type: translations` notes with `lang:` + `strings:` dict override template labels without editing HTML
+- [x] UI string translations — `type: translations` notes with `lang:` + fenced `yaml` body block override template labels without editing HTML
 - [x] Obsidian Bases — `.base` files with `website: true` rendered as HTML tables; filters, column order, sort, and limit supported
 
 ---

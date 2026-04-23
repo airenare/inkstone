@@ -91,7 +91,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 ### Multilingual
 
 - **Language routing** — add a two-letter suffix to any filename (`Post_RU.md` → `/post/ru`), or set `lang:` in frontmatter; language toggle in header; `hreflang` meta tags; auto-redirect for missing translations; "not yet translated" placeholder for content that exists only in a non-default language
-- **UI string translations** — create a vault note with `type: translations` (no `website: true` needed), a `lang:` code, and a `strings:` dict mapping English labels to their translated equivalents; covers "Search", "Tags", "min read", nav items, and more. One note per language.
+- **UI string translations** — create a vault note with `type: translations` and a `lang:` code; put the string mappings in a fenced `yaml` block in the note body (no `website: true` needed); covers "Search", "Tags", "min read", nav items, and more. One note per language.
 
 ---
 

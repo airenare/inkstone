@@ -124,11 +124,16 @@ tags:                 # user content tags — shown as clickable badges, used fo
 language: en          # root homepage only: sets the site default language
 lang: ru              # per-note or filename suffix (_RU.md): marks note as a language variant
                       #   → served at /{slug}/{lang}; language toggle, hreflang, auto-redirect
-# For type: translations notes only:
-strings:              # dict of English label → translated string (no website: true needed)
-  Search: Поиск
-  Tags: Теги
 ---
+```
+
+**`type: translations` notes** — frontmatter only needs `type: translations` + `lang:`. String mappings go in a fenced ` ```yaml ` block in the note body (not in frontmatter). No `website: true` needed. Example body:
+
+```yaml
+Search: Поиск
+Tags: Теги
+"All tags": Все теги
+"min read": мин чтения
 ```
 
 **Title resolution order:** frontmatter `title` → first `# H1` in body → filename (without `.md`).

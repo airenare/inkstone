@@ -448,8 +448,33 @@ def load_posts():
             # Detect translation-table notes (don't need website: true)
             if (metadata.get("type") or "").strip().lower() == "translations":
                 note_lang = str(metadata.get("lang") or "").strip().lower()
-                strings_raw = metadata.get("strings")
-                if note_lang and isinstance(strings_raw, dict):
+                if not note_lang:
+                    print(
+                        f"WARNING: translation note {filepath} skipped "
+                        f"(missing lang:).",
+                        file=sys.stderr,
+                    )
+                    continue
+                # Prefer a fenced ```yaml block in the body over the
+                # legacy strings: frontmatter dict.
+                strings_raw = None
+                yaml_block = re.search(
+                    r"^```yaml\s*\n(.*?)^```",
+                    md,
+                    re.MULTILINE | re.DOTALL,
+                )
+                if yaml_block:
+                    try:
+                        strings_raw = yaml.safe_load(yaml_block.group(1))
+                    except yaml.YAMLError as exc:
+                        print(
+                            f"WARNING: translation note {filepath} — "
+                            f"YAML block parse error: {exc}",
+                            file=sys.stderr,
+                        )
+                elif isinstance(metadata.get("strings"), dict):
+                    strings_raw = metadata["strings"]
+                if isinstance(strings_raw, dict):
                     if note_lang in ui_translations:
                         print(
                             f"WARNING: duplicate translation note for lang "
@@ -462,7 +487,7 @@ def load_posts():
                 else:
                     print(
                         f"WARNING: translation note {filepath} skipped "
-                        f"(missing lang: or strings: is not a dict).",
+                        f"(no valid yaml block or strings: dict found).",
                         file=sys.stderr,
                     )
                 continue
