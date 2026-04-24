@@ -28,7 +28,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 - **Callouts** — `> [!tip]` boxes; all standard Obsidian types; collapsible (`> [!type]-`) or pinned open (`> [!type]+`); rendered as native `<details>`
 - **Wiki-links** — `[[Note]]`, `[[Note|alias]]`, `[[Note#Heading]]`, `[[Note^block-id]]` — resolved across all vault sections even when filename, title, and slug differ
-- **Image embeds** — `![[file.jpg]]` on its own line becomes a lightbox-enabled image; multiple on one line become a slider; `![[photo.jpg|Caption]]` renders a `<figcaption>`
+- **Image embeds** — `![[file.jpg]]` on its own line becomes a lightbox-enabled image; multiple on one line become a slider; `![[photo.jpg|Caption]]` renders a `<figcaption>`; `![[photo.jpg|inline]]` renders a plain centered illustration without a lightbox (combine: `|inline 300` for width, `|inline Caption` for caption, `|inline 300 Caption` for both)
 - **Note transclusion** — `![[Note Title]]` or `![[Note Title#Heading]]` embeds another note (or just one section) inline
 - **Audio embeds** — `![[file.mp3]]` → `<audio>` element; `.mp3`, `.ogg`, `.wav`, `.flac`, `.m4a` supported
 - **Checkboxes** — `- [ ]` / `- [x]` → HTML checkbox lists with proper nesting

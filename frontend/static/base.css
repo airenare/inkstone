@@ -1579,6 +1579,17 @@ figure {
     max-width: 100%;
 }
 
+figure.inline-figure {
+    display: block;
+    margin: 1.5em auto;
+    text-align: center;
+}
+
+figure.inline-figure img {
+    max-width: 100%;
+    height: auto;
+}
+
 figcaption {
     margin-top: 0.4em;
     font-size: 0.85rem;

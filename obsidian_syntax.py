@@ -287,9 +287,28 @@ def _resolve_attachment(filename, folder):
     return None
 
 
+def _parse_caption(cap):
+    """Parse the pipe argument of ![[file|...]] into (inline, width, caption)."""
+    if not cap:
+        return False, None, ""
+    text = cap.strip()
+    is_inline = text == "inline" or text.startswith("inline ")
+    if is_inline:
+        text = text[len("inline"):].strip()
+    parts = text.split(None, 1)
+    width = None
+    if parts and parts[0].isdigit():
+        width = parts[0]
+        text = parts[1] if len(parts) > 1 else ""
+    elif not is_inline and text.isdigit():
+        width = text
+        text = ""
+    return is_inline, width, text
+
+
 def convert_media(md, md_path):
     folder = os.path.dirname(md_path)
-    pattern = r'!\[\[([^|\]]+)(?:\|([0-9x]+))?\]\]'
+    pattern = r'!\[\[([^|\]]+)(?:\|([^\]]+))?\]\]'
     vault_real = os.path.realpath(VAULT_PATH)
 
     lines = md.split("\n")
@@ -407,21 +426,36 @@ def convert_media(md, md_path):
                     f'<audio src="/attachments/{rel}" controls></audio>'
                 )
             else:
-                is_numeric = caption and caption.isdigit()
-                width_attr = f' style="max-width:{caption}px"' if is_numeric else ""
-                img_caption = "" if is_numeric else caption
-                img_tag = (
-                    f'<img src="/attachments/{rel}"{width_attr}'
-                    f' data-gallery="gallery" data-src="/attachments/{rel}"'
-                    f' data-type="image" data-caption="{img_caption}" loading="lazy">'
-                )
-                if img_caption:
-                    gallery.append(
-                        f'<figure>{img_tag}'
-                        f'<figcaption>{img_caption}</figcaption></figure>'
+                is_inline, width, img_caption = _parse_caption(caption)
+                width_attr = f' style="max-width:{width}px"' if width else ""
+                if is_inline:
+                    img_tag = (
+                        f'<img src="/attachments/{rel}"{width_attr}'
+                        f' loading="lazy">'
                     )
+                    if img_caption:
+                        output.append(
+                            f'<figure class="inline-figure">{img_tag}'
+                            f'<figcaption>{img_caption}</figcaption></figure>'
+                        )
+                    else:
+                        output.append(
+                            f'<figure class="inline-figure">{img_tag}</figure>'
+                        )
                 else:
-                    gallery.append(img_tag)
+                    img_tag = (
+                        f'<img src="/attachments/{rel}"{width_attr}'
+                        f' data-gallery="gallery" data-src="/attachments/{rel}"'
+                        f' data-type="image" data-caption="{img_caption}"'
+                        f' loading="lazy">'
+                    )
+                    if img_caption:
+                        gallery.append(
+                            f'<figure>{img_tag}'
+                            f'<figcaption>{img_caption}</figcaption></figure>'
+                        )
+                    else:
+                        gallery.append(img_tag)
             continue
 
         else:

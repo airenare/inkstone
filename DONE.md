@@ -2,6 +2,10 @@
 
 ---
 
+## v1.30.0
+
+- ✅ **Inline image illustrations** — `![[image.jpg|inline]]` renders a plain centered `<figure>` without a lightbox; combine modifiers: `|inline 300` for max-width, `|inline Caption` for figcaption, `|inline 300 Caption` for both. Also fixes a silent bug where text captions (`|Caption text`) were dropped because the regex only matched numeric width hints. (v1.30.0)
+
 ## v1.29.0
 
 - ✅ **System theme option** — third toggle state (⊙) follows `prefers-color-scheme`; cycle is System → Light → Dark → System. When System is active: `localStorage.theme` is removed, OS preference applied immediately, `change` event listener tracks further OS changes. (v1.29.0)
