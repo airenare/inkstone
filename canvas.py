@@ -1,0 +1,208 @@
+import html as _html
+import json
+import os
+import re
+
+from obsidian_syntax import slugify
+
+
+CANVAS_COLOR_MAP = {
+    "1": "#fb464c",
+    "2": "#e9973f",
+    "3": "#e0de71",
+    "4": "#44cf6e",
+    "5": "#53dfdd",
+    "6": "#a882ff",
+}
+
+# Minimum bezier handle length in % units
+_CTRL_MIN = 3
+
+
+def _canvas_text_to_html(text):
+    """Minimal markdown rendering for canvas text nodes."""
+    escaped = _html.escape(text)
+    parts = []
+    for line in escaped.split("\n"):
+        line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
+        line = re.sub(r"__(.+?)__", r"<strong>\1</strong>", line)
+        line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
+        line = re.sub(r"`(.+?)`", r"<code>\1</code>", line)
+        parts.append(line)
+    return "<br>".join(parts)
+
+
+def _side_point(node, side, min_x, min_y, total_w, total_h):
+    """Return (x_pct, y_pct) for the connection point on a given side."""
+    nx = (node["x"] - min_x) / total_w * 100
+    ny = (node["y"] - min_y) / total_h * 100
+    nw = node["width"] / total_w * 100
+    nh = node["height"] / total_h * 100
+    if side == "left":
+        return nx, ny + nh / 2
+    if side == "right":
+        return nx + nw, ny + nh / 2
+    if side == "top":
+        return nx + nw / 2, ny
+    return nx + nw / 2, ny + nh  # bottom
+
+
+def _ctrl(x, y, side, offset):
+    """Bezier control point offset from (x, y) toward a given side."""
+    if side == "left":
+        return x - offset, y
+    if side == "right":
+        return x + offset, y
+    if side == "top":
+        return x, y - offset
+    return x, y + offset  # bottom
+
+
+def render_canvas(canvas_path, url_index=None):
+    """Parse a .canvas JSON file and return an HTML string."""
+    try:
+        with open(canvas_path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError) as exc:
+        return f"<p><em>Canvas could not be loaded: {_html.escape(str(exc))}</em></p>"
+
+    nodes = data.get("nodes", [])
+    edges = data.get("edges", [])
+
+    if not nodes:
+        return "<p><em>Empty canvas.</em></p>"
+
+    PAD = 60
+    min_x = min(n["x"] for n in nodes) - PAD
+    min_y = min(n["y"] for n in nodes) - PAD
+    max_x = max(n["x"] + n["width"] for n in nodes) + PAD
+    max_y = max(n["y"] + n["height"] for n in nodes) + PAD
+    total_w = max_x - min_x
+    total_h = max_y - min_y
+    aspect = total_h / total_w
+
+    node_map = {n["id"]: n for n in nodes}
+    out = [f'<div class="canvas-view" style="padding-bottom:{aspect * 100:.2f}%">']
+
+    # SVG layer for edges
+    out.append(
+        '<svg class="canvas-edges" viewBox="0 0 100 100" '
+        'preserveAspectRatio="none" aria-hidden="true">'
+    )
+    for edge in edges:
+        fn = node_map.get(edge.get("fromNode"))
+        tn = node_map.get(edge.get("toNode"))
+        if not fn or not tn:
+            continue
+        fs = edge.get("fromSide", "right")
+        ts = edge.get("toSide", "left")
+        fx, fy = _side_point(fn, fs, min_x, min_y, total_w, total_h)
+        tx, ty = _side_point(tn, ts, min_x, min_y, total_w, total_h)
+        # Offset scales with the distance so curves never loop back
+        if fs in ("left", "right"):
+            offset = max(_CTRL_MIN, abs(tx - fx) * 0.45)
+        else:
+            offset = max(_CTRL_MIN, abs(ty - fy) * 0.45)
+        cx1, cy1 = _ctrl(fx, fy, fs, offset)
+        cx2, cy2 = _ctrl(tx, ty, ts, offset)
+        stroke = CANVAS_COLOR_MAP.get(edge.get("color", ""), "currentColor")
+        out.append(
+            f'<path d="M{fx:.2f},{fy:.2f} '
+            f'C{cx1:.2f},{cy1:.2f} {cx2:.2f},{cy2:.2f} {tx:.2f},{ty:.2f}"'
+            f' stroke="{stroke}" fill="none" stroke-width="0.4"'
+            f' vector-effect="non-scaling-stroke" opacity="0.7" />'
+        )
+    out.append("</svg>")
+
+    # Edge labels as HTML divs (SVG text distorts with preserveAspectRatio=none)
+    for edge in edges:
+        fn = node_map.get(edge.get("fromNode"))
+        tn = node_map.get(edge.get("toNode"))
+        label = edge.get("label", "")
+        if not label or not fn or not tn:
+            continue
+        fs = edge.get("fromSide", "right")
+        ts = edge.get("toSide", "left")
+        fx, fy = _side_point(fn, fs, min_x, min_y, total_w, total_h)
+        tx, ty = _side_point(tn, ts, min_x, min_y, total_w, total_h)
+        # Place label at the bezier midpoint (t=0.5 approximated as curve midpoint)
+        if fs in ("left", "right"):
+            offset = max(_CTRL_MIN, abs(tx - fx) * 0.45)
+        else:
+            offset = max(_CTRL_MIN, abs(ty - fy) * 0.45)
+        cx1, cy1 = _ctrl(fx, fy, fs, offset)
+        cx2, cy2 = _ctrl(tx, ty, ts, offset)
+        # Cubic bezier at t=0.5
+        mx = 0.125*fx + 0.375*cx1 + 0.375*cx2 + 0.125*tx
+        my = 0.125*fy + 0.375*cy1 + 0.375*cy2 + 0.125*ty
+        out.append(
+            f'<div class="canvas-edge-label"'
+            f' style="left:{mx:.2f}%;top:{my:.2f}%">'
+            f'{_html.escape(label)}</div>'
+        )
+
+    # Node divs — groups first so they render beneath other nodes
+    for node in sorted(nodes, key=lambda n: 0 if n.get("type") == "group" else 1):
+        ntype = node.get("type", "text")
+        nid = _html.escape(node.get("id", ""))
+        x = (node["x"] - min_x) / total_w * 100
+        y = (node["y"] - min_y) / total_h * 100
+        w = node["width"] / total_w * 100
+        h = node["height"] / total_h * 100
+        border = CANVAS_COLOR_MAP.get(node.get("color", ""), "")
+        style = f"left:{x:.3f}%;top:{y:.3f}%;width:{w:.3f}%;height:{h:.3f}%;"
+        if border:
+            style += f"border-color:{border};"
+
+        if ntype == "group":
+            label = _html.escape(node.get("label", ""))
+            lbl = f'<div class="canvas-group-label">{label}</div>' if label else ""
+            out.append(
+                f'<div class="canvas-node canvas-group" data-id="{nid}"'
+                f' style="{style}">{lbl}</div>'
+            )
+
+        elif ntype == "file":
+            file_field = node.get("file", "")
+            stem = os.path.splitext(os.path.basename(file_field))[0]
+            url = ""
+            if url_index:
+                url = (
+                    url_index.get(slugify(stem))
+                    or url_index.get(slugify(file_field))
+                    or ""
+                )
+                if isinstance(url, dict):
+                    url = url.get("url_path", "")
+            esc_stem = _html.escape(stem)
+            inner = (
+                f'<a href="{_html.escape(url)}" class="canvas-file-link">'
+                f"{esc_stem}</a>"
+                if url
+                else f'<span class="canvas-file-name">{esc_stem}</span>'
+            )
+            out.append(
+                f'<div class="canvas-node canvas-node-file" data-id="{nid}"'
+                f' style="{style}">{inner}</div>'
+            )
+
+        elif ntype == "link":
+            raw = node.get("url", "")
+            out.append(
+                f'<div class="canvas-node canvas-node-link" data-id="{nid}"'
+                f' style="{style}">'
+                f'<a href="{_html.escape(raw, quote=True)}" class="canvas-ext-link"'
+                f' target="_blank" rel="noopener">'
+                f"{_html.escape(raw)}</a></div>"
+            )
+
+        else:  # text
+            content = _canvas_text_to_html(node.get("text", ""))
+            out.append(
+                f'<div class="canvas-node canvas-node-text" data-id="{nid}"'
+                f' style="{style}">'
+                f'<div class="canvas-node-content">{content}</div></div>'
+            )
+
+    out.append("</div>")
+    return "\n".join(out)

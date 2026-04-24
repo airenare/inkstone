@@ -2,6 +2,10 @@
 
 ---
 
+## v1.31.0
+
+- ✅ **Canvas file rendering** — `.canvas` files with `"website": true` in their JSON are published as read-only visual boards. Nodes (text, file, link, group) are absolutely positioned divs; edges are SVG bezier curves with optional labels. Minimal markdown in text nodes (bold, italic, inline code). File nodes link to published posts via `url_index`. Color-coded borders match Obsidian's 6 preset colors. New module `canvas.py`; Pass 4 in `posts.py`. Demo canvas at `/blog/my-writing-process`. (v1.31.0)
+
 ## v1.30.0
 
 - ✅ **Inline image illustrations** — `![[image.jpg|inline]]` renders a plain centered `<figure>` without a lightbox; combine modifiers: `|inline 300` for max-width, `|inline Caption` for figcaption, `|inline 300 Caption` for both. Also fixes a silent bug where text captions (`|Caption text`) were dropped because the regex only matched numeric width hints. (v1.30.0)

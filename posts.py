@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import sys
@@ -11,6 +12,7 @@ from config import VAULT_PATH
 from converters import slugify, render_markdown, extract_h1
 from view_helpers import get_related
 from bases import parse_base_config, render_base_view
+from canvas import render_canvas
 
 
 # url_path → post dict (content posts only, not homepage/listing files)
@@ -403,6 +405,7 @@ def load_posts():
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
     candidates_base = []  # (.base files with website: true)
+    candidates_canvas = []  # (.canvas files with "website": true)
     url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
     dataview_index = {}  # filepath → dataview context (all vault notes)
 
@@ -430,6 +433,28 @@ def load_posts():
                 url_index[slug.lower()] = url_path
                 candidates_base.append(
                     (filepath, f, base_config, title, slug, section, url_path)
+                )
+                continue
+
+            if f.endswith(".canvas"):
+                filepath = os.path.join(root, f)
+                try:
+                    with open(filepath, encoding="utf-8") as fh:
+                        data = json.load(fh)
+                except Exception:
+                    continue
+                if not data.get("website"):
+                    continue
+                stem = f[:-7]  # strip .canvas
+                title = data.get("title") or stem
+                slug = slugify(str(data.get("slug") or title))
+                section = _section_from_filepath(filepath)
+                url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
+                url_index[slugify(title).lower()] = url_path
+                url_index[slugify(stem).lower()] = url_path
+                url_index[slug.lower()] = url_path
+                candidates_canvas.append(
+                    (filepath, f, data, title, slug, section, url_path)
                 )
                 continue
 
@@ -813,6 +838,44 @@ def load_posts():
         }
         all_posts[url_path] = post_data
         print(f"Loaded base: {title} | {url_path}")
+
+    # ---- Pass 4: render .canvas visual boards ----
+    for (filepath, f, data, title, slug, section, url_path) in candidates_canvas:
+        html = render_canvas(filepath, url_index)
+        date = _parse_date(data.get("date"), filepath)
+        raw_tags = data.get("tags") or []
+        try:
+            tags = sorted(str(t).lower() for t in raw_tags)
+        except Exception:
+            tags = []
+        section_url = ("/" + section) if section else "/"
+        post_data = {
+            "url_path": url_path,
+            "base_url_path": url_path,
+            "lang": default_lang,
+            "section": section,
+            "section_url": section_url,
+            "slug": slug,
+            "title": title,
+            "date": date,
+            "updated": None,
+            "author": [],
+            "html": html,
+            "toc": "",
+            "reading_time": 0,
+            "post_type": "canvas",
+            "tags": tags,
+            "content": "",
+            "summary": data.get("summary") or "",
+            "priority": float("inf"),
+            "featured": bool(data.get("featured")),
+            "banner": data.get("banner"),
+            "banner_x": data.get("banner_x"),
+            "banner_y": data.get("banner_y"),
+            "metadata": data,
+        }
+        all_posts[url_path] = post_data
+        print(f"Loaded canvas: {title} | {url_path}")
 
     # ---- Auto-generate listing routes for sections with no explicit index ----
     for post_data in all_posts.values():

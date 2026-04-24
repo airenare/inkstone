@@ -46,6 +46,11 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 - **Table and list queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
 - **Inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
+- **Obsidian Bases** — `.base` files with `website: true` rendered as filtered, sorted HTML tables
+
+### Canvas
+
+- **Visual boards** — `.canvas` files with `"website": true` in their JSON published as read-only diagrams; text, file, link, and group node types; edges drawn as SVG bezier curves; file nodes link to published posts; edge labels rendered as HTML overlays; node borders follow Obsidian's 6 preset colors
 
 ### Publishing & structure
 
@@ -209,8 +214,10 @@ app.py               Flask app, single catch-all route
 config.py            Loads .env, VAULT_PATH, tag constants
 obsidian_syntax.py   Obsidian-specific converters: wiki-links, callouts, embeds, math, block IDs
 dataview.py          Server-side Dataview query engine
+bases.py             Obsidian Bases renderer (type:table filtered views)
+canvas.py            Canvas renderer (nodes + SVG edges → HTML)
 converters.py        Markdown pipeline coordinator; imports obsidian_syntax + dataview
-posts.py             Two-pass vault loader, ALL_POSTS, SECTION_ROUTES, LANG_GROUPS
+posts.py             Four-pass vault loader, ALL_POSTS, SECTION_ROUTES, LANG_GROUPS
 view_helpers.py      Pure view utilities: breadcrumbs, adjacent posts, related posts
 frontend/
   templates/         base, index, post, listing, book, private, search, tag, 404
@@ -238,6 +245,7 @@ The import chain is strictly one-way: `config ← obsidian_syntax / dataview ←
 | `/gallery` | Image gallery with lightbox and slider |
 | `/books` | Dataview-powered bookshelf |
 | `/books/project-hail-mary` | Example of a private note placeholder |
+| `/blog/my-writing-process` | Canvas diagram — writing workflow with colored nodes and edges |
 
 ---
 
