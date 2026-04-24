@@ -113,7 +113,9 @@ show_tags: true       # root homepage only: shows a Tags link in the top nav
 date: 2026-03-21
 updated: 2026-04-01   # optional; shown as "Updated …" in post meta and JSON-LD dateModified
 title: My Post        # optional; overrides H1 in body and filename
-slug: my-post         # optional; auto-generated from title if omitted
+slug: my-post         # optional; auto-generated from title if omitted; non-ASCII titles are
+                      #   transliterated via unidecode (Cyrillic, Greek, etc. → ASCII Latin);
+                      #   manual slug: is used as-is, bypassing transliteration
 priority: 0           # featured posts only; 0 = top, then 1, 2… (date breaks ties)
 summary: "..."        # shown on listing pages; auto-derived from content if omitted
 menu_order: 1         # pin this post to the top nav; lower = further left; appended after section links

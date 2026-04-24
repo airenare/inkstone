@@ -109,7 +109,8 @@ show_search: true     # root homepage only: show a Search link in the top nav
 show_tags: true       # root homepage only: show a Tags link in the top nav
 date: 2026-01-15
 title: My Post        # optional; overrides H1 and filename
-slug: my-post         # optional; auto-generated from title if omitted
+slug: my-post         # optional; auto-generated from title if omitted (non-ASCII titles are
+                      #   transliterated — e.g. Cyrillic → Latin — before slug generation)
 priority: 0           # featured posts only; lower = higher (date breaks ties)
 summary: "..."        # shown on listing pages; auto-derived from content if omitted
 menu_order: 1         # pin to top nav; lower number = further left; appended after section links
