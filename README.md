@@ -132,6 +132,9 @@ icon: _attachments/logo.png  # optional; image shown beside the site title in th
 site_title: "My Brand"       # optional; replaces the website name displayed in the header;
                               #   cascades to child pages the same way as icon
 language: en          # root homepage only: sets the default site language (e.g. "en", "ru", "fr")
+default_theme: dark   # root homepage only: initial theme for new visitors — "dark", "light", or
+                      #   "system" (follow OS). Defaults to "system" if omitted. Visitors can always
+                      #   override with the toggle; their choice is saved in localStorage.
 lang: ru              # per-note: marks this note as a specific language variant; also set
                       #   automatically by filename suffix (_RU.md → ru, _FR.md → fr)
 tags:                 # user content tags — shown as badges, used for /tag/<name> archive pages,

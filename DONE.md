@@ -2,6 +2,10 @@
 
 ---
 
+## v1.32.0
+
+- ✅ **Default theme frontmatter** — `default_theme: dark|light|system` in the root homepage frontmatter sets the initial theme for new visitors (before they interact with the toggle). "dark" and "light" force that theme; "system" (default) follows the OS `prefers-color-scheme`. Visitors can always override with the toggle; their choice is saved in `localStorage`. (v1.32.0)
+
 ## v1.31.0
 
 - ✅ **Canvas file rendering** — `.canvas` files with `"website": true` in their JSON are published as read-only visual boards. Nodes (text, file, link, group) are absolutely positioned divs; edges are SVG bezier curves with optional labels. Minimal markdown in text nodes (bold, italic, inline code). File nodes link to published posts via `url_index`. Color-coded borders match Obsidian's 6 preset colors. New module `canvas.py`; Pass 4 in `posts.py`. Demo canvas at `/blog/my-writing-process`. (v1.31.0)

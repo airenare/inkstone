@@ -135,6 +135,8 @@ access_token: secret  # optional; private notes (no website: true) only; share t
                       #   /slug?token=secret to unlock this specific note for the visitor;
                       #   ACCESS_TOKEN env var acts as a master key that unlocks all notes
 language: en          # root homepage only: sets the site default language
+default_theme: dark   # root homepage only: initial theme for new visitors — "dark", "light", or
+                      #   "system" (follow OS); defaults to "system" if omitted
 lang: ru              # per-note or filename suffix (_RU.md): marks note as a language variant
                       #   → served at /{slug}/{lang}; language toggle, hreflang, auto-redirect
 ---
