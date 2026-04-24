@@ -4,6 +4,7 @@
 
 ## v1.27.x (continued)
 
+- ✅ **Transliterated slugs** — `unidecode` applied in `slugify()` before slug generation; Cyrillic/Greek/etc. titles produce ASCII URLs. Manual `slug:` frontmatter bypasses this entirely. (v1.27.3)
 - ✅ **Translations note body format** — strings moved from `strings:` frontmatter dict to a fenced ` ```yaml ` block in the note body; frontmatter now only needs `type: translations` + `lang:`. Legacy `strings:` dict still accepted as fallback. Updated demo vault, template, README, CLAUDE.md, How This Blog Works, Multilingual.md, Note Templates.md. (v1.27.2)
 - ✅ **Obsidian template workflow** — QuickAdd (already bundled in demo vault) is the recommended approach; core Templates plugin is the simpler fallback. Cleaned up `templates/web page template.md` (removed clutter, added `summary` prompt). New doc page `Note Templates.md` in antonbakulin.com vault; added to Documentation index.
 

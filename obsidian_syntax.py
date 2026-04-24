@@ -9,6 +9,7 @@ import os
 import re
 
 import markdown
+from unidecode import unidecode
 
 from config import VAULT_PATH, ATTACHMENTS_PATH
 
@@ -18,7 +19,7 @@ from config import VAULT_PATH, ATTACHMENTS_PATH
 # =========================================
 
 def slugify(text):
-    text = text.strip().lower()
+    text = unidecode(text.strip()).lower()
     text = re.sub(r"[^\w\s-]", "", text)
     text = re.sub(r"\s+", "-", text)
     return text
