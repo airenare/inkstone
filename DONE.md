@@ -2,6 +2,10 @@
 
 ---
 
+## v1.28.0
+
+- ✅ **Private note access control** — set `ACCESS_TOKEN` env var; share `?token=<value>` links; token validated via `hmac.compare_digest`, stored in a Flask session cookie. Private notes rendered at load time in Pass 2b (`PRIVATE_RENDERED` dict) and served with `post.html` to authenticated guests. Unauthenticated visitors still see the private placeholder. (v1.28.0)
+
 ## v1.27.x (continued)
 
 - ✅ **Mermaid token leaking in nested fenced blocks** — `_extract_mermaid` rewritten line-by-line; skips mermaid blocks inside outer fenced blocks (e.g. ` ````markdown ```` ` doc examples), so the token never ends up stranded in a `<pre><code>` block. (v1.27.4)

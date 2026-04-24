@@ -24,6 +24,14 @@ docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault onyxfolio
 
 Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory. If `VAULT_PATH` is unset or missing, the app falls back to `./BlogPages` automatically.
 
+**Optional env vars:**
+- `ACCESS_TOKEN` — set to any non-empty string to enable private note access. Share URLs as `https://yoursite.com/private-note?token=<value>`; the token is stored in a session cookie so subsequent pages load without it.
+- `SECRET_KEY` — Flask session signing key. Set to a long random string in production. Defaults to `"onyxfolio-dev-secret"` (sessions invalidated on restart if not set).
+- `HIDE_ATTRIBUTION` — set to `"1"` or `"true"` to remove the "built with OnyxFolio" footer line.
+- `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` — all three required to enable Giscus comments.
+- `VAULT_REPO` — Git URL to clone a private vault at Docker build time.
+- `WEBHOOK_SECRET` — secret for validating GitHub webhook payloads on `/webhook`.
+
 ## Architecture
 
 The app is split across eight modules with a strict one-way import chain:
@@ -35,7 +43,7 @@ config.py  ←  obsidian_syntax.py  ←  converters.py  ←  posts.py  ←  app.
 
 | File | Responsibility |
 |------|---------------|
-| `config.py` | Loads `.env`, sets `VAULT_PATH`, `ATTACHMENTS_PATH` |
+| `config.py` | Loads `.env`, sets `VAULT_PATH`, `ATTACHMENTS_PATH`, `ACCESS_TOKEN`, `SECRET_KEY` |
 | `obsidian_syntax.py` | Obsidian-specific converters: wiki-links, embeds, callouts, checkboxes, highlights, math, block IDs, transclusion, `slugify` |
 | `dataview.py` | Server-side Dataview query engine: TABLE/LIST/GROUP BY/WHERE/SORT/LIMIT |
 | `bases.py` | Obsidian Bases renderer: parses `.base` YAML, evaluates filters, renders `type:table` views as HTML |

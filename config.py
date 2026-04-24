@@ -32,6 +32,17 @@ if ATTACHMENTS_PATH and not os.path.isdir(ATTACHMENTS_PATH):
 VAULT_REPO = os.getenv("VAULT_REPO") or None
 WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET") or None
 
+# Optional token to unlock private notes for permitted guests.
+# Set ACCESS_TOKEN in .env to any non-empty string. Visitors who
+# present ?token=<value> in the URL get a session cookie and can
+# browse all private notes until the session expires.
+# Leave unset (default) to keep the feature disabled.
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN") or None
+
+# Flask session signing key. Set to a long random string in production.
+# If not set, sessions are invalidated on every server restart.
+SECRET_KEY = os.getenv("SECRET_KEY", "onyxfolio-dev-secret")
+
 # Set to "1", "true", or "yes" to remove the "built with OnyxFolio" footer line.
 HIDE_ATTRIBUTION = os.getenv("HIDE_ATTRIBUTION", "").lower() in ("1", "true", "yes")
 

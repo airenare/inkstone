@@ -87,6 +87,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
 - **Custom 404** — styled 404 page consistent with the rest of the site
 - **Docker-ready** — pass `VAULT_REPO` as a build arg to clone your private vault at deploy time
+- **Private note access** — set `ACCESS_TOKEN` in `.env`; share links with `?token=<value>` to grant guests read access to private notes; token is stored in a session cookie so subsequent pages load cleanly
 
 ### Multilingual
 

@@ -24,8 +24,6 @@
 
 - **Canvas file rendering** — Obsidian `.canvas` files are JSON graphs of nodes and edges. Render as a read-only visual board: parse JSON, position `<div>`s or draw SVG. Effort: high; reward: unique.
 
-- **Private note access control** — opt-in password/token gate (HTTP Basic or query-param token) to share drafts without publishing. Niche use case.
-
 ---
 
 ## Business / External

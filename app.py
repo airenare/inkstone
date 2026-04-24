@@ -6,13 +6,14 @@ import subprocess
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
-    Response, redirect
+    Response, redirect, session
 
 import posts as post_store
 from config import (
     VAULT_PATH, VERSION, WEBHOOK_SECRET,
     HIDE_ATTRIBUTION,
     GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID,
+    ACCESS_TOKEN, SECRET_KEY,
 )
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
@@ -26,6 +27,12 @@ app = Flask(
     template_folder="frontend/templates",
     static_folder="frontend/static",
 )
+app.secret_key = SECRET_KEY
+
+
+def _is_authenticated():
+    """True if the current session holds a valid access grant."""
+    return bool(session.get("onyxfolio_access"))
 
 
 def _detect_current_lang(path):
@@ -460,8 +467,23 @@ def serve(path):
             **extra,
         )
 
-    # 3. Private note placeholder
+    # 3. Private note — placeholder, or full content for authenticated guests
     if url_path in post_store.PRIVATE_ROUTES:
+        if ACCESS_TOKEN:
+            token_param = request.args.get("token", "")
+            if token_param and hmac.compare_digest(token_param, ACCESS_TOKEN):
+                session["onyxfolio_access"] = True
+                return redirect(url_path, 302)
+            if _is_authenticated() and url_path in post_store.PRIVATE_RENDERED:
+                post = post_store.PRIVATE_RENDERED[url_path]
+                back_url = post["section_url"]
+                breadcrumbs = build_breadcrumbs(
+                    url_path, post["title"], post_store.SECTION_ROUTES
+                )
+                return render_template(
+                    "post.html", post=post, back_url=back_url,
+                    breadcrumbs=breadcrumbs, related=[], prev_post=None, next_post=None,
+                )
         entry = post_store.PRIVATE_ROUTES[url_path]
         parent = url_path.rsplit("/", 1)[0]
         back_url = parent if parent else "/"
@@ -505,6 +527,7 @@ if __name__ == "__main__":
         post_store.SITE_THEME,
         post_store.DATAVIEW_INDEX,
         post_store.PRIVATE_ROUTES,
+        post_store.PRIVATE_RENDERED,
         post_store.MENU_POSTS,
         post_store.SHOW_SEARCH,
         post_store.SHOW_TAGS,

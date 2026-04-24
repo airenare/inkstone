@@ -26,6 +26,8 @@ UI_TRANSLATIONS: dict = {}
 DATAVIEW_INDEX = {}
 # url_path → dataview entry for notes that exist but are NOT published as web pages
 PRIVATE_ROUTES = {}
+# url_path → rendered post_data for private notes (served when ACCESS_TOKEN auth passes)
+PRIVATE_RENDERED: dict = {}
 # posts pinned to the top nav via menu_order frontmatter, sorted by menu_order
 MENU_POSTS = []
 # Default language code (from root homepage `language:` frontmatter, e.g. "en")
@@ -848,6 +850,61 @@ def load_posts():
             }
             print(f"Auto-listing: {section_url} ('{title}')")
 
+    # ---- Pass 2b: render private notes for authenticated guest access ----
+    private_rendered = {}
+    for _entry in dataview_index.values():
+        _url = _entry.get("url_path")
+        if not _url or _url in all_posts:
+            continue
+        _meta = _entry.get("metadata") or {}
+        _note_type = (_meta.get("type") or "").strip().lower()
+        if _note_type in ("translations", "homepage", "listing"):
+            continue
+        try:
+            with open(_entry["filepath"], encoding="utf-8") as _fh:
+                _text = _fh.read()
+        except OSError:
+            continue
+        _, _md = parse_frontmatter(_text, _entry["filepath"])
+        _html, _toc = render_markdown(
+            _md, _entry["filepath"], url_index, dataview_index, _meta
+        )
+        _section = _entry.get("section") or ""
+        _section_url = ("/" + _section) if _section else "/"
+        _word_count = len(re.sub(r"<[^>]+>", "", _html).split())
+        _author_raw = _meta.get("author")
+        if isinstance(_author_raw, str):
+            _author = [_author_raw] if _author_raw.strip() else []
+        elif isinstance(_author_raw, list):
+            _author = [str(a) for a in _author_raw if a]
+        else:
+            _author = []
+        private_rendered[_url] = {
+            "url_path": _url,
+            "base_url_path": _url,
+            "lang": default_lang,
+            "section": _section,
+            "section_url": _section_url,
+            "title": _entry["title"],
+            "date": _parse_date(_meta.get("date"), _entry["filepath"]),
+            "updated": _parse_date(
+                _meta.get("updated") or _meta.get("modified"), _entry["filepath"]
+            ),
+            "author": _author,
+            "html": _html,
+            "toc": _toc,
+            "reading_time": max(1, _word_count // 200),
+            "post_type": _note_type or "post",
+            "tags": _entry.get("tags", []),
+            "content": re.sub(r"<[^>]+>", "", _html).lower(),
+            "summary": _meta.get("summary") or _make_summary(_html),
+            "banner": _meta.get("banner") or "",
+            "banner_x": _meta.get("banner_x", 0.5),
+            "banner_y": _meta.get("banner_y", 0.4),
+            "metadata": _meta,
+            "related": [],
+        }
+
     # ---- Build private routes: vault notes that have a URL but are not published ----
     # Exclude homepage/listing files — their slug URL differs from the section URL
     # they are registered under, so they pass the section_routes check but must
@@ -927,8 +984,8 @@ def load_posts():
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, dataview_index,
-            private_routes, menu_posts, show_search, show_tags, all_tags,
-            icon_overrides, default_lang, available_langs, lang_groups,
+            private_routes, private_rendered, menu_posts, show_search, show_tags,
+            all_tags, icon_overrides, default_lang, available_langs, lang_groups,
             social_links, website_names, ui_translations)
 
 
@@ -945,9 +1002,9 @@ def force_reload():
 
 def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, WEBSITE_NAMES, SITE_THEME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, \
-        DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, UI_TRANSLATIONS, \
-        LAST_SCAN_TIME, _last_check_time
+        PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, \
+        ICON_OVERRIDES, DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, \
+        UI_TRANSLATIONS, LAST_SCAN_TIME, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
         return
@@ -970,7 +1027,7 @@ def maybe_reload():
         if newest > LAST_SCAN_TIME:
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME,
-             DATAVIEW_INDEX, PRIVATE_ROUTES, MENU_POSTS,
+             DATAVIEW_INDEX, PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
              DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS,
              SOCIAL_LINKS, WEBSITE_NAMES, UI_TRANSLATIONS) = load_posts()
