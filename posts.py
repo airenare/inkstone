@@ -49,6 +49,8 @@ ICON_OVERRIDES: dict = {}
 ALL_TAGS: list = []
 # Active theme name — set from the root homepage 'theme' frontmatter field
 SITE_THEME: str = "obsidian"
+# Default dark/light mode for visitors with no saved preference: "dark", "light", or "system"
+DEFAULT_THEME: str = "system"
 # Social links built from per-platform keys on the root homepage frontmatter
 # (e.g. github:, mastodon:, bluesky:). Each entry: {name, icon, handle, url, rel}.
 SOCIAL_LINKS: list = []
@@ -373,6 +375,7 @@ def load_posts():
     website_name = "My Blog"
     website_names = {}
     site_theme = "obsidian"
+    default_theme = "system"
     menu_posts = []
     show_search = False
     show_tags = False
@@ -766,6 +769,8 @@ def load_posts():
                 site_theme = _resolve_theme(
                     metadata.get("theme"), filepath
                 )
+                _dt = str(metadata.get("default_theme") or "system").lower()
+                default_theme = _dt if _dt in {"dark", "light", "system"} else "system"
                 social_links = []
                 for key, network in _SOCIAL_REGISTRY.items():
                     url = metadata.get(key)
@@ -1046,10 +1051,11 @@ def load_posts():
             icon_overrides[url_path] = {"icon": icon, "site_title": st}
 
     menu_posts.sort(key=lambda x: x["menu_order"])
-    return (all_posts, section_routes, website_name, site_theme, dataview_index,
-            private_routes, private_rendered, menu_posts, show_search, show_tags,
-            all_tags, icon_overrides, default_lang, available_langs, lang_groups,
-            social_links, website_names, ui_translations)
+    return (all_posts, section_routes, website_name, site_theme, default_theme,
+            dataview_index, private_routes, private_rendered, menu_posts,
+            show_search, show_tags, all_tags, icon_overrides, default_lang,
+            available_langs, lang_groups, social_links, website_names,
+            ui_translations)
 
 
 # =========================================
@@ -1064,10 +1070,10 @@ def force_reload():
 
 
 def maybe_reload():
-    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, WEBSITE_NAMES, SITE_THEME, DATAVIEW_INDEX, \
-        PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS, SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, \
-        ICON_OVERRIDES, DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS, SOCIAL_LINKS, \
-        UI_TRANSLATIONS, LAST_SCAN_TIME, _last_check_time
+    global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, WEBSITE_NAMES, SITE_THEME, \
+        DEFAULT_THEME, DATAVIEW_INDEX, PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS, \
+        SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, DEFAULT_LANG, AVAILABLE_LANGS, \
+        LANG_GROUPS, SOCIAL_LINKS, UI_TRANSLATIONS, LAST_SCAN_TIME, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
         return
@@ -1089,7 +1095,7 @@ def maybe_reload():
         _last_check_time = time.time()
         if newest > LAST_SCAN_TIME:
             print("Reloading vault...")
-            (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME,
+            (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DEFAULT_THEME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
              DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS,

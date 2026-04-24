@@ -6,6 +6,7 @@ show_search: true
 show_tags: false
 title: OnyxFolio
 theme: omarchy
+default_theme: dark
 icon: /static/logo.svg
 ---
 
@@ -37,7 +38,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Audio embeds** — `![[file.mp3]]` → `<audio>` element
 - **Aliases** — `aliases:` frontmatter for alternate wiki-link names
 - **Related posts** — automatic "See also" section scored by shared tags and section
-- **Dark / light mode** — toggle in the header, remembered across visits
+- **Dark / light / system mode** — three-state toggle (⊙ / ☀ / ☾) in header; `default_theme: dark|light|system` in root homepage frontmatter sets the initial theme for new visitors
 - **Inline body tags** — `#hashtag` in post body auto-collected as tags
 - **Dataview inline queries** — `` `= this.field` `` evaluated against note frontmatter
 - **Block references** — `^block-id` on a paragraph; `[[Note^id]]` links scroll to it

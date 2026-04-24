@@ -422,8 +422,11 @@ hljs.highlightAll()
 <script>
 (function() {
     const saved = localStorage.getItem("theme")
+    const def = "{{ site_default_theme }}"
     if (saved === "dark" || saved === "light") {
         document.documentElement.setAttribute("data-theme", saved)
+    } else if (def === "dark" || def === "light") {
+        document.documentElement.setAttribute("data-theme", def)
     } else {
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
         document.documentElement.setAttribute("data-theme", prefersDark ? "dark" : "light")
@@ -433,20 +436,31 @@ hljs.highlightAll()
 document.addEventListener("DOMContentLoaded", () => {
     const btn = document.getElementById("theme-toggle")
     const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const def = "{{ site_default_theme }}"
     let mqListener = null
 
-    function applySystem() {
-        document.documentElement.setAttribute("data-theme", mq.matches ? "dark" : "light")
+    function applyDefault() {
+        if (def === "dark" || def === "light") {
+            document.documentElement.setAttribute("data-theme", def)
+        } else {
+            document.documentElement.setAttribute("data-theme", mq.matches ? "dark" : "light")
+        }
     }
 
     function update() {
         const saved = localStorage.getItem("theme")
         if (!saved) {
             btn.textContent = "⊙"
-            btn.setAttribute("aria-label", "Theme: System")
-            if (!mqListener) {
-                mqListener = applySystem
-                mq.addEventListener("change", mqListener)
+            btn.setAttribute("aria-label", "Theme: Auto")
+            // Only listen to OS changes when the site default is system/OS
+            if (def !== "dark" && def !== "light") {
+                if (!mqListener) {
+                    mqListener = applyDefault
+                    mq.addEventListener("change", mqListener)
+                }
+            } else if (mqListener) {
+                mq.removeEventListener("change", mqListener)
+                mqListener = null
             }
         } else {
             if (mqListener) {
@@ -468,14 +482,17 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => {
         const saved = localStorage.getItem("theme")
         if (!saved) {
+            // Auto → Light
             localStorage.setItem("theme", "light")
             document.documentElement.setAttribute("data-theme", "light")
         } else if (saved === "light") {
+            // Light → Dark
             localStorage.setItem("theme", "dark")
             document.documentElement.setAttribute("data-theme", "dark")
         } else {
+            // Dark → Auto (reset to site default)
             localStorage.removeItem("theme")
-            applySystem()
+            applyDefault()
         }
         update()
     })
