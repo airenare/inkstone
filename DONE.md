@@ -2,6 +2,10 @@
 
 ---
 
+## v1.29.0
+
+- ✅ **System theme option** — third toggle state (⊙) follows `prefers-color-scheme`; cycle is System → Light → Dark → System. When System is active: `localStorage.theme` is removed, OS preference applied immediately, `change` event listener tracks further OS changes. (v1.29.0)
+
 ## v1.28.0
 
 - ✅ **Private note access control — per-note tokens** — `access_token: secret` frontmatter unlocks a specific note via `?token=secret`; session stores a list of unlocked URL paths so subsequent visits work without the token. Global `ACCESS_TOKEN` env var acts as master key (unlocks all, stores boolean flag). Both can coexist. (v1.28.1)
@@ -13,6 +17,8 @@
 - ✅ **Transliterated slugs** — `unidecode` applied in `slugify()` before slug generation; Cyrillic/Greek/etc. titles produce ASCII URLs. Manual `slug:` frontmatter bypasses this entirely. (v1.27.3)
 - ✅ **Translations note body format** — strings moved from `strings:` frontmatter dict to a fenced ` ```yaml ` block in the note body; frontmatter now only needs `type: translations` + `lang:`. Legacy `strings:` dict still accepted as fallback. Updated demo vault, template, README, CLAUDE.md, How This Blog Works, Multilingual.md, Note Templates.md. (v1.27.2)
 - ✅ **Obsidian template workflow** — QuickAdd (already bundled in demo vault) is the recommended approach; core Templates plugin is the simpler fallback. Cleaned up `templates/web page template.md` (removed clutter, added `summary` prompt). New doc page `Note Templates.md` in antonbakulin.com vault; added to Documentation index.
+
+- ✅ **Lowercase URLs audit** — `_section_from_filepath` calls `slugify(p)` on every path segment (line 343); `slugify` lowercases + transliterates via unidecode, so mixed-case vault folders like `Blog/` produce `/blog` URLs. Confirmed; no code change needed.
 
 ## Audits & Docs
 

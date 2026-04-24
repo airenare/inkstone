@@ -81,7 +81,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 - **Hot-reload** — the server watches file modification times and reloads the vault on any change; no restart needed
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
-- **Dark / light mode** — toggle button in the header; preference persisted in `localStorage`
+- **Dark / light / system mode** — three-state toggle (☾ / ☀ / ⊙) in the header; System follows `prefers-color-scheme` and tracks OS changes live; preference persisted in `localStorage` (absent = System)
 - **Inline body tags** — `#hashtag` mentions in the note body are collected as tags; merged with frontmatter `tags:`
 - **Mobile nav** — nav links wrap below the site title on narrow viewports (≤ 600 px)
 - **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
