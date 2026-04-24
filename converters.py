@@ -42,15 +42,42 @@ _MERMAID_TOKEN = "ONYXMERMAID{i}ONYXEND"
 
 
 def _extract_mermaid(md):
-    """Pull ```mermaid blocks out before codehilite can strip their class."""
+    """Pull ```mermaid blocks out before codehilite can strip their class.
+
+    Only extracts top-level mermaid blocks — blocks nested inside a larger
+    fenced block (e.g. a ````markdown```` example) are left untouched.
+    """
     blocks = []
-
-    def replacer(m):
-        blocks.append(m.group(1))
-        return f"\n\n{_MERMAID_TOKEN.format(i=len(blocks) - 1)}\n\n"
-
-    md = re.sub(r"```mermaid\n(.*?)```", replacer, md, flags=re.DOTALL)
-    return md, blocks
+    result = []
+    outer_fence = None  # fence marker of the enclosing non-mermaid block
+    lines = md.split("\n")
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if outer_fence is None:
+            m = re.match(r"^(`{3,}|~{3,})(\S*)", line)
+            if m:
+                marker, lang = m.group(1), m.group(2).lower()
+                if lang == "mermaid":
+                    content = []
+                    i += 1
+                    while i < len(lines) and not lines[i].startswith(marker):
+                        content.append(lines[i])
+                        i += 1
+                    idx = len(blocks)
+                    blocks.append("\n".join(content))
+                    result += ["", _MERMAID_TOKEN.format(i=idx), ""]
+                else:
+                    outer_fence = marker
+                    result.append(line)
+            else:
+                result.append(line)
+        else:
+            result.append(line)
+            if re.match(rf"^{re.escape(outer_fence)}\s*$", line):
+                outer_fence = None
+        i += 1
+    return "\n".join(result), blocks
 
 
 def _restore_mermaid(html_str, blocks):
