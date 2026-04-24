@@ -87,7 +87,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Print stylesheet** — `@media print` hides nav and interactive chrome, resets colours, appends link URLs inline
 - **Custom 404** — styled 404 page consistent with the rest of the site
 - **Docker-ready** — pass `VAULT_REPO` as a build arg to clone your private vault at deploy time
-- **Private note access** — set `ACCESS_TOKEN` in `.env`; share links with `?token=<value>` to grant guests read access to private notes; token is stored in a session cookie so subsequent pages load cleanly
+- **Private note access** — add `access_token: secret` to a note's frontmatter; share its URL with `?token=secret`; the token unlocks that specific note and is stored in a session cookie. A global `ACCESS_TOKEN` env var acts as a master key that unlocks all private notes
 
 ### Multilingual
 
@@ -132,6 +132,8 @@ lang: ru              # per-note: marks this note as a specific language variant
 tags:                 # user content tags — shown as badges, used for /tag/<name> archive pages,
   - python            #   search filtering, related posts, and Dataview FROM queries
   - philosophy        #   body #hashtags are also collected as tags automatically
+access_token: secret  # optional; notes without `website: true` are private by default;
+                      #   set this to grant access via ?token=secret in the URL
 ---
 ```
 

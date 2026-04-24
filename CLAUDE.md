@@ -25,7 +25,7 @@ docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault onyxfolio
 Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory. If `VAULT_PATH` is unset or missing, the app falls back to `./BlogPages` automatically.
 
 **Optional env vars:**
-- `ACCESS_TOKEN` — set to any non-empty string to enable private note access. Share URLs as `https://yoursite.com/private-note?token=<value>`; the token is stored in a session cookie so subsequent pages load without it.
+- `ACCESS_TOKEN` — master key that unlocks ALL private notes. Per-note access is controlled by `access_token:` frontmatter instead (each note has its own token, session tracks unlocked URLs individually). Both can coexist.
 - `SECRET_KEY` — Flask session signing key. Set to a long random string in production. Defaults to `"onyxfolio-dev-secret"` (sessions invalidated on restart if not set).
 - `HIDE_ATTRIBUTION` — set to `"1"` or `"true"` to remove the "built with OnyxFolio" footer line.
 - `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` — all three required to enable Giscus comments.
@@ -131,6 +131,9 @@ author: "Jane Doe"    # optional; shown in post meta and JSON-LD (string or list
 tags:                 # user content tags — shown as clickable badges, used for /tag/<name>
   - python            #   archive pages, search filtering, related posts, and Dataview FROM queries
   - philosophy        #   body #hashtags are collected as tags automatically
+access_token: secret  # optional; private notes (no website: true) only; share the URL as
+                      #   /slug?token=secret to unlock this specific note for the visitor;
+                      #   ACCESS_TOKEN env var acts as a master key that unlocks all notes
 language: en          # root homepage only: sets the site default language
 lang: ru              # per-note or filename suffix (_RU.md): marks note as a language variant
                       #   → served at /{slug}/{lang}; language toggle, hreflang, auto-redirect

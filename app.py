@@ -30,9 +30,16 @@ app = Flask(
 app.secret_key = SECRET_KEY
 
 
-def _is_authenticated():
-    """True if the current session holds a valid access grant."""
-    return bool(session.get("onyxfolio_access"))
+def _is_unlocked(url_path):
+    """True if the session grants access to this specific private note.
+
+    Access is granted either by a per-note token (stored as a list of
+    unlocked URL paths in the session) or by the global ACCESS_TOKEN master
+    key (stored as a single boolean flag).
+    """
+    if session.get("onyxfolio_access"):
+        return True
+    return url_path in session.get("onyxfolio_unlocked", [])
 
 
 def _detect_current_lang(path):
@@ -467,24 +474,42 @@ def serve(path):
             **extra,
         )
 
-    # 3. Private note — placeholder, or full content for authenticated guests
+    # 3. Private note — placeholder, or full content for unlocked guests
     if url_path in post_store.PRIVATE_ROUTES:
-        if ACCESS_TOKEN:
-            token_param = request.args.get("token", "")
-            if token_param and hmac.compare_digest(token_param, ACCESS_TOKEN):
+        entry = post_store.PRIVATE_ROUTES[url_path]
+        note_token = str(
+            (entry.get("metadata") or {}).get("access_token") or ""
+        )
+        token_param = request.args.get("token", "")
+        if token_param:
+            note_match = (
+                note_token
+                and hmac.compare_digest(token_param, note_token)
+            )
+            master_match = (
+                ACCESS_TOKEN
+                and hmac.compare_digest(token_param, ACCESS_TOKEN)
+            )
+            if note_match:
+                unlocked = list(session.get("onyxfolio_unlocked", []))
+                if url_path not in unlocked:
+                    unlocked.append(url_path)
+                session["onyxfolio_unlocked"] = unlocked
+                session.modified = True
+                return redirect(url_path, 302)
+            elif master_match:
                 session["onyxfolio_access"] = True
                 return redirect(url_path, 302)
-            if _is_authenticated() and url_path in post_store.PRIVATE_RENDERED:
-                post = post_store.PRIVATE_RENDERED[url_path]
-                back_url = post["section_url"]
-                breadcrumbs = build_breadcrumbs(
-                    url_path, post["title"], post_store.SECTION_ROUTES
-                )
-                return render_template(
-                    "post.html", post=post, back_url=back_url,
-                    breadcrumbs=breadcrumbs, related=[], prev_post=None, next_post=None,
-                )
-        entry = post_store.PRIVATE_ROUTES[url_path]
+        if _is_unlocked(url_path) and url_path in post_store.PRIVATE_RENDERED:
+            post = post_store.PRIVATE_RENDERED[url_path]
+            back_url = post["section_url"]
+            breadcrumbs = build_breadcrumbs(
+                url_path, post["title"], post_store.SECTION_ROUTES
+            )
+            return render_template(
+                "post.html", post=post, back_url=back_url,
+                breadcrumbs=breadcrumbs, related=[], prev_post=None, next_post=None,
+            )
         parent = url_path.rsplit("/", 1)[0]
         back_url = parent if parent else "/"
         return render_template("private.html", entry=entry, back_url=back_url)

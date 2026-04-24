@@ -4,7 +4,8 @@
 
 ## v1.28.0
 
-- ✅ **Private note access control** — set `ACCESS_TOKEN` env var; share `?token=<value>` links; token validated via `hmac.compare_digest`, stored in a Flask session cookie. Private notes rendered at load time in Pass 2b (`PRIVATE_RENDERED` dict) and served with `post.html` to authenticated guests. Unauthenticated visitors still see the private placeholder. (v1.28.0)
+- ✅ **Private note access control — per-note tokens** — `access_token: secret` frontmatter unlocks a specific note via `?token=secret`; session stores a list of unlocked URL paths so subsequent visits work without the token. Global `ACCESS_TOKEN` env var acts as master key (unlocks all, stores boolean flag). Both can coexist. (v1.28.1)
+- ✅ **Private note access control — foundation** — Pass 2b in `posts.py` pre-renders all private notes into `PRIVATE_RENDERED`; `post.html` served to unlocked guests; private placeholder shown otherwise. `SECRET_KEY` env var for Flask session signing. (v1.28.0)
 
 ## v1.27.x (continued)
 
