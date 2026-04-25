@@ -144,7 +144,8 @@
       "Bash(python3 *)",
       "Bash(curl -s \"http://127.0.0.1:8000/blog/my-writing-process\")",
       "Bash(FLASK_DEBUG=0 /home/air/venv/3.14/bin/python3 app.py)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(git rebase *)"
     ]
   }
 }
