@@ -24,12 +24,12 @@
 
 {% if featured %}
 <section class="featured-posts">
-<h3>Featured</h3>
+<h3>{{ ui_strings.get('Featured', 'Featured') }}</h3>
 
 {% for post in featured %}
 <article class="featured-post">
     <h3><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
-    <div class="post-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
+    <div class="post-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
     <p class="post-summary">{{ post.summary }}</p>
 </article>
 {% endfor %}
@@ -39,13 +39,13 @@
 
 {% if regular %}
 <section class="regular-posts">
-<h3>All Posts</h3>
+<h3>{{ ui_strings.get('All Posts', 'All Posts') }}</h3>
 
 <div class="related-grid">
 {% for post in regular %}
 <a href="{{ post.url_path }}" class="related-card">
     <div class="related-card-title">{{ post.title }}</div>
-    <div class="related-card-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}</div>
+    <div class="related-card-meta">{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
     <div class="related-card-summary">{{ post.summary }}</div>
 </a>
 {% endfor %}
@@ -63,7 +63,7 @@
 {% endif %}
 
 {% if not regular and not featured %}
-<p>No posts yet.</p>
+<p>{{ ui_strings.get('No posts yet.', 'No posts yet.') }}</p>
 {% endif %}
 
 {% endblock %}

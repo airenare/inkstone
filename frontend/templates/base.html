@@ -144,7 +144,7 @@ new MutationObserver(renderMermaid).observe(
 <header>
 <div class="header-inner">
 <h1><a href="/">{% if header_icon %}<img src="{{ header_icon }}" alt="" class="site-icon" aria-hidden="true">{% endif %}{{ header_site_title or website_name }}</a></h1>
-<nav id="main-nav">{% for url, label in nav_sections %}<a href="{{ url }}"{% if request.path == url or request.path.startswith(url + '/') %} class="nav-active"{% endif %}>{{ label }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}"{% if request.path == p.url_path %} class="nav-active"{% endif %}>{{ p.title }}</a>{% endfor %}{% if show_tags %}<a href="/tags"{% if request.path == '/tags' %} class="nav-active"{% endif %}>{{ ui_strings.get('Tags', 'Tags') }}</a>{% endif %}{% if show_search %}<a href="/search"{% if request.path == '/search' %} class="nav-active"{% endif %}>{{ ui_strings.get('Search', 'Search') }}</a>{% endif %}</nav>
+<nav id="main-nav">{% for url, label in nav_sections %}<a href="{{ url }}"{% if request.path == url or request.path.startswith(url + '/') %} class="nav-active"{% endif %}>{{ label }}</a>{% endfor %}{% for p in menu_posts %}<a href="{{ p.url_path }}"{% if request.path == p.url_path %} class="nav-active"{% endif %}>{{ p.title }}</a>{% endfor %}{% if show_tags %}<a href="/tags{% if current_lang != default_lang %}?lang={{ current_lang }}{% endif %}"{% if request.path == '/tags' %} class="nav-active"{% endif %}>{{ ui_strings.get('Tags', 'Tags') }}</a>{% endif %}{% if show_search %}<a href="/search{% if current_lang != default_lang %}?lang={{ current_lang }}{% endif %}"{% if request.path == '/search' %} class="nav-active"{% endif %}>{{ ui_strings.get('Search', 'Search') }}</a>{% endif %}</nav>
 <div class="header-controls">
 {% if lang_variants and lang_variants|length > 1 %}
 <div class="lang-toggle" aria-label="Switch language">{% for lc, lu in lang_variants.items() %}<a href="{{ lu }}" class="lang-option{% if lc == current_lang %} lang-active{% endif %}" aria-label="{{ lc|upper }}" data-lang="{{ lc }}">{{ lc|upper }}</a>{% endfor %}</div>
@@ -172,7 +172,7 @@ new MutationObserver(renderMermaid).observe(
   </div>
   {% endif %}
   {% if not hide_attribution %}
-  <span>built with <a href="https://github.com/airenare/onyxfolio" target="_blank" rel="noopener">OnyxFolio</a> v{{ app_version }}</span>
+  <span>{{ ui_strings.get('built with', 'built with') }} <a href="https://github.com/airenare/onyxfolio" target="_blank" rel="noopener">OnyxFolio</a> v{{ app_version }}</span>
   {% endif %}
 </footer>
 

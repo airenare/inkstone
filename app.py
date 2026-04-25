@@ -51,6 +51,11 @@ def _detect_current_lang(path):
     if (last in post_store.AVAILABLE_LANGS
             and last != post_store.DEFAULT_LANG):
         return last
+    # Utility routes (/search, /tags) carry lang as a query param
+    lang_param = request.args.get("lang", "")
+    if (lang_param in post_store.AVAILABLE_LANGS
+            and lang_param != post_store.DEFAULT_LANG):
+        return lang_param
     return post_store.DEFAULT_LANG
 
 

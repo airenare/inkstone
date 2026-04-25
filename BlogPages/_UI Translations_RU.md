@@ -21,4 +21,7 @@ Books: Книги
 "Start Here": Начни с этого
 Featured: Избранное
 "All Posts": Все Посты
+"built with": создано с помощью
+"No posts yet.": Пока нет записей.
+"No tags yet.": Пока нет тегов.
 ```

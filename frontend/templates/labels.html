@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<h2>Tags</h2>
+<h2>{{ ui_strings.get('Tags', 'Tags') }}</h2>
 
 {% if labels %}
 <ul class="labels-index">
@@ -21,7 +21,7 @@
 {% endfor %}
 </ul>
 {% else %}
-<p>No tags yet.</p>
+<p>{{ ui_strings.get('No tags yet.', 'No tags yet.') }}</p>
 {% endif %}
 
 {% endblock %}
