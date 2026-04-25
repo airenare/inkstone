@@ -20,8 +20,8 @@
 <article class="post-entry">
     <h3><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
     <div class="post-meta">
-        {% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}
-        {% if post.reading_time %} · {{ post.reading_time }} min read{% endif %}
+        {% if post.date %}{{ localize_date(post.date) }}{% endif %}
+        {% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}
     </div>
     <p class="post-summary">{{ post.summary }}</p>
     {% if nav.prev or nav.next %}

@@ -24,4 +24,22 @@ Featured: Избранное
 "built with": создано с помощью
 "No posts yet.": Пока нет записей.
 "No tags yet.": Пока нет тегов.
+Home: Главная
+Contents: Содержание
+"See also": Смотрите также
+Updated: Обновлено
+by: автор
+date_format: "{day} {month} {year}"
+January: января
+February: февраля
+March: марта
+April: апреля
+May: мая
+June: июня
+July: июля
+August: августа
+September: сентября
+October: октября
+November: ноября
+December: декабря
 ```

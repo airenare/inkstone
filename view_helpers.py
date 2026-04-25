@@ -7,9 +7,9 @@ import html
 import re
 
 
-def build_breadcrumbs(url_path, post_title, section_routes):
+def build_breadcrumbs(url_path, post_title, section_routes, home_label="Home"):
     """Build breadcrumb list: [(label, url), ..., (current_title, None)]."""
-    crumbs = [("Home", "/")]
+    crumbs = [(home_label, "/")]
     parts = [p for p in url_path.split("/") if p]
     for i in range(len(parts) - 1):
         segment_url = "/" + "/".join(parts[: i + 1])

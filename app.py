@@ -127,6 +127,16 @@ def inject_globals():
     lang_variants = post_store.LANG_GROUPS.get(base_url, {}) if multilingual else {}
 
     icon_ctx = _resolve_icon_override(request.path)
+    ui_strings = post_store.UI_TRANSLATIONS.get(current_lang, {})
+
+    def localize_date(date_obj):
+        if not date_obj:
+            return ""
+        month_en = date_obj.strftime("%B")
+        month = ui_strings.get(month_en, month_en)
+        fmt = ui_strings.get("date_format", "{month} {day}, {year}")
+        return fmt.format(month=month, day=date_obj.day, year=date_obj.year)
+
     return {
         "website_name": post_store.WEBSITE_NAMES.get(current_lang) or post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
@@ -151,7 +161,8 @@ def inject_globals():
             "repo_id": GISCUS_REPO_ID,
             "category_id": GISCUS_CATEGORY_ID,
         } if GISCUS_REPO and GISCUS_REPO_ID and GISCUS_CATEGORY_ID else None,
-        "ui_strings": post_store.UI_TRANSLATIONS.get(current_lang, {}),
+        "ui_strings": ui_strings,
+        "localize_date": localize_date,
     }
 
 
@@ -467,7 +478,11 @@ def serve(path):
         post = post_store.ALL_POSTS[url_path]
         back_url = "/" + post["section"] if post["section"] else "/"
         template = "book.html" if post.get("post_type") == "book" else "post.html"
-        breadcrumbs = build_breadcrumbs(url_path, post["title"], post_store.SECTION_ROUTES)
+        _ui = post_store.UI_TRANSLATIONS.get(_detect_current_lang(request.path), {})
+        breadcrumbs = build_breadcrumbs(
+            url_path, post["title"], post_store.SECTION_ROUTES,
+            home_label=_ui.get("Home", "Home"),
+        )
         related = post.get("related", [])
         prev_post, next_post = get_adjacent_posts(post, post_store.ALL_POSTS)
         extra = {}
@@ -509,8 +524,12 @@ def serve(path):
         if _is_unlocked(url_path) and url_path in post_store.PRIVATE_RENDERED:
             post = post_store.PRIVATE_RENDERED[url_path]
             back_url = post["section_url"]
+            _ui = post_store.UI_TRANSLATIONS.get(
+                _detect_current_lang(request.path), {}
+            )
             breadcrumbs = build_breadcrumbs(
-                url_path, post["title"], post_store.SECTION_ROUTES
+                url_path, post["title"], post_store.SECTION_ROUTES,
+                home_label=_ui.get("Home", "Home"),
             )
             return render_template(
                 "post.html", post=post, back_url=back_url,

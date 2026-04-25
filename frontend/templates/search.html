@@ -5,6 +5,7 @@
 <h2>{{ ui_strings.get('Search', 'Search') }}</h2>
 
 <form class="search-form" action="/search">
+{% if current_lang != default_lang %}<input type="hidden" name="lang" value="{{ current_lang }}">{% endif %}
 
 <input type="text" name="q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…">
 
@@ -37,7 +38,7 @@
 <li class="search-result">
 <h4><a href="{{ post.url_path }}">{{ post.highlighted_title | safe }}</a></h4>
 <div class="post-meta">
-{% if post.date %}{{ post.date.strftime("%B %d, %Y") }}{% endif %}
+{% if post.date %}{{ localize_date(post.date) }}{% endif %}
 {% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}
 </div>
 <p class="post-summary">{{ post.highlighted_summary | safe }}</p>
