@@ -1,4 +1,4 @@
-# OnyxFolio
+# InkStone
 
 > Your notes, published.
 
@@ -58,7 +58,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Auto-listings** — folders with no explicit index file get an auto-generated listing page automatically
 - **Banner images** — `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/`, then `ATTACHMENTS_PATH` from `.env`
-- **Favicon** — default OnyxFolio favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
+- **Favicon** — default InkStone favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD
 - **Date last modified** — `updated:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
 - **Site icon** — `icon: path/to/image` shows an image beside the site title; cascades to all child pages unless overridden
@@ -152,8 +152,8 @@ access_token: secret  # optional; notes without `website: true` are private by d
 **Requirements:** Python 3.11+
 
 ```bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
 
 pip install -r requirements.txt
 
@@ -171,8 +171,8 @@ The server hot-reloads when vault files change.
 ## Docker
 
 ```bash
-docker build -t onyxfolio .
-docker run -p 8000:8000 -v /path/to/vault:/vault onyxfolio
+docker build -t inkstone .
+docker run -p 8000:8000 -v /path/to/vault:/vault inkstone
 ```
 
 If `/vault` is not mounted or doesn't exist, the server falls back to the bundled `BlogPages/` demo vault.

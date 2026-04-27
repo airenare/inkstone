@@ -37,9 +37,9 @@ def _is_unlocked(url_path):
     unlocked URL paths in the session) or by the global ACCESS_TOKEN master
     key (stored as a single boolean flag).
     """
-    if session.get("onyxfolio_access"):
+    if session.get("inkstone_access"):
         return True
-    return url_path in session.get("onyxfolio_unlocked", [])
+    return url_path in session.get("inkstone_unlocked", [])
 
 
 def _detect_current_lang(path):
@@ -205,7 +205,7 @@ def attachments(path):
 
 
 # Favicon: vault root overrides (favicon.ico / favicon.png / favicon.svg),
-# falling back to the built-in OnyxFolio defaults in frontend/static/.
+# falling back to the built-in InkStone defaults in frontend/static/.
 _FAVICON_CANDIDATES = ["favicon.ico", "favicon.png", "favicon.svg"]
 
 # Map each route to the static fallback filename and MIME type
@@ -512,14 +512,14 @@ def serve(path):
                 and hmac.compare_digest(token_param, ACCESS_TOKEN)
             )
             if note_match:
-                unlocked = list(session.get("onyxfolio_unlocked", []))
+                unlocked = list(session.get("inkstone_unlocked", []))
                 if url_path not in unlocked:
                     unlocked.append(url_path)
-                session["onyxfolio_unlocked"] = unlocked
+                session["inkstone_unlocked"] = unlocked
                 session.modified = True
                 return redirect(url_path, 302)
             elif master_match:
-                session["onyxfolio_access"] = True
+                session["inkstone_access"] = True
                 return redirect(url_path, 302)
         if _is_unlocked(url_path) and url_path in post_store.PRIVATE_RENDERED:
             post = post_store.PRIVATE_RENDERED[url_path]

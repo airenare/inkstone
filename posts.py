@@ -1034,7 +1034,7 @@ def load_posts():
     available_langs = [default_lang] + sorted(_others)
 
     # ---- Build icon/site-title override map for cascade inheritance ----
-    # Section routes are keyed by their *section URL* (e.g. "/onyxfolio"), not
+    # Section routes are keyed by their *section URL* (e.g. "/inkstone"), not
     # by the homepage file's slug path — that's what the cascade lookup uses.
     icon_overrides = {}
     for section_url, route in section_routes.items():

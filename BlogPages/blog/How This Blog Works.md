@@ -376,7 +376,7 @@ This matters for wiki-links: if you link to a private note, the link renders as 
 
 ## Multilingual Content
 
-OnyxFolio supports publishing notes in multiple languages side-by-side. There are two independent mechanisms: content translation (per-note language variants) and UI string translation (labels and fixed strings in templates).
+InkStone supports publishing notes in multiple languages side-by-side. There are two independent mechanisms: content translation (per-note language variants) and UI string translation (labels and fixed strings in templates).
 
 ### Content Translation — `_LANG` filename suffix
 

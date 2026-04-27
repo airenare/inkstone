@@ -3,7 +3,7 @@ website: true
 title: Start Here
 menu_order: 0
 date: 2026-04-21
-summary: "Get OnyxFolio running and your first note live — three paths to choose from."
+summary: "Get InkStone running and your first note live — three paths to choose from."
 ---
 
 # Start Here
@@ -17,8 +17,8 @@ Get your Obsidian vault live on the web. Pick one path below.
 **Requirements:** Python 3.11+, Git
 
 ```bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
 pip3 install -r requirements.txt
 python3 app.py
 # → http://127.0.0.1:8000
@@ -38,10 +38,10 @@ The server watches your files and reloads automatically — no restart needed.
 ## Option B — Docker
 
 ```bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
-docker build -t onyxfolio .
-docker run -p 8000:8000 -v /path/to/your/vault:/vault onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
+docker build -t inkstone .
+docker run -p 8000:8000 -v /path/to/your/vault:/vault inkstone
 # → http://127.0.0.1:8000
 ```
 
@@ -53,7 +53,7 @@ If no `/vault` is mounted, the bundled demo vault loads instead.
 
 For a production site that updates automatically when you push your vault to GitHub:
 
-→ See the [Deployment guide](https://antonbakulin.com/onyxfolio/deployment) for step-by-step instructions.
+→ See the [Deployment guide](https://antonbakulin.com/inkstone/deployment) for step-by-step instructions.
 
 ---
 
@@ -90,4 +90,4 @@ That note is now live. Its URL is `/my-first-post` if it's in the vault root, or
 
 Full configuration reference — theming, Dataview, multilingual, deployment, and more:
 
-→ [antonbakulin.com/onyxfolio](https://antonbakulin.com/onyxfolio)
+→ [antonbakulin.com/inkstone](https://antonbakulin.com/inkstone)

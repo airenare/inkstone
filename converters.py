@@ -1,4 +1,4 @@
-"""Markdown rendering pipeline for OnyxFolio.
+"""Markdown rendering pipeline for InkStone.
 
 This module is the only one imported externally.  It re-exports the
 utilities that other modules (posts.py) need and wires all the converter

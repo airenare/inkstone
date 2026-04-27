@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Project Does
 
-OnyxFolio converts Obsidian vault markdown notes into a web-accessible blog. URL structure is derived from vault folder hierarchy. Files in `VAULT/blog/` are served at `/blog/slug`, files in `VAULT/gallery/` at `/gallery/slug`, and files in the vault root at `/slug`.
+InkStone converts Obsidian vault markdown notes into a web-accessible blog. URL structure is derived from vault folder hierarchy. Files in `VAULT/blog/` are served at `/blog/slug`, files in `VAULT/gallery/` at `/gallery/slug`, and files in the vault root at `/slug`.
 
 ## Running the Server
 
@@ -18,16 +18,16 @@ The project dependencies live in `/home/air/venv/3.14/`. Use that Python when ru
 /home/air/venv/3.14/bin/gunicorn -b 0.0.0.0:8000 app:app
 
 # Docker
-docker build -t onyxfolio .
-docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault onyxfolio
+docker build -t inkstone .
+docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault inkstone
 ```
 
 Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory. If `VAULT_PATH` is unset or missing, the app falls back to `./BlogPages` automatically.
 
 **Optional env vars:**
 - `ACCESS_TOKEN` — master key that unlocks ALL private notes. Per-note access is controlled by `access_token:` frontmatter instead (each note has its own token, session tracks unlocked URLs individually). Both can coexist.
-- `SECRET_KEY` — Flask session signing key. Set to a long random string in production. Defaults to `"onyxfolio-dev-secret"` (sessions invalidated on restart if not set).
-- `HIDE_ATTRIBUTION` — set to `"1"` or `"true"` to remove the "built with OnyxFolio" footer line.
+- `SECRET_KEY` — Flask session signing key. Set to a long random string in production. Defaults to `"inkstone-dev-secret"` (sessions invalidated on restart if not set).
+- `HIDE_ATTRIBUTION` — set to `"1"` or `"true"` to remove the "built with InkStone" footer line.
 - `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` — all three required to enable Giscus comments.
 - `VAULT_REPO` — Git URL to clone a private vault at Docker build time.
 - `WEBHOOK_SECRET` — secret for validating GitHub webhook payloads on `/webhook`.
@@ -195,8 +195,8 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 
 ## Workflow Rules
 
-- **Context retrieval:** At the start of every session, search the `onyxfolio` Pinecone index (namespace `codebase`) with a query relevant to the task at hand — e.g. "routing and data flow" or "how does callout rendering work". Pull 3–5 records. This replaces re-reading source files for architectural questions and keeps context usage low.
-- **Pinecone index maintenance:** After every feature addition, change, or removal — update the `onyxfolio` index (namespace `codebase`) as part of the same work session. Upsert modified records with the new information. If something is removed or replaced, upsert the affected record with a note marking the old behaviour as removed/changed and describing the new behaviour. Never leave the index stale.
+- **Context retrieval:** At the start of every session, search the `inkstone` Pinecone index (namespace `codebase`) with a query relevant to the task at hand — e.g. "routing and data flow" or "how does callout rendering work". Pull 3–5 records. This replaces re-reading source files for architectural questions and keeps context usage low.
+- **Pinecone index maintenance:** After every feature addition, change, or removal — update the `inkstone` index (namespace `codebase`) as part of the same work session. Upsert modified records with the new information. If something is removed or replaced, upsert the affected record with a note marking the old behaviour as removed/changed and describing the new behaviour. Never leave the index stale.
 - **Sync before starting:** At the beginning of every task, run `git fetch` and check both (a) whether the remote is ahead and (b) whether there are any unstaged or uncommitted local changes. Report the findings and, if there is anything to resolve, present numbered options (e.g. 1. stash, 2. commit, 3. discard) before proceeding. If the remote is ahead and local is clean, `git pull --rebase` automatically and summarise what changed.
 - **Code style:** Follow PEP 8 — snake_case for variables/functions, 4-space indentation, double quotes for strings, max line length 79 characters.
 - **Before editing:** Always read a file before modifying it.

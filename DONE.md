@@ -1,4 +1,4 @@
-# OnyxFolio — Completed Work
+# InkStone — Completed Work
 
 ---
 
@@ -66,12 +66,12 @@
 
 ## v1.22.x
 
-- ✅ **Version in footer** — `built with OnyxFolio v{{ app_version }}`. (v1.21.2)
+- ✅ **Version in footer** — `built with InkStone v{{ app_version }}`. (v1.21.2)
 
 ## v1.21.x — Branding
 
 - Logo: hex gem SVG (Catppuccin Mocha, onyx facets + folio heart)
-- Favicon: default OnyxFolio logo; vault-root override (`favicon.ico/png/svg`)
+- Favicon: default InkStone logo; vault-root override (`favicon.ico/png/svg`)
 - `icon:` frontmatter: image beside site title (1.25em height); cascades to child pages
 - `site_title:` frontmatter: overrides displayed website name; cascades to child pages
 

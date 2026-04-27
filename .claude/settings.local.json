@@ -145,7 +145,16 @@
       "Bash(curl -s \"http://127.0.0.1:8000/blog/my-writing-process\")",
       "Bash(FLASK_DEBUG=0 /home/air/venv/3.14/bin/python3 app.py)",
       "Bash(echo \"exit: $?\")",
-      "Bash(git rebase *)"
+      "Bash(git rebase *)",
+      "Bash(git -C /home/air/Documents/GithubRepos/OnyxFolio fetch)",
+      "Bash(git -C /home/air/Documents/GithubRepos/OnyxFolio status)",
+      "Bash(git -C /home/air/Documents/GithubRepos/OnyxFolio log --oneline -5)",
+      "Bash(git -C \"/home/air/Documents/Obsidian/obsidian/antonbakulin.com\" fetch)",
+      "Bash(git -C \"/home/air/Documents/Obsidian/obsidian/antonbakulin.com\" status)",
+      "Bash(git -C \"/home/air/Documents/Obsidian/obsidian/antonbakulin.com\" log --oneline -5)",
+      "Bash(git *)",
+      "Bash(xargs sed *)",
+      "Bash(gh repo *)"
     ]
   }
 }

@@ -5,7 +5,7 @@ menu_order: 0
 title: Запуск
 slug: start-here
 lang: ru
-summary: Запустите OnyxFolio и опубликуйте свою первую заметку — выберите один из трёх способов.
+summary: Запустите InkStone и опубликуйте свою первую заметку — выберите один из трёх способов.
 ---
 
 # Запуск
@@ -19,8 +19,8 @@ summary: Запустите OnyxFolio и опубликуйте свою пер�
 **Требования:** Python 3.11+, Git
 
 ``` bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
 pip3 install -r requirements.txt
 python3 app.py
 # → http://127.0.0.1:8000
@@ -41,10 +41,10 @@ python3 app.py
 ## Вариант B — Docker
 
 ``` bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
-docker build -t onyxfolio .
-docker run -p 8000:8000 -v /path/to/your/vault:/vault onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
+docker build -t inkstone .
+docker run -p 8000:8000 -v /path/to/your/vault:/vault inkstone
 # → http://127.0.0.1:8000
 ```
 
@@ -57,7 +57,7 @@ docker run -p 8000:8000 -v /path/to/your/vault:/vault onyxfolio
 Для продакшен-сайта, который автоматически обновляется при пуше вашего
 хранилища на GitHub:
 
-→ Смотрите [Руководство по деплою](https://antonbakulin.com/onyxfolio/deployment) с пошаговыми
+→ Смотрите [Руководство по деплою](https://antonbakulin.com/inkstone/deployment) с пошаговыми
 инструкциями.
 
 ------------------------------------------------------------------------
@@ -99,4 +99,4 @@ date: 2026-01-15
 Полное руководство по настройке — темы, Dataview, мультиязычность,
 деплой и многое другое:
 
-→ [antonbakulin.com/onyxfolio](https://antonbakulin.com/onyxfolio)
+→ [antonbakulin.com/inkstone](https://antonbakulin.com/inkstone)

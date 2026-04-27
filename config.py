@@ -41,9 +41,9 @@ ACCESS_TOKEN = os.getenv("ACCESS_TOKEN") or None
 
 # Flask session signing key. Set to a long random string in production.
 # If not set, sessions are invalidated on every server restart.
-SECRET_KEY = os.getenv("SECRET_KEY", "onyxfolio-dev-secret")
+SECRET_KEY = os.getenv("SECRET_KEY", "inkstone-dev-secret")
 
-# Set to "1", "true", or "yes" to remove the "built with OnyxFolio" footer line.
+# Set to "1", "true", or "yes" to remove the "built with InkStone" footer line.
 HIDE_ATTRIBUTION = os.getenv("HIDE_ATTRIBUTION", "").lower() in ("1", "true", "yes")
 
 # Giscus comment system — all three must be set to enable comments.

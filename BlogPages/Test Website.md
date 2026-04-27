@@ -4,13 +4,13 @@ type: homepage
 language: en
 show_search: true
 show_tags: false
-title: OnyxFolio
+title: InkStone
 theme: omarchy
 default_theme: dark
 icon: /static/logo.svg
 ---
 
-# OnyxFolio
+# InkStone
 
 A lightweight blog engine that turns your **Obsidian vault into a website** — no export, no copy-paste. Write in Obsidian, push to GitHub, see it live. 
 
