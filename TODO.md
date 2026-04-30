@@ -6,11 +6,17 @@
 
 ## Immediate  *(small, pick up and finish in one session)*
 
+- **See also should exclude language variants of the same post** — in related-posts selection, do not show sibling translations (same canonical post content in another `lang`). Keep only truly different posts.
+
 ---
 
 ## Polish & Bugs
 
 - **Canvas is extremely basic** - we need something much more https://jsoncanvas.org/ looking. It can still be looking like a webpage of our website, but the contents need to be much more advanced. For example, there is a way to insert a whole note in a card. Very powerful tool. Current state of implementation in our engine is just a card with a link to the post.
+
+- **Canvas edges need directionality** — replace plain curved connectors with directional arrows so edge flow is visually clear (closer to Obsidian canvas semantics).
+
+- **Canvas file-card note preview** — for file/note cards that represent a note, render real note content inside the card (scrollable preview) instead of only showing the note title.
 
 - **Marking canvas to be published** - is done by editing the json file (.canvas) and adding two more key-value pairs ("website": true, "title": "my title"). Which works until you try to edit this .canvas in obsidian again. Once it's opened in obsidian, these key-value pairs are removed, and the page is not posted anymore. Either we need another way to mark canvas for publishing, or need to find a workaround.
 
@@ -21,6 +27,8 @@
 ## Ideas  *(not committed — explore when the time is right)*
 
 - **Canvas file rendering** — Obsidian `.canvas` files are JSON graphs of nodes and edges. Render as a read-only visual board: parse JSON, position `<div>`s or draw SVG. Effort: high; reward: unique.
+
+- **Logo polish pass** — iterate on the new logo mock-up (refine geometry, contrast, and small-size legibility) and prepare final web-ready SVG + favicon variants.
 
 ---
 
