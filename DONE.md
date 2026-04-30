@@ -2,6 +2,10 @@
 
 ---
 
+## v1.35.2
+
+- ✅ **[Bug] See also: fix sibling exclusion for translated-title variants** — v1.35.1's `base_url_path` comparison broke when translated posts have different titles (e.g. "About" → "Обо мне" → slug `obo-mne`). Fix: store `base_stem` (lowercased filename stem with `_XX` stripped) in every post dict; `get_related()` now compares `(section, base_stem)` pairs to identify siblings regardless of translated slugs. (v1.35.2)
+
 ## v1.35.1
 
 - ✅ **[Bug] See also excludes language siblings** — `get_related()` now computes `post_base = post.get("base_url_path") or post["url_path"]` and skips any candidate whose `base_url_path` matches, so translations of the same post never appear in See also. (v1.35.1)
