@@ -2,6 +2,10 @@
 
 ---
 
+## v1.35.0
+
+- ✅ **Inline `dv.pages()` expressions — Stage 1** — `` `= dv.pages("#tag").length` `` and `` `= dv.pages("").length` `` now evaluate server-side against the full vault index. `_filter_dv_pages()` filters by tag or returns all posts; `_eval_dv_pages_expr()` handles the pattern; `convert_dataview_inline()` gains an optional `dataview_index` kwarg and tries `dv.pages()` first. Stage 2 (field access, sorting, limiting) deferred. (v1.35.0)
+
 ## v1.32.0
 
 - ✅ **Default theme frontmatter** — `default_theme: dark|light|system` in the root homepage frontmatter sets the initial theme for new visitors (before they interact with the toggle). "dark" and "light" force that theme; "system" (default) follows the OS `prefers-color-scheme`. Visitors can always override with the toggle; their choice is saved in `localStorage`. (v1.32.0)

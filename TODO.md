@@ -6,8 +6,6 @@
 
 ## Immediate  *(small, pick up and finish in one session)*
 
-- **Inline Dataview `dv.pages()` expression** — extend `convert_dataview_inline` in `dataview.py` beyond `this.*`. **Stage 1 (narrow):** detect `` `= dv.pages("#tag").length` ``, run filtered count against `DATAVIEW_INDEX`. **Stage 2 (later):** richer expressions — field access (`dv.pages("#tag").file.name`), sorting, limiting. Keep server-side.
-
 ---
 
 ## Polish & Bugs
