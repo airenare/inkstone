@@ -645,11 +645,12 @@ def load_posts():
             )
 
             candidates.append((filepath, f, metadata, md, title, slug,
-                                section, url_path, lang, base_url_path))
+                                section, url_path, lang, base_url_path,
+                                base_stem.lower()))
 
     # ---- Pass 2: render markdown with resolved wiki-links + dataview ----
     for (filepath, f, metadata, md, title, slug,
-         section, url_path, lang, base_url_path) in candidates:
+         section, url_path, lang, base_url_path, base_stem) in candidates:
 
         date = _parse_date(metadata.get("date"), filepath)
         updated = _parse_date(
@@ -720,6 +721,7 @@ def load_posts():
         post_data = {
             "url_path": url_path,
             "base_url_path": base_url_path,
+            "base_stem": base_stem,
             "lang": lang,
             "section": section,
             "section_url": section_url,

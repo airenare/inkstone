@@ -50,13 +50,14 @@ def get_related(post, all_posts, max_results=4):
     """Return up to max_results related posts sorted by shared-tag count."""
     post_tags = set(post.get("tags") or [])
     post_section = post.get("section", "")
+    post_stem = post.get("base_stem") or post.get("slug", "")
+    post_canonical = (post_section, post_stem)
     scored = []
-    post_base = post.get("base_url_path") or post["url_path"]
     for p in all_posts.values():
         if p["url_path"] == post["url_path"]:
             continue
-        # skip language variants of the same post (same canonical base URL)
-        if (p.get("base_url_path") or p["url_path"]) == post_base:
+        # skip language variants of the same post
+        if (p.get("section", ""), p.get("base_stem") or p.get("slug", "")) == post_canonical:
             continue
         shared = len(post_tags & set(p.get("tags") or []))
         same_section = int(p.get("section", "") == post_section)
