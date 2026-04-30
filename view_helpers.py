@@ -51,8 +51,12 @@ def get_related(post, all_posts, max_results=4):
     post_tags = set(post.get("tags") or [])
     post_section = post.get("section", "")
     scored = []
+    post_base = post.get("base_url_path") or post["url_path"]
     for p in all_posts.values():
         if p["url_path"] == post["url_path"]:
+            continue
+        # skip language variants of the same post (same canonical base URL)
+        if (p.get("base_url_path") or p["url_path"]) == post_base:
             continue
         shared = len(post_tags & set(p.get("tags") or []))
         same_section = int(p.get("section", "") == post_section)
