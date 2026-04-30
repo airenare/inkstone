@@ -45,6 +45,13 @@ def _is_unlocked(url_path):
 def _detect_current_lang(path):
     """Return the language code if the last path segment is a known non-default
     language code, otherwise return DEFAULT_LANG."""
+    route = post_store.SECTION_ROUTES.get(path)
+    if route and route.get("lang"):
+        return route.get("lang")
+    post = post_store.ALL_POSTS.get(path)
+    if post and post.get("lang"):
+        return post.get("lang")
+
     if not path or path == "/":
         return post_store.DEFAULT_LANG
     last = path.rstrip("/").rsplit("/", 1)[-1]
@@ -120,10 +127,14 @@ def inject_globals():
         lang_menu = [p for p in post_store.MENU_POSTS
                      if p.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG]
 
-    # Language variants for the toggle: base_url → {lang: url}
+    # Language variants for the toggle: resolve by URL match so translated
+    # pages with custom slugs (no /{lang} suffix) still map to the right group.
     base_url = request.path.rstrip("/") or "/"
-    if multilingual and current_lang != post_store.DEFAULT_LANG:
-        base_url = base_url.rsplit("/", 1)[0] or "/"
+    if multilingual:
+        for group_base, variants in post_store.LANG_GROUPS.items():
+            if variants.get(current_lang) == base_url:
+                base_url = group_base
+                break
     lang_variants = post_store.LANG_GROUPS.get(base_url, {}) if multilingual else {}
 
     icon_ctx = _resolve_icon_override(request.path)

@@ -608,7 +608,13 @@ def load_posts():
             section = _section_from_filepath(filepath)
 
             base_url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
-            if lang != default_lang:
+            has_custom_slug = (
+                isinstance(slug_raw, str) and bool(slug_raw.strip())
+            )
+            # Keep /{lang} suffix only when translated pages reuse the same slug
+            # shape (auto-slug flow). If a translation explicitly sets its own
+            # slug, publish it at that standalone slug without the lang suffix.
+            if lang != default_lang and not has_custom_slug:
                 url_path = base_url_path + "/" + lang
             else:
                 url_path = base_url_path

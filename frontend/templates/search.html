@@ -7,7 +7,7 @@
 <form class="search-form" action="/search">
 {% if current_lang != default_lang %}<input type="hidden" name="lang" value="{{ current_lang }}">{% endif %}
 
-<input type="text" name="q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…">
+<input type="text" name="q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…" autofocus>
 
 {% if all_tags %}
 <select name="tag">

@@ -48,7 +48,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Banner images** — set `banner:` in frontmatter for a hero image with configurable focal point
 - **Private notes** — notes without `website: true` are queryable by Dataview but show a placeholder page instead of their content
 - **Hot-reload** — the server detects file changes and reloads without a restart
-- **Search** — full-text search across all published posts at `/search`, with tag filter
+- **Search** — full-text search across all published posts at `/search`, with tag filter and input auto-focus
 - **Tag pages** — every tag gets a `/tag/<name>` archive page; tags on posts are clickable badges
 - **Breadcrumb navigation** — posts show a `Home › Section › Post` trail
 - **Reading time** — estimated reading time on post pages and listing cards
@@ -69,7 +69,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Mobile nav** — nav links wrap below the site title on narrow screens; breadcrumbs stay on one line
 - **Print stylesheet** — clean `@media print` styles for printing or saving as PDF
 - **Docker-ready** — pass a `VAULT_REPO` build arg to clone your vault at deploy time
-- **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md` → `/post/ru`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
+- **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md`); keep `/{lang}` only when variants share the same slug (`/post/ru`), but if a translation has its own slug, publish it directly (for example `/about` and `/obo-mne`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
 - **UI string translations** — create a `type: translations` note (no `website: true` needed) with `lang:` and key/value pairs in a fenced `yaml` block; translates all fixed UI text — section headings (Featured, All Posts, Contents, See also), meta labels (Updated, by, min read, built with), breadcrumb Home, nav items, and dates (via `date_format` + month name keys)
 - **Obsidian Bases** — `.base` files with `website: true` are rendered as HTML tables; filters support `file.hasTag()`, `file.inFolder()`, property comparisons, and `and`/`or`/`not` logic; column order, sort, and limit are respected
 
