@@ -510,6 +510,43 @@ def _execute_dv_query(parsed, dataview_index):
 
 
 # =========================================
+# DV.PAGES HELPERS (inline queries)
+# =========================================
+
+def _filter_dv_pages(source, dataview_index):
+    """Return posts from dataview_index matching a dv.pages() source string.
+
+    Supports:
+      ""        — all pages
+      "#tag"    — pages that have the given tag
+    """
+    posts = list(dataview_index.values())
+    if not source:
+        return posts
+    if source.startswith("#"):
+        tag = source[1:].lower()
+        return [p for p in posts if tag in p.get("tags", [])]
+    return posts
+
+
+def _eval_dv_pages_expr(expr, dataview_index):
+    """Evaluate a dv.pages(...).prop inline expression.
+
+    Stage 1: only .length is supported.
+    Returns the result as a string, or None if the pattern is not matched.
+    """
+    m = re.match(r"^dv\.pages\(([^)]*)\)\.(\w+)$", expr)
+    if not m:
+        return None
+    raw_arg = m.group(1).strip().strip("\"'")
+    prop = m.group(2)
+    pages = _filter_dv_pages(raw_arg, dataview_index)
+    if prop == "length":
+        return str(len(pages))
+    return None
+
+
+# =========================================
 # MARKDOWN CONVERTERS (called by pipeline)
 # =========================================
 
@@ -581,12 +618,13 @@ def convert_dataview(md, dataview_index):
     return "\n".join(output)
 
 
-def convert_dataview_inline(md, note_ctx):
+def convert_dataview_inline(md, note_ctx, dataview_index=None):
     """Replace `= expr` inline queries with evaluated values.
 
     note_ctx is a dict of the current note's frontmatter fields plus
     special keys: file.name, file.link, file.ctime, tags.
     `this.field` is an alias for the top-level field name.
+    dataview_index is required for dv.pages(...) expressions.
     """
     # Skip multi-backtick code spans; only match single-backtick `= expr`
     pattern = r'(``+[^`].*?``+)|`= ([^`]+)`'
@@ -595,6 +633,18 @@ def convert_dataview_inline(md, note_ctx):
         if match.group(1) is not None:
             return match.group(1)  # multi-backtick code span — leave untouched
         expr = match.group(2).strip()
+
+        # dv.pages(...).prop expressions require the full index
+        if dataview_index is not None:
+            try:
+                result = _eval_dv_pages_expr(expr, dataview_index)
+                if result is not None:
+                    return f'<span class="dv-inline">{result}</span>'
+            except Exception:
+                return (
+                    f'<span class="dv-inline dv-inline-error">{expr}</span>'
+                )
+
         expr = re.sub(r"^this\.", "", expr)
         try:
             val = _eval_dv_expr(expr, note_ctx)

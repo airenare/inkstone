@@ -109,7 +109,7 @@ def render_markdown(md, path, url_index=None, dataview_index=None,
     if note_metadata is not None:
         note_ctx = dict(note_metadata)
         note_ctx["file"] = {"name": os.path.basename(path)}
-        md = convert_dataview_inline(md, note_ctx)
+        md = convert_dataview_inline(md, note_ctx, dataview_index=dataview_index)
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
 

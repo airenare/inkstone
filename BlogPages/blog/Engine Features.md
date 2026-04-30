@@ -45,6 +45,8 @@ Labels from both sources are merged and deduplicated.
 
 This is the same expression language used in `TABLE` blocks, but inline in prose. Useful for auto-populating recurring metadata without copy-pasting.
 
+`dv.pages()` expressions query the full vault index inline. The blog section currently has `= dv.pages("#blog").length` posts tagged `#blog`. All published posts: `= dv.pages("").length`.
+
 ---
 
 ## Block References
