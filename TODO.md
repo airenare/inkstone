@@ -6,7 +6,6 @@
 
 ## P0 — High Priority
 
-- [ ] **[Bug][Content Discovery] See also should exclude language variants of the same post** — in related-post selection, do not show sibling translations (same canonical post content in another `lang`); show only genuinely different posts.
 - [ ] **[Bug][Canvas Publishing] Canvas publish marker gets removed by Obsidian** — current `.canvas` JSON keys (`"website": true`, `"title": "..."`) are stripped after editing in Obsidian. Replace with a durable publish signal or add a reliable workaround.
 
 ---

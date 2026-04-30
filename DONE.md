@@ -2,6 +2,10 @@
 
 ---
 
+## v1.35.1
+
+- ✅ **[Bug] See also excludes language siblings** — `get_related()` now computes `post_base = post.get("base_url_path") or post["url_path"]` and skips any candidate whose `base_url_path` matches, so translations of the same post never appear in See also. (v1.35.1)
+
 ## v1.35.0
 
 - ✅ **Inline `dv.pages()` expressions — Stage 1** — `` `= dv.pages("#tag").length` `` and `` `= dv.pages("").length` `` now evaluate server-side against the full vault index. `_filter_dv_pages()` filters by tag or returns all posts; `_eval_dv_pages_expr()` handles the pattern; `convert_dataview_inline()` gains an optional `dataview_index` kwarg and tries `dv.pages()` first. Stage 2 (field access, sorting, limiting) deferred. (v1.35.0)
