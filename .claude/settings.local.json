@@ -154,7 +154,10 @@
       "Bash(git -C \"/home/air/Documents/Obsidian/obsidian/antonbakulin.com\" log --oneline -5)",
       "Bash(git *)",
       "Bash(xargs sed *)",
-      "Bash(gh repo *)"
+      "Bash(gh repo *)",
+      "Bash(awk '{print $2}')",
+      "Bash(xargs '-I{}' sh -c ' *)",
+      "Bash(grep -v \"^$\")"
     ]
   }
 }
