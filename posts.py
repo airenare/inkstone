@@ -407,6 +407,7 @@ def load_posts():
 
     # ---- Pass 1: scan ALL .md files — build dataview_index + candidates ----
     candidates = []
+    candidates_raw = []
     candidates_base = []  # (.base files with website: true)
     candidates_canvas = []  # (.canvas files with "website": true)
     url_index = {}  # slugify(title) → url_path, used to resolve wiki-links
@@ -608,51 +609,62 @@ def load_posts():
             section = _section_from_filepath(filepath)
 
             base_url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
-            has_custom_slug = (
-                isinstance(slug_raw, str) and bool(slug_raw.strip())
-            )
-            # Keep /{lang} suffix only when translated pages reuse the same slug
-            # shape (auto-slug flow). If a translation explicitly sets its own
-            # slug, publish it at that standalone slug without the lang suffix.
-            if lang != default_lang and not has_custom_slug:
-                url_path = base_url_path + "/" + lang
-            else:
-                url_path = base_url_path
-
-            # Homepage/listing files are served at the section URL, not their
-            # computed url_path — index them under the section URL so that
-            # [[SectionHomepage]] wiki-links resolve correctly.
             note_type_p1 = (metadata.get("type") or "").strip().lower()
-            section_url_p1 = ("/" + section) if section else "/"
-            index_url = (
-                section_url_p1
-                if note_type_p1 in ("homepage", "listing")
-                else url_path
-            )
-
-            # Store all keys lowercase so wiki-link lookup is case-insensitive
-            url_index[slugify(title).lower()] = index_url
-            # Also index by filename and slug so [[Filename|Display]] links
-            # resolve even when the title differs from the file name.
-            url_index[slugify(f[:-3]).lower()] = index_url
-            url_index[slug.lower()] = index_url
             # aliases frontmatter: list of alternate names that resolve to this post
             aliases = metadata.get("aliases") or []
             if isinstance(aliases, str):
                 aliases = [aliases]
-            for alias in aliases:
-                url_index[slugify(str(alias)).lower()] = url_path
-
-            # Update dataview entry with web URL, section, and clickable link
-            dataview_index[filepath]["url_path"] = url_path
-            dataview_index[filepath]["section"] = section
-            dataview_index[filepath]["file"]["link"] = (
-                f'<a href="{url_path}">{title}</a>'
+            candidates_raw.append(
+                (filepath, f, metadata, md, title, slug, section, lang,
+                 base_url_path, base_stem.lower(), note_type_p1, aliases)
             )
 
-            candidates.append((filepath, f, metadata, md, title, slug,
-                                section, url_path, lang, base_url_path,
-                                base_stem.lower()))
+    # Resolve multilingual URL shape after scanning all markdown posts.
+    # Non-default language pages get /{lang} only when they share the same
+    # slug as their default-language sibling; different slugs stay unsuffixed.
+    default_slug_by_canonical = {}
+    for (_, _, _, _, _, slug, section, lang,
+         _, base_stem, _, _) in candidates_raw:
+        if lang == default_lang:
+            default_slug_by_canonical[(section, base_stem)] = slug
+
+    for (filepath, f, metadata, md, title, slug, section, lang,
+         base_url_path, base_stem, note_type_p1, aliases) in candidates_raw:
+        url_path = base_url_path
+        if lang != default_lang:
+            default_slug = default_slug_by_canonical.get((section, base_stem))
+            if default_slug and slug == default_slug:
+                url_path = base_url_path + "/" + lang
+
+        # Homepage/listing files are served at the section URL, not their
+        # computed url_path — index them under the section URL so that
+        # [[SectionHomepage]] wiki-links resolve correctly.
+        section_url_p1 = ("/" + section) if section else "/"
+        index_url = (
+            section_url_p1
+            if note_type_p1 in ("homepage", "listing")
+            else url_path
+        )
+
+        # Store all keys lowercase so wiki-link lookup is case-insensitive
+        url_index[slugify(title).lower()] = index_url
+        # Also index by filename and slug so [[Filename|Display]] links
+        # resolve even when the title differs from the file name.
+        url_index[slugify(f[:-3]).lower()] = index_url
+        url_index[slug.lower()] = index_url
+        for alias in aliases:
+            url_index[slugify(str(alias)).lower()] = url_path
+
+        # Update dataview entry with web URL, section, and clickable link
+        dataview_index[filepath]["url_path"] = url_path
+        dataview_index[filepath]["section"] = section
+        dataview_index[filepath]["file"]["link"] = (
+            f'<a href="{url_path}">{title}</a>'
+        )
+
+        candidates.append((filepath, f, metadata, md, title, slug,
+                            section, url_path, lang, base_url_path,
+                            base_stem))
 
     # ---- Pass 2: render markdown with resolved wiki-links + dataview ----
     for (filepath, f, metadata, md, title, slug,
