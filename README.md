@@ -50,7 +50,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ### Canvas
 
-- **Visual boards** — publish a `.canvas` file by naming it `Your Title__website.canvas` (title is the part before `__website`; Obsidian won't strip this) or by legacy `"website": true` in the JSON. Read-only diagrams: text, file, link, and group node types; edges as directed SVG bezier curves (arrow toward the target node); file nodes link to published posts and embed a scrollable preview of the note body when the file resolves; media inside previews scales to the card; edge labels as HTML overlays; node borders follow Obsidian's 6 preset colors
+- **Visual boards** — publish a `.canvas` file by naming it `Your Title__website.canvas` (title is the part before `__website`; Obsidian won't strip this) or by legacy `"website": true` in the JSON. Read-only diagrams: text, file, link, and group node types; edges as directed SVG bezier curves (arrow toward the target node); file nodes link to published posts and embed a scrollable preview of the note body when the file resolves; file nodes that point at vault image/audio/video paths render that media in the card; media inside previews scales to the card; edge labels as HTML overlays; node borders follow Obsidian's 6 preset colors. If the site lives under a URL prefix (e.g. `/inkstone`), set `URL_PATH_PREFIX` in `.env` so `![[embeds]]` and canvas media use the correct `/inkstone/attachments/…` URLs.
 
 ### Publishing & structure
 

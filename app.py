@@ -14,6 +14,7 @@ from config import (
     HIDE_ATTRIBUTION,
     GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID,
     ACCESS_TOKEN, SECRET_KEY,
+    vault_attachment_href,
 )
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
@@ -92,7 +93,7 @@ def _resolve_icon_override(url_path):
             if icon.startswith("/") or icon.startswith("http"):
                 icon_url = icon
             else:
-                icon_url = f"/attachments/{icon}"
+                icon_url = vault_attachment_href(icon)
             return {"header_icon": icon_url, "header_site_title": st}
     return {"header_icon": None, "header_site_title": None}
 

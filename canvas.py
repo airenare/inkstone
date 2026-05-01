@@ -3,6 +3,7 @@ import json
 import os
 import re
 
+import config as _config
 from obsidian_syntax import slugify
 
 
@@ -101,6 +102,60 @@ def _resolve_file_node_url(file_field, url_index):
         if isinstance(url, dict):
             url = url.get("url_path", "")
     return stem, url
+
+
+_CANVAS_MEDIA_EXT = frozenset({
+    ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg", ".bmp",
+    ".mp4", ".webm", ".mov",
+    ".mp3", ".ogg", ".wav", ".flac", ".m4a",
+})
+
+
+def _canvas_direct_media_relpath(file_field, canvas_path):
+    """If the node points at an image/audio/video file under VAULT_PATH, return
+    its vault-relative path (posix slashes), else None.
+    """
+    raw = file_field.replace("\\", "/").strip()
+    if not raw:
+        return None
+    try:
+        vault_real = os.path.realpath(_config.VAULT_PATH)
+    except OSError:
+        return None
+    candidates = [
+        os.path.join(_config.VAULT_PATH, raw),
+        os.path.normpath(os.path.join(os.path.dirname(canvas_path), raw)),
+    ]
+    seen = set()
+    for cand in candidates:
+        try:
+            full = os.path.realpath(cand)
+        except OSError:
+            continue
+        if full in seen:
+            continue
+        seen.add(full)
+        if not full.startswith(vault_real + os.sep):
+            continue
+        if not os.path.isfile(full):
+            continue
+        ext = os.path.splitext(full)[1].lower()
+        if ext not in _CANVAS_MEDIA_EXT:
+            return None
+        return os.path.relpath(full, _config.VAULT_PATH).replace("\\", "/")
+    return None
+
+
+def _canvas_embed_media_html(rel_under_vault):
+    """HTML for a single vault-relative media file (for file-card preview)."""
+    ext = rel_under_vault.rsplit(".", 1)[-1].lower()
+    href = _config.vault_attachment_href(rel_under_vault)
+    he = _html.escape(href, quote=True)
+    if ext in {"mp4", "webm", "mov"}:
+        return f'<video src="{he}" controls loading="lazy"></video>'
+    if ext in {"mp3", "ogg", "wav", "flac", "m4a"}:
+        return f'<audio src="{he}" controls></audio>'
+    return f'<img src="{he}" alt="" loading="lazy">'
 
 
 def render_canvas(
@@ -253,11 +308,22 @@ def render_canvas(
             preview = ""
             if url and post_html_by_url:
                 preview = post_html_by_url.get(url) or ""
-            if preview and url:
-                head = (
-                    f'<a href="{_html.escape(url)}" class="canvas-file-link">'
-                    f"{header_label}</a>"
-                )
+            if not preview:
+                rel_m = _canvas_direct_media_relpath(file_field, canvas_path)
+                if rel_m:
+                    preview = _canvas_embed_media_html(rel_m)
+            if preview:
+                if url:
+                    head = (
+                        f'<a href="{_html.escape(url)}" class="canvas-file-link">'
+                        f"{header_label}</a>"
+                    )
+                else:
+                    bn = os.path.basename(file_field.replace("\\", "/"))
+                    head = (
+                        f'<span class="canvas-file-name">'
+                        f"{_html.escape(bn)}</span>"
+                    )
                 out.append(
                     f'<div class="canvas-node canvas-node-file" data-id="{nid}"'
                     f' style="{style}">'

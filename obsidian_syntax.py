@@ -11,7 +11,7 @@ import re
 import markdown
 from unidecode import unidecode
 
-from config import VAULT_PATH, ATTACHMENTS_PATH
+from config import ATTACHMENTS_PATH, VAULT_PATH, vault_attachment_href
 
 
 # =========================================
@@ -375,14 +375,15 @@ def convert_media(md, md_path):
                 ):
                     continue
                 rel = os.path.relpath(full_path, VAULT_PATH)
+                href = vault_attachment_href(rel)
                 ext = filename.lower().rsplit(".", 1)[-1]
                 if ext in {"mp4", "webm", "mov"}:
                     slider.append(
-                        f'<video src="/attachments/{rel}" controls loading="lazy"></video>'
+                        f'<video src="{href}" controls loading="lazy"></video>'
                     )
                 elif ext in {"mp3", "ogg", "wav", "flac", "m4a"}:
                     slider.append(
-                        f'<audio src="/attachments/{rel}" controls></audio>'
+                        f'<audio src="{href}" controls></audio>'
                     )
                 else:
                     width_attr = (
@@ -391,7 +392,7 @@ def convert_media(md, md_path):
                         else ""
                     )
                     slider.append(
-                        f'<img src="/attachments/{rel}" alt=""'
+                        f'<img src="{href}" alt=""'
                         f'{width_attr} loading="lazy">'
                     )
             output.append(flush_slider())
@@ -416,21 +417,22 @@ def convert_media(md, md_path):
                 output.append(f"<em>Missing media: {filename}</em>")
                 continue
             rel = os.path.relpath(full_path, VAULT_PATH)
+            href = vault_attachment_href(rel)
             ext = filename.lower().rsplit(".", 1)[-1]
             if ext in {"mp4", "webm", "mov"}:
                 gallery.append(
-                    f'<video src="/attachments/{rel}" controls loading="lazy"></video>'
+                    f'<video src="{href}" controls loading="lazy"></video>'
                 )
             elif ext in {"mp3", "ogg", "wav", "flac", "m4a"}:
                 gallery.append(
-                    f'<audio src="/attachments/{rel}" controls></audio>'
+                    f'<audio src="{href}" controls></audio>'
                 )
             else:
                 is_inline, width, img_caption = _parse_caption(caption)
                 width_attr = f' style="max-width:{width}px"' if width else ""
                 if is_inline:
                     img_tag = (
-                        f'<img src="/attachments/{rel}"{width_attr}'
+                        f'<img src="{href}"{width_attr}'
                         f' loading="lazy">'
                     )
                     if img_caption:
@@ -444,8 +446,8 @@ def convert_media(md, md_path):
                         )
                 else:
                     img_tag = (
-                        f'<img src="/attachments/{rel}"{width_attr}'
-                        f' data-gallery="gallery" data-src="/attachments/{rel}"'
+                        f'<img src="{href}"{width_attr}'
+                        f' data-gallery="gallery" data-src="{href}"'
                         f' data-type="image" data-caption="{img_caption}"'
                         f' loading="lazy">'
                     )

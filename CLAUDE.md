@@ -31,6 +31,7 @@ Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directo
 - `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` — all three required to enable Giscus comments.
 - `VAULT_REPO` — Git URL to clone a private vault at Docker build time.
 - `WEBHOOK_SECRET` — secret for validating GitHub webhook payloads on `/webhook`.
+- `URL_PATH_PREFIX` or `APPLICATION_ROOT` — when the site is served under a subpath (e.g. `https://example.com/inkstone/`), set to that prefix without trailing slash (e.g. `/inkstone`). All generated `/attachments/…` URLs in note HTML, canvas cards, and header icons include this prefix.
 
 ## Architecture
 

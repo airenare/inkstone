@@ -1,5 +1,6 @@
 import os
 import sys
+from urllib.parse import quote
 
 import dotenv
 
@@ -51,4 +52,24 @@ HIDE_ATTRIBUTION = os.getenv("HIDE_ATTRIBUTION", "").lower() in ("1", "true", "y
 GISCUS_REPO = os.getenv("GISCUS_REPO") or None
 GISCUS_REPO_ID = os.getenv("GISCUS_REPO_ID") or None
 GISCUS_CATEGORY_ID = os.getenv("GISCUS_CATEGORY_ID") or None
+
+# When the app is mounted below the domain root, set the same prefix the
+# browser uses (e.g. "/inkstone"). All generated /attachments/ links include
+# it so images work behind a path-prefix reverse proxy.
+_raw_ap = (
+    os.getenv("URL_PATH_PREFIX")
+    or os.getenv("APPLICATION_ROOT")
+    or ""
+).strip().rstrip("/")
+URL_PATH_PREFIX = _raw_ap
+
+
+def vault_attachment_href(rel_path: str) -> str:
+    """Build the public URL for a vault-relative attachment path."""
+    rel = rel_path.replace("\\", "/").strip("/")
+    if not rel:
+        return f"{URL_PATH_PREFIX}/attachments" if URL_PATH_PREFIX else "/attachments"
+    enc = "/".join(quote(seg, safe="") for seg in rel.split("/") if seg)
+    base = f"{URL_PATH_PREFIX}/attachments" if URL_PATH_PREFIX else "/attachments"
+    return f"{base}/{enc}"
 
