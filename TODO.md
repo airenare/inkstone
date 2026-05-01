@@ -4,12 +4,6 @@
 
 ---
 
-## P0 — High Priority
-
-- [ ] **[Bug][Canvas Publishing] Canvas publish marker gets removed by Obsidian** — current `.canvas` JSON keys (`"website": true`, `"title": "..."`) are stripped after editing in Obsidian. Replace with a durable publish signal or add a reliable workaround. We can use the filename, as the json of the canvas is not editable in obsidian. 'My new canvas__website.canvas' - something like that will do the trick, where My new canvas becomes the title and the __website flag marks it to be posted. If you have other ideas, provide.
-
----
-
 ## P1 — Medium Priority
 
 - [ ] **[Enhancement][Canvas UX] Canvas connectors need directionality** — replace plain curved lines with directional arrows so graph flow is clear and semantically closer to Obsidian canvas.

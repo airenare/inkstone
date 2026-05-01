@@ -72,6 +72,7 @@ Your vault folder structure becomes your site's URL structure. A note at `blog/M
 - **Multilingual** — publish notes in multiple languages using filename suffixes (`Post_RU.md`); keep `/{lang}` only when the translated slug matches the default-language slug (`/post/ru`), but if slugs differ (manual or transliterated), publish each variant at its own direct URL (for example `/about` and `/obo-mne`); language toggle in header, `hreflang` meta tags, auto-redirect for missing translations, "not yet translated" placeholder for content that exists only in a non-default language
 - **UI string translations** — create a `type: translations` note (no `website: true` needed) with `lang:` and key/value pairs in a fenced `yaml` block; translates all fixed UI text — section headings (Featured, All Posts, Contents, See also), meta labels (Updated, by, min read, built with), breadcrumb Home, nav items, and dates (via `date_format` + month name keys)
 - **Obsidian Bases** — `.base` files with `website: true` are rendered as HTML tables; filters support `file.hasTag()`, `file.inFolder()`, property comparisons, and `and`/`or`/`not` logic; column order, sort, and limit are respected
+- **Canvas boards** — name a `.canvas` file `Your Title__website.canvas` to publish it (Obsidian strips JSON flags on save; the filename marker is durable); legacy `"website": true` in the JSON still works
 
 ---
 
@@ -89,6 +90,7 @@ No build step, no static site generator, no CMS. Just markdown files and a Pytho
 ## Explore the demo
 
 - [Blog](/blog) — blog posts with callouts, code, images, and checkboxes
+- [My writing process](/blog/my-writing-process) — published Obsidian canvas (`__website` filename)
 - [Gallery](/gallery) — an image gallery with lightbox and slider
 - [Books](/books) — a Dataview-powered bookshelf pulled from individual book notes
 - [[The Accidental Existentialist]] — a root-level standalone page pinned to the nav via `menu_order`

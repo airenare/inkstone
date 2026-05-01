@@ -1,6 +1,4 @@
 {
-  "website": true,
-  "title": "My Writing Process",
   "date": "2026-01-10",
   "summary": "A visual map of how blog posts go from idea to published page.",
   "nodes": [
@@ -47,7 +45,7 @@
     {
       "id": "publish",
       "type": "text",
-      "text": "**Publish**\n\nAdd `website: true`, push to GitHub — site updates.",
+      "text": "**Publish**\n\nRename the canvas to end with `__website` before `.canvas`, push to GitHub — site updates.",
       "x": 340,
       "y": -80,
       "width": 260,

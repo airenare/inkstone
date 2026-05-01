@@ -50,7 +50,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ### Canvas
 
-- **Visual boards** — `.canvas` files with `"website": true` in their JSON published as read-only diagrams; text, file, link, and group node types; edges drawn as SVG bezier curves; file nodes link to published posts; edge labels rendered as HTML overlays; node borders follow Obsidian's 6 preset colors
+- **Visual boards** — publish a `.canvas` file by naming it `Your Title__website.canvas` (title is the part before `__website`; Obsidian won't strip this) or by legacy `"website": true` in the JSON. Read-only diagrams: text, file, link, and group node types; edges as SVG bezier curves; file nodes link to published posts; edge labels as HTML overlays; node borders follow Obsidian's 6 preset colors
 
 ### Publishing & structure
 

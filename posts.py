@@ -12,7 +12,7 @@ from config import VAULT_PATH
 from converters import slugify, render_markdown, extract_h1
 from view_helpers import get_related
 from bases import parse_base_config, render_base_view
-from canvas import render_canvas
+from canvas import canvas_filename_publish_meta, render_canvas
 
 
 # url_path → post dict (content posts only, not homepage/listing files)
@@ -447,15 +447,21 @@ def load_posts():
                         data = json.load(fh)
                 except Exception:
                     continue
-                if not data.get("website"):
+                pub_fname, display_stem, raw_stem = canvas_filename_publish_meta(
+                    f
+                )
+                if not pub_fname and not data.get("website"):
                     continue
-                stem = f[:-7]  # strip .canvas
-                title = data.get("title") or stem
+                if pub_fname:
+                    title = display_stem
+                else:
+                    title = data.get("title") or raw_stem
                 slug = slugify(str(data.get("slug") or title))
                 section = _section_from_filepath(filepath)
                 url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
                 url_index[slugify(title).lower()] = url_path
-                url_index[slugify(stem).lower()] = url_path
+                link_stem = display_stem if pub_fname else raw_stem
+                url_index[slugify(link_stem).lower()] = url_path
                 url_index[slug.lower()] = url_path
                 candidates_canvas.append(
                     (filepath, f, data, title, slug, section, url_path)

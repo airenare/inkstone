@@ -6,6 +6,8 @@ import re
 from obsidian_syntax import slugify
 
 
+CANVAS_PUBLISH_FILENAME_SUFFIX = "__website"
+
 CANVAS_COLOR_MAP = {
     "1": "#fb464c",
     "2": "#e9973f",
@@ -17,6 +19,32 @@ CANVAS_COLOR_MAP = {
 
 # Minimum bezier handle length in % units
 _CTRL_MIN = 3
+
+
+def canvas_filename_publish_meta(filename):
+    """Parse ``*.canvas`` filename for InkStone publish marker.
+
+    Obsidian strips custom top-level JSON keys like ``website`` when saving.
+    A durable convention is ``Title__website.canvas``: the part before the
+    suffix becomes the page title; the suffix marks the board for publishing.
+
+    Returns:
+        (publish_via_filename, display_stem, raw_stem)
+        publish_via_filename — True if ``raw_stem`` ends with ``__website``
+            (case-insensitive).
+        display_stem — title base: suffix stripped when publish marker present,
+            otherwise same as raw_stem.
+        raw_stem — filename with ``.canvas`` removed.
+    """
+    if not filename.endswith(".canvas"):
+        return False, "", ""
+    raw_stem = filename[:-7]
+    suf = CANVAS_PUBLISH_FILENAME_SUFFIX
+    if raw_stem.lower().endswith(suf):
+        base = raw_stem[: -len(suf)].rstrip()
+        display = base if base else raw_stem
+        return True, display, raw_stem
+    return False, raw_stem, raw_stem
 
 
 def _canvas_text_to_html(text):

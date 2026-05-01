@@ -2,6 +2,10 @@
 
 ---
 
+## v1.35.5
+
+- ✅ **Canvas publish via filename (`__website`)** — Obsidian strips custom JSON keys when saving `.canvas` files. Publishing now uses durable filename marker `Title__website.canvas` (case-insensitive suffix): display title is the stem before `__website`; slug from title or optional JSON `slug`. Legacy `"website": true` in JSON still works. `canvas_filename_publish_meta()` in `canvas.py`; Pass 1 logic in `posts.py`. Demo vault file renamed to `blog/My Writing Process__website.canvas`. (v1.35.5)
+
 ## v1.35.2
 
 - ✅ **[Bug] See also: fix sibling exclusion for translated-title variants** — v1.35.1's `base_url_path` comparison broke when translated posts have different titles (e.g. "About" → "Обо мне" → slug `obo-mne`). Fix: store `base_stem` (lowercased filename stem with `_XX` stripped) in every post dict; `get_related()` now compares `(section, base_stem)` pairs to identify siblings regardless of translated slugs. (v1.35.2)

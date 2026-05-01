@@ -48,7 +48,7 @@ config.py  ←  obsidian_syntax.py  ←  converters.py  ←  posts.py  ←  app.
 | `dataview.py` | Server-side Dataview query engine: TABLE/LIST/GROUP BY/WHERE/SORT/LIMIT |
 | `bases.py` | Obsidian Bases renderer: parses `.base` YAML, evaluates filters, renders `type:table` views as HTML |
 | `converters.py` | Pipeline coordinator: imports from `obsidian_syntax` + `dataview`, wires `render_markdown()` |
-| `posts.py` | Three-pass `load_posts()`, `maybe_reload()`, `ALL_POSTS`, `SECTION_ROUTES` |
+| `posts.py` | `load_posts()` (markdown + `.base` + `.canvas`), Pass 4 canvas HTML, `maybe_reload()`, `ALL_POSTS`, `SECTION_ROUTES` |
 | `view_helpers.py` | Pure view utilities (no Flask): `_build_breadcrumbs`, `_get_adjacent_posts`, `_get_related`, `_highlight` |
 | `app.py` | Flask app init, context processor, routes |
 
@@ -56,7 +56,7 @@ New features should follow this chain — `app.py` imports from `posts.py` and `
 
 ### Data Flow
 
-1. **Pass 1** — `load_posts()` scans all `.md` files, parses frontmatter, computes `url_path` and `section` from folder location, builds `url_index` for wiki-link resolution. Also scans `.base` files with `website: true` and adds them to `url_index` + `candidates_base`. Each post is indexed three ways: `slugify(title)`, `slugify(filename without .md)`, and frontmatter `slug`.
+1. **Pass 1** — `load_posts()` scans all `.md` files, parses frontmatter, computes `url_path` and `section` from folder location, builds `url_index` for wiki-link resolution. Also scans `.base` files with `website: true` and adds them to `url_index` + `candidates_base`. Scans `.canvas` files: publish if the filename ends with `__website` before `.canvas` (title = name with that suffix stripped; survives Obsidian re-saves) or if legacy JSON has `"website": true`. Each `.md` post is indexed three ways: `slugify(title)`, `slugify(filename without .md)`, and frontmatter `slug`.
 2. **Pass 2** — renders markdown for each `.md` file using `url_index` so `[[Wiki Links]]` resolve to the correct cross-section URLs.
 3. **Pass 3** — renders each `.base` candidate by executing its filters against the completed `dataview_index` and generating an HTML table; adds result to `ALL_POSTS` with `post_type: "base"`.
 4. Files with `type: listing` → registered in `SECTION_ROUTES[section_url]`; files with `type: homepage` → same. Neither appears in `ALL_POSTS`.
@@ -192,6 +192,7 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 | `gallery/Pixel Sunset.md` | `/gallery/pixel-sunset` | Gallery post |
 | `gallery/Recursive Landscapes.md` | `/gallery/recursive-landscapes` | Gallery post |
 | `gallery/arts/Watercolor Algorithms.md` | `/gallery/arts/watercolor-algorithms` | Subfolder post with wiki-links |
+| `blog/My Writing Process__website.canvas` | `/blog/my-writing-process` | Published canvas (`__website` filename marker; JSON graph only) |
 
 ## Workflow Rules
 
