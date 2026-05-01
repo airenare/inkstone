@@ -2,6 +2,10 @@
 
 ---
 
+## v1.37.0
+
+- ✅ **Obsidian Bases: view filters + filename publish/feature markers** — `.base` filters now understand Obsidian-style `file.tags.contains("...")` in addition to existing expressions, so table views can use in-app filter trees directly from `views[].filters`. Publishing/featuring no longer depends on editing YAML in Obsidian: `Title__website.base` publishes, `Title__website__featured.base` publishes and features (case-insensitive suffix parsing, any order), with legacy `website:` / `featured:` still supported. Demo base fixture renamed to `blog/All Posts__website__featured.base`. (v1.37.0)
+
 ## v1.36.1
 
 - ✅ **Canvas file cards: vault media + prefixed attachment URLs** — File nodes that reference an image/audio/video path under `VAULT_PATH` (e.g. `inkstone/docs/_attachments/media-demo-3.jpg`) now render that media in the card even when there is no matching `.md` post. New `vault_attachment_href()` / `URL_PATH_PREFIX` (`APPLICATION_ROOT`) in `config.py` so all `![]` / `![[…]]` media, canvas embeds, and relative header icons use `{prefix}/attachments/…` when the app is mounted below the domain root (fixes broken images on prefixed deployments). `canvas.py` uses `config.VAULT_PATH` at resolve time. (v1.36.1)

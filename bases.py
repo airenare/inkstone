@@ -9,6 +9,9 @@ import sys
 
 import yaml
 
+BASE_PUBLISH_SUFFIX = "__website"
+BASE_FEATURED_SUFFIX = "__featured"
+
 
 # =========================================
 # PARSING
@@ -22,6 +25,39 @@ def parse_base_config(text, filepath="<unknown>"):
         print(f"WARNING: {filepath} — YAML parse error: {exc}", file=sys.stderr)
         config = {}
     return config if isinstance(config, dict) else {}
+
+
+def base_filename_publish_meta(filename):
+    """Parse ``*.base`` filename markers for publish/featured/title.
+
+    Supports case-insensitive suffix markers before ``.base``:
+    - ``__website``  -> publish
+    - ``__featured`` -> featured
+    Markers can be combined in any order, e.g.:
+    ``All Posts__website__featured.base``.
+    """
+    if not filename.endswith(".base"):
+        return False, False, "", ""
+    raw_stem = filename[:-5]
+    stem = raw_stem
+    low = stem.lower()
+    publish = False
+    featured = False
+    changed = True
+    while changed:
+        changed = False
+        if low.endswith(BASE_PUBLISH_SUFFIX):
+            publish = True
+            stem = stem[: -len(BASE_PUBLISH_SUFFIX)].rstrip()
+            low = stem.lower()
+            changed = True
+        if low.endswith(BASE_FEATURED_SUFFIX):
+            featured = True
+            stem = stem[: -len(BASE_FEATURED_SUFFIX)].rstrip()
+            low = stem.lower()
+            changed = True
+    display_stem = stem if stem else raw_stem
+    return publish, featured, display_stem, raw_stem
 
 
 # =========================================
@@ -92,6 +128,25 @@ def _eval_filter_expr(expr_str, note_ctx):
     # file.hasLink("note") — not implementable without a link graph; pass through
     if re.match(r'^file\.hasLink\(', expr_str, re.IGNORECASE):
         return True
+
+    # <field>.contains("value") or <field>.contains('value')
+    m = re.match(
+        r'^([A-Za-z_][\w.]*)\.contains\((.+)\)$', expr_str, re.IGNORECASE
+    )
+    if m:
+        field = m.group(1)
+        raw_val = m.group(2).strip()
+        lhs = _get_note_field(note_ctx, field)
+        if ((raw_val.startswith('"') and raw_val.endswith('"')) or
+                (raw_val.startswith("'") and raw_val.endswith("'"))):
+            rhs = raw_val[1:-1]
+        else:
+            rhs = raw_val
+        if isinstance(lhs, list):
+            rhs_low = str(rhs).lower()
+            return any(str(v).lower() == rhs_low for v in lhs)
+        lhs_str = str(lhs or "")
+        return str(rhs).lower() in lhs_str.lower()
 
     # Comparison: field OP value  (== != >= <= > <)
     m = re.match(

@@ -11,7 +11,11 @@ import yaml
 from config import VAULT_PATH
 from converters import slugify, render_markdown, extract_h1
 from view_helpers import get_related
-from bases import parse_base_config, render_base_view
+from bases import (
+    base_filename_publish_meta,
+    parse_base_config,
+    render_base_view,
+)
 from canvas import canvas_filename_publish_meta, render_canvas
 
 
@@ -425,18 +429,29 @@ def load_posts():
                     print(f"Skipping {filepath}: {e}", file=sys.stderr)
                     continue
                 base_config = parse_base_config(text, filepath)
-                if not base_config.get("website"):
+                pub_fname, feat_fname, display_stem, raw_stem = \
+                    base_filename_publish_meta(f)
+                if not pub_fname and not base_config.get("website"):
                     continue
-                stem = f[:-5]  # strip .base
-                title = base_config.get("title") or stem
+                title = base_config.get("title") or display_stem
                 slug = slugify(str(base_config.get("slug") or title))
                 section = _section_from_filepath(filepath)
                 url_path = ("/" + section + "/" + slug) if section else ("/" + slug)
                 url_index[slugify(title).lower()] = url_path
-                url_index[slugify(stem).lower()] = url_path
+                link_stem = display_stem if pub_fname else raw_stem
+                url_index[slugify(link_stem).lower()] = url_path
                 url_index[slug.lower()] = url_path
                 candidates_base.append(
-                    (filepath, f, base_config, title, slug, section, url_path)
+                    (
+                        filepath,
+                        f,
+                        base_config,
+                        title,
+                        slug,
+                        section,
+                        url_path,
+                        feat_fname,
+                    )
                 )
                 continue
 
@@ -825,7 +840,8 @@ def load_posts():
             all_posts[url_path] = post_data
 
     # ---- Pass 3: render .base database views ----
-    for (filepath, f, base_config, title, slug, section, url_path) in candidates_base:
+    for (filepath, f, base_config, title, slug, section, url_path,
+         feat_fname) in candidates_base:
         html = render_base_view(base_config, dataview_index)
         date = _parse_date(base_config.get("date"), filepath)
         raw_tags = base_config.get("tags") or []
@@ -861,7 +877,7 @@ def load_posts():
             "content": "",
             "summary": summary,
             "priority": float("inf"),
-            "featured": bool(base_config.get("featured")),
+            "featured": bool(feat_fname or base_config.get("featured")),
             "banner": base_config.get("banner"),
             "banner_x": base_config.get("banner_x"),
             "banner_y": base_config.get("banner_y"),

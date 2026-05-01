@@ -46,7 +46,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 - **Table and list queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
 - **Inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
-- **Obsidian Bases** — `.base` files with `website: true` rendered as filtered, sorted HTML tables
+- **Obsidian Bases** — publish with `website: true` or filename marker `Title__website.base`; feature on listings with `featured: true` or filename marker `__featured`; views render as filtered, sorted HTML tables
 
 ### Canvas
 
