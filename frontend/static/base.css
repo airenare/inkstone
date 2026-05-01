@@ -1674,10 +1674,73 @@ figcaption {
 .canvas-node-file {
     background: var(--bg);
     display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+
+.canvas-node-file-only-title {
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 4px;
+}
+
+.canvas-file-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.canvas-file-header {
+    flex-shrink: 0;
+    padding: 4px 6px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    background: var(--bg-secondary, var(--bg));
+}
+
+.canvas-file-preview {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: auto;
+    padding: 5px 7px;
+    font-size: 0.72rem;
+    line-height: 1.3;
+    text-align: left;
+    -webkit-overflow-scrolling: touch;
+}
+
+.canvas-file-preview img,
+.canvas-file-preview video,
+.canvas-file-preview audio,
+.canvas-file-preview picture {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+}
+
+.canvas-file-preview iframe {
+    max-width: 100%;
+}
+
+.canvas-file-preview pre {
+    overflow-x: auto;
+    max-width: 100%;
+    font-size: 0.68rem;
+    margin: 0.4em 0;
+}
+
+.canvas-file-preview .callout {
+    font-size: 0.72rem;
+}
+
+.canvas-file-preview .highlight,
+.canvas-file-preview mark {
+    font-size: inherit;
 }
 
 .canvas-file-link,

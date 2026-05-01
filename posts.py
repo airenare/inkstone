@@ -871,8 +871,20 @@ def load_posts():
         print(f"Loaded base: {title} | {url_path}")
 
     # ---- Pass 4: render .canvas visual boards ----
+    embed_by_url = {
+        p["url_path"]: p["html"]
+        for p in all_posts.values()
+        if p.get("post_type") != "canvas"
+    }
+    embed_title_by_url = {
+        p["url_path"]: p["title"]
+        for p in all_posts.values()
+        if p.get("post_type") != "canvas"
+    }
     for (filepath, f, data, title, slug, section, url_path) in candidates_canvas:
-        html = render_canvas(filepath, url_index)
+        html = render_canvas(
+            filepath, url_index, embed_by_url, embed_title_by_url
+        )
         date = _parse_date(data.get("date"), filepath)
         raw_tags = data.get("tags") or []
         try:

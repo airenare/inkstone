@@ -6,9 +6,6 @@
 
 ## P1 — Medium Priority
 
-- [ ] **[Enhancement][Canvas UX] Canvas connectors need directionality** — replace plain curved lines with directional arrows so graph flow is clear and semantically closer to Obsidian canvas.
-- [ ] **[Enhancement][Canvas UX] Render note content inside file cards** — file/note cards should show real scrollable note preview instead of title-only display.
-- [ ] **[Enhancement][Canvas UX] Render media inside file cards** — media placed in the cards need to be displayed properly.
 - [ ] **[Tech Debt][Frontend] Remove Mermaid SVG background workaround** — adopt proper Mermaid v11 config/API so `fixSvgBg()` is no longer needed.
 - [ ] **[Design][Branding] Logo polish pass** — refine provided logo concept/mock-up for geometry balance, contrast, and small-size legibility; ship final web SVG plus favicon-ready variants.
 

@@ -86,8 +86,35 @@ def _ctrl(x, y, side, offset):
     return x, y + offset  # bottom
 
 
-def render_canvas(canvas_path, url_index=None):
-    """Parse a .canvas JSON file and return an HTML string."""
+def _resolve_file_node_url(file_field, url_index):
+    """Return (display_stem, url_path) for a canvas file node."""
+    stem = os.path.splitext(
+        os.path.basename(file_field.replace("\\", "/"))
+    )[0]
+    url = ""
+    if url_index:
+        url = (
+            url_index.get(slugify(stem))
+            or url_index.get(slugify(file_field))
+            or ""
+        )
+        if isinstance(url, dict):
+            url = url.get("url_path", "")
+    return stem, url
+
+
+def render_canvas(
+    canvas_path,
+    url_index=None,
+    post_html_by_url=None,
+    post_title_by_url=None,
+):
+    """Parse a .canvas JSON file and return an HTML string.
+
+    post_html_by_url maps published ``url_path`` to rendered note HTML for
+    scrollable in-card previews on file nodes. post_title_by_url overrides
+    the card header label when present.
+    """
     try:
         with open(canvas_path, encoding="utf-8") as f:
             data = json.load(f)
@@ -112,11 +139,32 @@ def render_canvas(canvas_path, url_index=None):
     node_map = {n["id"]: n for n in nodes}
     out = [f'<div class="canvas-view" style="padding-bottom:{aspect * 100:.2f}%">']
 
-    # SVG layer for edges
+    # SVG layer for edges (arrow markers per stroke color)
+    mid_by_stroke = {}
+    for edge in edges:
+        fn = node_map.get(edge.get("fromNode"))
+        tn = node_map.get(edge.get("toNode"))
+        if not fn or not tn:
+            continue
+        stroke = CANVAS_COLOR_MAP.get(edge.get("color", ""), "currentColor")
+        if stroke not in mid_by_stroke:
+            mid_by_stroke[stroke] = f"carr-{len(mid_by_stroke)}"
+
     out.append(
         '<svg class="canvas-edges" viewBox="0 0 100 100" '
         'preserveAspectRatio="none" aria-hidden="true">'
     )
+    out.append("<defs>")
+    for stroke, mid in mid_by_stroke.items():
+        esc = _html.escape(stroke, quote=True)
+        out.append(
+            f'<marker id="{mid}" viewBox="0 0 10 10" '
+            f'markerWidth="3" markerHeight="3" refX="10" refY="5" '
+            f'orient="auto" markerUnits="userSpaceOnUse">'
+            f'<path d="M0,0 L10,5 L0,10 Z" fill="{esc}" stroke="none" />'
+            f"</marker>"
+        )
+    out.append("</defs>")
     for edge in edges:
         fn = node_map.get(edge.get("fromNode"))
         tn = node_map.get(edge.get("toNode"))
@@ -134,11 +182,14 @@ def render_canvas(canvas_path, url_index=None):
         cx1, cy1 = _ctrl(fx, fy, fs, offset)
         cx2, cy2 = _ctrl(tx, ty, ts, offset)
         stroke = CANVAS_COLOR_MAP.get(edge.get("color", ""), "currentColor")
+        mid = mid_by_stroke[stroke]
+        esc_stroke = _html.escape(stroke, quote=True)
         out.append(
             f'<path d="M{fx:.2f},{fy:.2f} '
             f'C{cx1:.2f},{cy1:.2f} {cx2:.2f},{cy2:.2f} {tx:.2f},{ty:.2f}"'
-            f' stroke="{stroke}" fill="none" stroke-width="0.4"'
-            f' vector-effect="non-scaling-stroke" opacity="0.7" />'
+            f' stroke="{esc_stroke}" fill="none" stroke-width="0.4"'
+            f' vector-effect="non-scaling-stroke" opacity="0.7"'
+            f' marker-end="url(#{mid})" />'
         )
     out.append("</svg>")
 
@@ -192,27 +243,41 @@ def render_canvas(canvas_path, url_index=None):
 
         elif ntype == "file":
             file_field = node.get("file", "")
-            stem = os.path.splitext(os.path.basename(file_field))[0]
-            url = ""
-            if url_index:
-                url = (
-                    url_index.get(slugify(stem))
-                    or url_index.get(slugify(file_field))
-                    or ""
-                )
-                if isinstance(url, dict):
-                    url = url.get("url_path", "")
+            stem, url = _resolve_file_node_url(file_field, url_index)
             esc_stem = _html.escape(stem)
-            inner = (
-                f'<a href="{_html.escape(url)}" class="canvas-file-link">'
-                f"{esc_stem}</a>"
-                if url
-                else f'<span class="canvas-file-name">{esc_stem}</span>'
-            )
-            out.append(
-                f'<div class="canvas-node canvas-node-file" data-id="{nid}"'
-                f' style="{style}">{inner}</div>'
-            )
+            header_label = esc_stem
+            if url and post_title_by_url:
+                t = post_title_by_url.get(url)
+                if t:
+                    header_label = _html.escape(t)
+            preview = ""
+            if url and post_html_by_url:
+                preview = post_html_by_url.get(url) or ""
+            if preview and url:
+                head = (
+                    f'<a href="{_html.escape(url)}" class="canvas-file-link">'
+                    f"{header_label}</a>"
+                )
+                out.append(
+                    f'<div class="canvas-node canvas-node-file" data-id="{nid}"'
+                    f' style="{style}">'
+                    f'<div class="canvas-file-card">'
+                    f'<div class="canvas-file-header">{head}</div>'
+                    f'<div class="canvas-file-preview">{preview}</div>'
+                    f"</div></div>"
+                )
+            else:
+                inner = (
+                    f'<a href="{_html.escape(url)}" class="canvas-file-link">'
+                    f"{header_label}</a>"
+                    if url
+                    else f'<span class="canvas-file-name">{header_label}</span>'
+                )
+                out.append(
+                    f'<div class="canvas-node canvas-node-file'
+                    f' canvas-node-file-only-title" data-id="{nid}"'
+                    f' style="{style}">{inner}</div>'
+                )
 
         elif ntype == "link":
             raw = node.get("url", "")

@@ -2,6 +2,10 @@
 
 ---
 
+## v1.36.0
+
+- ✅ **Canvas UX — directed edges + file card previews** — SVG edges use `marker-end` arrowheads (per stroke color). File nodes that resolve to a published post render a scrollable in-card body preview (`post_html_by_url` / titles from `posts.py` Pass 4); images, video, audio, and code blocks constrained via `.canvas-file-preview` in `base.css`. Demo canvas adds a sample file card linking `Engine Features.md`. (v1.36.0)
+
 ## v1.35.5
 
 - ✅ **Canvas publish via filename (`__website`)** — Obsidian strips custom JSON keys when saving `.canvas` files. Publishing now uses durable filename marker `Title__website.canvas` (case-insensitive suffix): display title is the stem before `__website`; slug from title or optional JSON `slug`. Legacy `"website": true` in JSON still works. `canvas_filename_publish_meta()` in `canvas.py`; Pass 1 logic in `posts.py`. Demo vault file renamed to `blog/My Writing Process__website.canvas`. (v1.35.5)
