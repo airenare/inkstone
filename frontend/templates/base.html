@@ -78,7 +78,7 @@ function mermaidConfig() {
     const light = document.documentElement.getAttribute("data-theme") === "light"
     return {
         startOnLoad: false,
-        theme: light ? "base" : "dark",
+        theme: "base",
         themeVariables: light ? {
             background: "transparent",
             edgeLabelBackground: "transparent",
@@ -91,20 +91,30 @@ function mermaidConfig() {
         } : {
             background: "transparent",
             edgeLabelBackground: "transparent",
+            primaryColor: "#313148",
+            primaryTextColor: "#e8e8d8",
+            primaryBorderColor: "#44445a",
+            lineColor: "#9090a0",
+            secondaryColor: "#252535",
+            tertiaryColor: "#2a2a3e",
+            noteBkgColor: "#2a2a3e",
+            noteTextColor: "#e8e8d8",
+            noteBorderColor: "#44445a",
+            clusterBkg: "#252535",
+            clusterBorder: "#44445a",
+            titleColor: "#e8e8d8",
+            actorBkg: "#313148",
+            actorBorder: "#44445a",
+            actorTextColor: "#e8e8d8",
+            actorLineColor: "#9090a0",
+            signalColor: "#9090a0",
+            signalTextColor: "#e8e8d8",
+            labelBoxBkgColor: "#313148",
+            labelBoxBorderColor: "#44445a",
+            labelTextColor: "#e8e8d8",
+            loopTextColor: "#e8e8d8",
         }
     }
-}
-
-function fixSvgBg() {
-    document.querySelectorAll(".mermaid svg").forEach(svg => {
-        svg.style.background = "transparent"
-        svg.querySelectorAll("rect").forEach(r => {
-            if (r.getAttribute("class") === "background" ||
-                (r.style.fill && r.style.fill !== "none" && !r.closest("g[class]"))) {
-                r.style.fill = "transparent"
-            }
-        })
-    })
 }
 
 async function renderMermaid() {
@@ -125,7 +135,6 @@ async function renderMermaid() {
         }
     })
     await mermaid.run()
-    fixSvgBg()
 }
 
 document.addEventListener("DOMContentLoaded", renderMermaid)
