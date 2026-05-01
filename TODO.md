@@ -6,7 +6,6 @@
 
 ## P1 — Medium Priority
 
-- [ ] **[Tech Debt][Frontend] Remove Mermaid SVG background workaround** — adopt proper Mermaid v11 config/API so `fixSvgBg()` is no longer needed.
 - [ ] **[Design][Branding] Logo polish pass** — refine provided logo concept/mock-up for geometry balance, contrast, and small-size legibility; ship final web SVG plus favicon-ready variants.
 
 ---

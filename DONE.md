@@ -2,6 +2,10 @@
 
 ---
 
+## v1.37.1
+
+- ✅ **Remove Mermaid `fixSvgBg()` workaround** — switched both dark and light modes to `theme: "base"` (Mermaid v11), which fully honours `themeVariables.background: "transparent"`. Dark mode now uses a full set of `base`-theme variables matched to the site's Catppuccin palette (`primaryColor`, `lineColor`, `noteBkgColor`, sequence diagram variables, etc.). The `fixSvgBg()` DOM post-processing function and its call are removed; CSS `rect.background { fill: transparent !important }` remains as a passive safety net. (v1.37.1)
+
 ## v1.37.0
 
 - ✅ **Obsidian Bases: view filters + filename publish/feature markers** — `.base` filters now understand Obsidian-style `file.tags.contains("...")` in addition to existing expressions, so table views can use in-app filter trees directly from `views[].filters`. Publishing/featuring no longer depends on editing YAML in Obsidian: `Title__website.base` publishes, `Title__website__featured.base` publishes and features (case-insensitive suffix parsing, any order), with legacy `website:` / `featured:` still supported. Demo base fixture renamed to `blog/All Posts__website__featured.base`. (v1.37.0)
