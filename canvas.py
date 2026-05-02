@@ -19,8 +19,8 @@ CANVAS_COLOR_MAP = {
     "6": "#a882ff",
 }
 
-# Minimum bezier handle length in % units
-_CTRL_MIN = 3
+# Minimum bezier handle length in px units
+_CTRL_MIN = 50
 
 
 def canvas_filename_publish_meta(filename):
@@ -49,12 +49,12 @@ def canvas_filename_publish_meta(filename):
     return False, raw_stem, raw_stem
 
 
-def _side_point(node, side, min_x, min_y, total_w, total_h):
-    """Return (x_pct, y_pct) for the connection point on a given side."""
-    nx = (node["x"] - min_x) / total_w * 100
-    ny = (node["y"] - min_y) / total_h * 100
-    nw = node["width"] / total_w * 100
-    nh = node["height"] / total_h * 100
+def _side_point(node, side, min_x, min_y):
+    """Return (x_px, y_px) for the connection point on a given side."""
+    nx = node["x"] - min_x
+    ny = node["y"] - min_y
+    nw = node["width"]
+    nh = node["height"]
     if side == "left":
         return nx, ny + nh / 2
     if side == "right":
@@ -177,10 +177,15 @@ def render_canvas(
     max_y = max(n["y"] + n["height"] for n in nodes) + PAD
     total_w = max_x - min_x
     total_h = max_y - min_y
-    aspect = total_h / total_w
 
     node_map = {n["id"]: n for n in nodes}
-    out = [f'<div class="canvas-view" style="padding-bottom:{aspect * 100:.2f}%">']
+    out = [
+        '<div class="canvas-view">',
+        '<button class="canvas-fit-btn" title="Fit to view"'
+        ' aria-label="Fit to view">&#8861;</button>',
+        f'<div class="canvas-stage"'
+        f' style="width:{total_w}px;height:{total_h}px">',
+    ]
 
     _marker_ids = {}
     for edge in edges:
@@ -199,8 +204,9 @@ def render_canvas(
                 _marker_ids[mk] = f"cm-{len(_marker_ids)}"
 
     out.append(
-        '<svg class="canvas-edges" viewBox="0 0 100 100" '
-        'preserveAspectRatio="none" aria-hidden="true">'
+        f'<svg class="canvas-edges"'
+        f' viewBox="0 0 {total_w} {total_h}"'
+        f' aria-hidden="true">'
     )
     out.append("<defs>")
     for (stroke, direction), mid in _marker_ids.items():
@@ -229,8 +235,8 @@ def render_canvas(
             continue
         fs = edge.get("fromSide", "right")
         ts = edge.get("toSide", "left")
-        fx, fy = _side_point(fn, fs, min_x, min_y, total_w, total_h)
-        tx_c, ty_c = _side_point(tn, ts, min_x, min_y, total_w, total_h)
+        fx, fy = _side_point(fn, fs, min_x, min_y)
+        tx_c, ty_c = _side_point(tn, ts, min_x, min_y)
         if fs in ("left", "right"):
             offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.45)
         else:
@@ -252,7 +258,7 @@ def render_canvas(
         out.append(
             f'<path d="M{fx:.2f},{fy:.2f} '
             f'C{cx1:.2f},{cy1:.2f} {cx2:.2f},{cy2:.2f} {tx_c:.2f},{ty_c:.2f}"'
-            f' stroke="{esc_stroke}" fill="none" stroke-width="0.4"'
+            f' stroke="{esc_stroke}" fill="none" stroke-width="1.5"'
             f' vector-effect="non-scaling-stroke" opacity="0.7"'
             f'{marker_end_attr}{marker_start_attr} />'
         )
@@ -267,8 +273,8 @@ def render_canvas(
             continue
         fs = edge.get("fromSide", "right")
         ts = edge.get("toSide", "left")
-        fx, fy = _side_point(fn, fs, min_x, min_y, total_w, total_h)
-        tx_c, ty_c = _side_point(tn, ts, min_x, min_y, total_w, total_h)
+        fx, fy = _side_point(fn, fs, min_x, min_y)
+        tx_c, ty_c = _side_point(tn, ts, min_x, min_y)
         if fs in ("left", "right"):
             offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.45)
         else:
@@ -279,7 +285,7 @@ def render_canvas(
         my = 0.125*fy + 0.375*cy1 + 0.375*cy2 + 0.125*ty_c
         out.append(
             f'<div class="canvas-edge-label"'
-            f' style="left:{mx:.2f}%;top:{my:.2f}%">'
+            f' style="left:{mx:.1f}px;top:{my:.1f}px">'
             f'{_html.escape(label)}</div>'
         )
 
@@ -287,21 +293,24 @@ def render_canvas(
     for node in sorted(nodes, key=lambda n: 0 if n.get("type") == "group" else 1):
         ntype = node.get("type", "text")
         nid = _html.escape(node.get("id", ""))
-        x = (node["x"] - min_x) / total_w * 100
-        y = (node["y"] - min_y) / total_h * 100
-        w = node["width"] / total_w * 100
-        h = node["height"] / total_h * 100
+        x = node["x"] - min_x
+        y = node["y"] - min_y
+        w = node["width"]
+        h = node["height"]
         border = CANVAS_COLOR_MAP.get(node.get("color", ""), "")
-        style = f"left:{x:.3f}%;top:{y:.3f}%;width:{w:.3f}%;height:{h:.3f}%;"
+        style = f"left:{x}px;top:{y}px;width:{w}px;height:{h}px;"
         if border:
-            style += f"border-color:{border};"
+            style += f"border-color:{border};border-width:2px;"
 
         if ntype == "group":
             label = _html.escape(node.get("label", ""))
             lbl = f'<div class="canvas-group-label">{label}</div>' if label else ""
+            group_style = style
+            if border:
+                group_style += f"background-color:{border}14;"
             out.append(
                 f'<div class="canvas-node canvas-group" data-id="{nid}"'
-                f' style="{style}">{lbl}</div>'
+                f' style="{group_style}">{lbl}</div>'
             )
 
         elif ntype == "file":
@@ -355,12 +364,19 @@ def render_canvas(
 
         elif ntype == "link":
             raw = node.get("url", "")
+            try:
+                domain = _urlparse(raw).netloc or raw
+            except Exception:
+                domain = raw
             out.append(
                 f'<div class="canvas-node canvas-node-link" data-id="{nid}"'
                 f' style="{style}">'
                 f'<a href="{_html.escape(raw, quote=True)}" class="canvas-ext-link"'
                 f' target="_blank" rel="noopener">'
-                f"{_html.escape(raw)}</a></div>"
+                f'<span class="canvas-link-icon">&#8599;</span>'
+                f'<span class="canvas-link-domain">{_html.escape(domain)}</span>'
+                f'<span class="canvas-link-url">{_html.escape(raw)}</span>'
+                f"</a></div>"
             )
 
         else:  # text
@@ -375,5 +391,6 @@ def render_canvas(
                 f'<div class="canvas-node-content">{content}</div></div>'
             )
 
-    out.append("</div>")
+    out.append("</div>")  # canvas-stage
+    out.append("</div>")  # canvas-view
     return "\n".join(out)
