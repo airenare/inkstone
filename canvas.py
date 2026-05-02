@@ -182,31 +182,45 @@ def render_canvas(
     node_map = {n["id"]: n for n in nodes}
     out = [f'<div class="canvas-view" style="padding-bottom:{aspect * 100:.2f}%">']
 
-    # SVG layer for edges (arrow markers per stroke color)
-    mid_by_stroke = {}
+    _marker_ids = {}
     for edge in edges:
         fn = node_map.get(edge.get("fromNode"))
         tn = node_map.get(edge.get("toNode"))
         if not fn or not tn:
             continue
         stroke = CANVAS_COLOR_MAP.get(edge.get("color", ""), "currentColor")
-        if stroke not in mid_by_stroke:
-            mid_by_stroke[stroke] = f"carr-{len(mid_by_stroke)}"
+        if edge.get("toEnd", "arrow") == "arrow":
+            mk = (stroke, "end")
+            if mk not in _marker_ids:
+                _marker_ids[mk] = f"cm-{len(_marker_ids)}"
+        if edge.get("fromEnd", "none") == "arrow":
+            mk = (stroke, "start")
+            if mk not in _marker_ids:
+                _marker_ids[mk] = f"cm-{len(_marker_ids)}"
 
     out.append(
         '<svg class="canvas-edges" viewBox="0 0 100 100" '
         'preserveAspectRatio="none" aria-hidden="true">'
     )
     out.append("<defs>")
-    for stroke, mid in mid_by_stroke.items():
+    for (stroke, direction), mid in _marker_ids.items():
         esc = _html.escape(stroke, quote=True)
-        out.append(
-            f'<marker id="{mid}" viewBox="0 0 10 10" '
-            f'markerWidth="3" markerHeight="3" refX="10" refY="5" '
-            f'orient="auto" markerUnits="userSpaceOnUse">'
-            f'<path d="M0,0 L10,5 L0,10 Z" fill="{esc}" stroke="none" />'
-            f"</marker>"
-        )
+        if direction == "end":
+            out.append(
+                f'<marker id="{mid}" viewBox="0 0 10 10" '
+                f'markerWidth="10" markerHeight="10" refX="10" refY="5" '
+                f'orient="auto" markerUnits="userSpaceOnUse">'
+                f'<path d="M0,0 L10,5 L0,10 Z" fill="{esc}" stroke="none" />'
+                f"</marker>"
+            )
+        else:
+            out.append(
+                f'<marker id="{mid}" viewBox="0 0 10 10" '
+                f'markerWidth="10" markerHeight="10" refX="0" refY="5" '
+                f'orient="auto-start-reverse" markerUnits="userSpaceOnUse">'
+                f'<path d="M10,0 L0,5 L10,10 Z" fill="{esc}" stroke="none" />'
+                f"</marker>"
+            )
     out.append("</defs>")
     for edge in edges:
         fn = node_map.get(edge.get("fromNode"))
@@ -216,23 +230,31 @@ def render_canvas(
         fs = edge.get("fromSide", "right")
         ts = edge.get("toSide", "left")
         fx, fy = _side_point(fn, fs, min_x, min_y, total_w, total_h)
-        tx, ty = _side_point(tn, ts, min_x, min_y, total_w, total_h)
-        # Offset scales with the distance so curves never loop back
+        tx_c, ty_c = _side_point(tn, ts, min_x, min_y, total_w, total_h)
         if fs in ("left", "right"):
-            offset = max(_CTRL_MIN, abs(tx - fx) * 0.45)
+            offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.45)
         else:
-            offset = max(_CTRL_MIN, abs(ty - fy) * 0.45)
+            offset = max(_CTRL_MIN, abs(ty_c - fy) * 0.45)
         cx1, cy1 = _ctrl(fx, fy, fs, offset)
-        cx2, cy2 = _ctrl(tx, ty, ts, offset)
+        cx2, cy2 = _ctrl(tx_c, ty_c, ts, offset)
         stroke = CANVAS_COLOR_MAP.get(edge.get("color", ""), "currentColor")
-        mid = mid_by_stroke[stroke]
         esc_stroke = _html.escape(stroke, quote=True)
+        has_end = edge.get("toEnd", "arrow") == "arrow"
+        has_start = edge.get("fromEnd", "none") == "arrow"
+        marker_end_attr = (
+            f' marker-end="url(#{_marker_ids[(stroke, "end")]})"'
+            if has_end else ""
+        )
+        marker_start_attr = (
+            f' marker-start="url(#{_marker_ids[(stroke, "start")]})"'
+            if has_start else ""
+        )
         out.append(
             f'<path d="M{fx:.2f},{fy:.2f} '
-            f'C{cx1:.2f},{cy1:.2f} {cx2:.2f},{cy2:.2f} {tx:.2f},{ty:.2f}"'
+            f'C{cx1:.2f},{cy1:.2f} {cx2:.2f},{cy2:.2f} {tx_c:.2f},{ty_c:.2f}"'
             f' stroke="{esc_stroke}" fill="none" stroke-width="0.4"'
             f' vector-effect="non-scaling-stroke" opacity="0.7"'
-            f' marker-end="url(#{mid})" />'
+            f'{marker_end_attr}{marker_start_attr} />'
         )
     out.append("</svg>")
 
@@ -246,17 +268,15 @@ def render_canvas(
         fs = edge.get("fromSide", "right")
         ts = edge.get("toSide", "left")
         fx, fy = _side_point(fn, fs, min_x, min_y, total_w, total_h)
-        tx, ty = _side_point(tn, ts, min_x, min_y, total_w, total_h)
-        # Place label at the bezier midpoint (t=0.5 approximated as curve midpoint)
+        tx_c, ty_c = _side_point(tn, ts, min_x, min_y, total_w, total_h)
         if fs in ("left", "right"):
-            offset = max(_CTRL_MIN, abs(tx - fx) * 0.45)
+            offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.45)
         else:
-            offset = max(_CTRL_MIN, abs(ty - fy) * 0.45)
+            offset = max(_CTRL_MIN, abs(ty_c - fy) * 0.45)
         cx1, cy1 = _ctrl(fx, fy, fs, offset)
-        cx2, cy2 = _ctrl(tx, ty, ts, offset)
-        # Cubic bezier at t=0.5
-        mx = 0.125*fx + 0.375*cx1 + 0.375*cx2 + 0.125*tx
-        my = 0.125*fy + 0.375*cy1 + 0.375*cy2 + 0.125*ty
+        cx2, cy2 = _ctrl(tx_c, ty_c, ts, offset)
+        mx = 0.125*fx + 0.375*cx1 + 0.375*cx2 + 0.125*tx_c
+        my = 0.125*fy + 0.375*cy1 + 0.375*cy2 + 0.125*ty_c
         out.append(
             f'<div class="canvas-edge-label"'
             f' style="left:{mx:.2f}%;top:{my:.2f}%">'
