@@ -95,8 +95,9 @@ def _restore_mermaid(html_str, blocks):
 
 
 def render_markdown(md, path, url_index=None, dataview_index=None,
-                    note_metadata=None):
-    md = strip_leading_h1(md)
+                    note_metadata=None, skip_strip_h1=False):
+    if not skip_strip_h1:
+        md = strip_leading_h1(md)
     md = convert_media(md, path)
     if dataview_index is not None:
         md = convert_transclusion(md, dataview_index)
