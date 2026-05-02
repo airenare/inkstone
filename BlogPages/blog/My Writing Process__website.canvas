@@ -15,11 +15,11 @@
     {
       "id": "research",
       "type": "text",
-      "text": "**Research**\n\nObsidian notes, highlights, linked concepts.",
+      "text": "## Research\n\n- Obsidian notes\n- Highlights\n- Linked concepts\n\nSee also: [[test_post_1]]",
       "x": -340,
       "y": -220,
       "width": 260,
-      "height": 160,
+      "height": 200,
       "color": "3"
     },
     {
@@ -64,7 +64,7 @@
     {
       "id": "sample-post",
       "type": "file",
-      "file": "blog/Engine Features.md",
+      "file": "blog/test_post_1.md",
       "x": 360,
       "y": 200,
       "width": 300,
@@ -78,7 +78,8 @@
       "x": -380,
       "y": -260,
       "width": 680,
-      "height": 620
+      "height": 620,
+      "color": "3"
     }
   ],
   "edges": [
@@ -88,7 +89,9 @@
       "fromSide": "right",
       "toNode": "research",
       "toSide": "left",
-      "label": "explore"
+      "label": "explore",
+      "fromEnd": "arrow",
+      "toEnd": "arrow"
     },
     {
       "id": "e2",
@@ -124,7 +127,8 @@
       "fromSide": "bottom",
       "toNode": "sample-post",
       "toSide": "top",
-      "label": "example"
+      "label": "example",
+      "toEnd": "none"
     }
   ]
 }
