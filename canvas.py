@@ -1,9 +1,10 @@
 import html as _html
 import json
 import os
-import re
+from urllib.parse import urlparse as _urlparse
 
 import config as _config
+from converters import render_markdown as _render_markdown
 from obsidian_syntax import slugify
 
 
@@ -46,19 +47,6 @@ def canvas_filename_publish_meta(filename):
         display = base if base else raw_stem
         return True, display, raw_stem
     return False, raw_stem, raw_stem
-
-
-def _canvas_text_to_html(text):
-    """Minimal markdown rendering for canvas text nodes."""
-    escaped = _html.escape(text)
-    parts = []
-    for line in escaped.split("\n"):
-        line = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", line)
-        line = re.sub(r"__(.+?)__", r"<strong>\1</strong>", line)
-        line = re.sub(r"\*(.+?)\*", r"<em>\1</em>", line)
-        line = re.sub(r"`(.+?)`", r"<code>\1</code>", line)
-        parts.append(line)
-    return "<br>".join(parts)
 
 
 def _side_point(node, side, min_x, min_y, total_w, total_h):
@@ -356,7 +344,11 @@ def render_canvas(
             )
 
         else:  # text
-            content = _canvas_text_to_html(node.get("text", ""))
+            raw_text = node.get("text", "")
+            content, _ = _render_markdown(
+                raw_text, canvas_path, url_index=url_index,
+                skip_strip_h1=True,
+            )
             out.append(
                 f'<div class="canvas-node canvas-node-text" data-id="{nid}"'
                 f' style="{style}">'
