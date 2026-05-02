@@ -1606,20 +1606,35 @@ figcaption {
 .canvas-view {
     position: relative;
     width: 100%;
-    height: 0; /* padding-bottom set inline as aspect ratio */
+    height: min(80vh, 600px);
     margin: 2em 0;
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
     background: var(--bg-secondary, var(--bg));
+    cursor: grab;
+    user-select: none;
+}
+
+.canvas-view:active {
+    cursor: grabbing;
+}
+
+.canvas-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
 }
 
 .canvas-edges {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
+    overflow: visible;
     color: var(--text-muted);
 }
 
@@ -1635,6 +1650,27 @@ figcaption {
     white-space: nowrap;
     pointer-events: none;
     z-index: 2;
+}
+
+.canvas-fit-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    z-index: 10;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.canvas-fit-btn:hover {
+    opacity: 1;
+    color: var(--text);
 }
 
 .canvas-node {
@@ -1769,19 +1805,43 @@ figcaption {
 }
 
 .canvas-ext-link {
-    font-size: 0.75rem;
-    color: var(--link);
-    word-break: break-all;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
     text-decoration: none;
+    color: var(--link);
+    padding: 6px;
+    text-align: center;
 }
 
-.canvas-ext-link:hover {
+.canvas-ext-link:hover .canvas-link-domain {
     text-decoration: underline;
+}
+
+.canvas-link-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+    opacity: 0.7;
+}
+
+.canvas-link-domain {
+    font-size: 0.78rem;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.canvas-link-url {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    word-break: break-all;
+    opacity: 0.75;
 }
 
 .canvas-group {
     background: transparent;
-    border: 2px dashed var(--border);
+    border: 2px solid var(--border);
     border-radius: 6px;
     z-index: 0;
     overflow: visible;
