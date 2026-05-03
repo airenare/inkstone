@@ -3,6 +3,7 @@
 *Completed items live in [DONE.md](DONE.md).*
 
 ---
+## P0 - High Priority
 
 Before next task - The working directory was renamed from OnyxFolio to InkStone. Make sure everything works with this name change (docs, memory, index, etc.)
 
