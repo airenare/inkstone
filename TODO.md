@@ -4,6 +4,8 @@
 
 ---
 
+Before next task - The working directory was renamed from OnyxFolio to InkStone. Make sure everything works with this name change (docs, memory, index, etc.)
+
 ## P1 — Medium Priority
 
 - [ ] **[Design][Branding] Logo polish pass** — refine provided logo concept/mock-up for geometry balance, contrast, and small-size legibility; ship final web SVG plus favicon-ready variants.
