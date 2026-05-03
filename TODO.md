@@ -13,7 +13,7 @@ Before next task - The working directory was renamed from OnyxFolio to InkStone.
 
 - [ ] **[Enhancement][Canvas UX]** Add wide mode for canvas pages: a button that user can press to make the canvas span almost the whole window width and height. Might be necessary to view a complex canvas and don't feel restrained.
 
-- [ ] **[Enhancement][Canvas UX]** Make the lines connecting the cards more curvy at the ends.
+- [ ] **[Enhancement][Canvas UX]** Make the lines connecting the cards more curvy at the ends. They should curve from vertical to horizontal with less radius.
 
 ---
 
