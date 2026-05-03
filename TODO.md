@@ -8,6 +8,10 @@
 
 - [ ] **[Design][Branding] Logo polish pass** — refine provided logo concept/mock-up for geometry balance, contrast, and small-size legibility; ship final web SVG plus favicon-ready variants.
 
+- [ ] **[Enhancement][Canvas UX]** Add wide mode for canvas pages: a button that user can press to make the canvas span almost the whole window width and height. Might be necessary to view a complex canvas and don't feel restrained.
+
+- [ ] **[Enhancement][Canvas UX]** Make the lines connecting the cards more curvy at the ends.
+
 ---
 
 ## P2 — Lower Priority

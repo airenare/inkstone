@@ -1,16 +1,14 @@
 title: All Blog Posts
 summary: A database view of all blog posts.
-
 filters:
   and:
     - file.inFolder("blog")
-
 views:
   - type: table
     name: Table
     filters:
       and:
-        - file.tags.contains("inkstone")
+        - file.inFolder("blog")
     order:
       - file.name
       - file.folder
@@ -20,5 +18,5 @@ views:
       - type
       - summary
     sort:
-      - column: date
+      - property: date
         direction: DESC

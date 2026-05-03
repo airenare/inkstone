@@ -157,7 +157,13 @@
       "Bash(gh repo *)",
       "Bash(awk '{print $2}')",
       "Bash(xargs '-I{}' sh -c ' *)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(curl -s http://localhost:5000/blog/my-writing-process)",
+      "Bash(wait)",
+      "Bash(curl -s http://localhost:8000/blog/my-writing-process)",
+      "Bash(pkill -f \"python3.*app.py\")",
+      "Bash(VAULT_PATH=/home/air/Documents/Obsidian/obsidian/antonbakulin.com /home/air/venv/3.14/bin/python3 app.py)",
+      "Bash(curl -s http://localhost:8000/inkstone/documentation-map)"
     ]
   }
 }
