@@ -521,6 +521,7 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
     function initCanvas(view) {
         var stage = view.querySelector(".canvas-stage");
         var fitBtn = view.querySelector(".canvas-fit-btn");
+        var wideBtn = view.querySelector(".canvas-wide-btn");
         if (!stage) return;
 
         var tx = 0, ty = 0, scale = 1;
@@ -630,6 +631,24 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
             fitBtn.addEventListener("click", function(e) {
                 e.stopPropagation();
                 fitToView();
+            });
+        }
+
+        if (wideBtn) {
+            wideBtn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                var isWide = view.classList.toggle("canvas-wide");
+                wideBtn.innerHTML = isWide ? "&times;" : "&#9974;";
+                wideBtn.title = isWide ? "Exit wide view" : "Wide view";
+                requestAnimationFrame(fitToView);
+            });
+            document.addEventListener("keydown", function(e) {
+                if (e.key === "Escape" && view.classList.contains("canvas-wide")) {
+                    view.classList.remove("canvas-wide");
+                    wideBtn.innerHTML = "&#9974;";
+                    wideBtn.title = "Wide view";
+                    requestAnimationFrame(fitToView);
+                }
             });
         }
 

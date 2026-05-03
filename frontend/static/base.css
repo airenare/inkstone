@@ -1673,6 +1673,37 @@ figcaption {
     color: var(--text);
 }
 
+.canvas-wide-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 44px;
+    z-index: 10;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.canvas-wide-btn:hover {
+    opacity: 1;
+    color: var(--text);
+}
+
+.canvas-view.canvas-wide {
+    position: fixed;
+    inset: 16px;
+    z-index: 200;
+    width: auto;
+    height: auto;
+    margin: 0;
+    border-radius: 12px;
+}
+
 .canvas-node {
     position: absolute;
     box-sizing: border-box;

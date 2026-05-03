@@ -2,6 +2,16 @@
 
 ---
 
+## v1.39.0
+
+- ✅ **P0: OnyxFolio → InkStone rename cleanup** — created new `inkstone` Pinecone index (namespace `codebase`), migrated all codebase records from `onyxfolio`; removed stale OnyxFolio paths from `.claude/settings.local.json`; created session memory files. Demo canvas already had correct name from prior commit. (v1.39.0)
+- ✅ **Canvas wide mode** — added ⛶ button (`canvas-wide-btn`) that toggles `.canvas-wide` CSS class on the viewport, expanding the canvas to `position: fixed; inset: 16px` (near full window); Esc closes it; button icon toggles between ⛶ and ×; `fitToView()` re-runs after toggle. (v1.39.0)
+- ✅ **Canvas curvier edges** — raised `_CTRL_MIN` from 50 → 100 and bezier offset multiplier from 0.45 → 0.55, giving more pronounced S-curves especially on closely-spaced nodes. (v1.39.0)
+
+## v1.38.0
+
+- ✅ **Canvas UX upgrade — pan/zoom, markdown, edge direction, polish** — interactive pan/zoom via vanilla JS `initCanvas()`, full `render_markdown()` pipeline for text nodes (`skip_strip_h1=True`), `fromEnd`/`toEnd` edge directionality per jsoncanvas spec, px-based node layout with `.canvas-stage` wrapper, fit-to-view button, link node domain/icon, group color tint. (v1.38.0)
+
 ## v1.37.1
 
 - ✅ **Remove Mermaid `fixSvgBg()` workaround** — switched both dark and light modes to `theme: "base"` (Mermaid v11), which fully honours `themeVariables.background: "transparent"`. Dark mode now uses a full set of `base`-theme variables matched to the site's Catppuccin palette (`primaryColor`, `lineColor`, `noteBkgColor`, sequence diagram variables, etc.). The `fixSvgBg()` DOM post-processing function and its call are removed; CSS `rect.background { fill: transparent !important }` remains as a passive safety net. (v1.37.1)

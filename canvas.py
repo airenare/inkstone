@@ -20,7 +20,7 @@ CANVAS_COLOR_MAP = {
 }
 
 # Minimum bezier handle length in px units
-_CTRL_MIN = 50
+_CTRL_MIN = 100
 
 
 def canvas_filename_publish_meta(filename):
@@ -183,6 +183,8 @@ def render_canvas(
         '<div class="canvas-view">',
         '<button class="canvas-fit-btn" title="Fit to view"'
         ' aria-label="Fit to view">&#8861;</button>',
+        '<button class="canvas-wide-btn" title="Wide view"'
+        ' aria-label="Toggle wide view">&#9974;</button>',
         f'<div class="canvas-stage"'
         f' style="width:{total_w}px;height:{total_h}px">',
     ]
@@ -238,9 +240,9 @@ def render_canvas(
         fx, fy = _side_point(fn, fs, min_x, min_y)
         tx_c, ty_c = _side_point(tn, ts, min_x, min_y)
         if fs in ("left", "right"):
-            offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.45)
+            offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.55)
         else:
-            offset = max(_CTRL_MIN, abs(ty_c - fy) * 0.45)
+            offset = max(_CTRL_MIN, abs(ty_c - fy) * 0.55)
         cx1, cy1 = _ctrl(fx, fy, fs, offset)
         cx2, cy2 = _ctrl(tx_c, ty_c, ts, offset)
         stroke = CANVAS_COLOR_MAP.get(edge.get("color", ""), "currentColor")
@@ -276,9 +278,9 @@ def render_canvas(
         fx, fy = _side_point(fn, fs, min_x, min_y)
         tx_c, ty_c = _side_point(tn, ts, min_x, min_y)
         if fs in ("left", "right"):
-            offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.45)
+            offset = max(_CTRL_MIN, abs(tx_c - fx) * 0.55)
         else:
-            offset = max(_CTRL_MIN, abs(ty_c - fy) * 0.45)
+            offset = max(_CTRL_MIN, abs(ty_c - fy) * 0.55)
         cx1, cy1 = _ctrl(fx, fy, fs, offset)
         cx2, cy2 = _ctrl(tx_c, ty_c, ts, offset)
         mx = 0.125*fx + 0.375*cx1 + 0.375*cx2 + 0.125*tx_c
