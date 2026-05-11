@@ -216,21 +216,19 @@ def attachments(path):
     return send_from_directory(VAULT_PATH, path)
 
 
-# Favicon: vault root overrides (favicon.ico / favicon.png / favicon.svg),
+# Favicon: vault root overrides (favicon.ico / favicon.png),
 # falling back to the built-in InkStone defaults in frontend/static/.
-_FAVICON_CANDIDATES = ["favicon.ico", "favicon.png", "favicon.svg"]
+_FAVICON_CANDIDATES = ["favicon.ico", "favicon.png"]
 
 # Map each route to the static fallback filename and MIME type
 _FAVICON_DEFAULTS = {
     "/favicon.ico": ("favicon.ico", "image/x-icon"),
     "/favicon.png": ("favicon-32.png", "image/png"),
-    "/favicon.svg": ("logo.svg", "image/svg+xml"),
 }
 
 
 @app.route("/favicon.ico")
 @app.route("/favicon.png")
-@app.route("/favicon.svg")
 def favicon():
     for name in _FAVICON_CANDIDATES:
         vault_favicon = os.path.join(VAULT_PATH, name)

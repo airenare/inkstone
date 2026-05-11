@@ -7,7 +7,7 @@ show_tags: false
 title: InkStone
 theme: omarchy
 default_theme: dark
-icon: /static/logo.svg
+icon: /static/InkStoneLogo.png
 ---
 
 # InkStone

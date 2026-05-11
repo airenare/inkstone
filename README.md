@@ -58,7 +58,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Auto-listings** — folders with no explicit index file get an auto-generated listing page automatically
 - **Banner images** — `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/`, then `ATTACHMENTS_PATH` from `.env`
-- **Favicon** — default InkStone favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
+- **Favicon** — default InkStone favicon included; override by placing `favicon.ico` or `favicon.png` in your vault root
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD
 - **Date last modified** — `updated:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
 - **Site icon** — `icon: path/to/image` shows an image beside the site title; cascades to all child pages unless overridden
