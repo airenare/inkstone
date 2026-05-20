@@ -2,6 +2,11 @@
 
 ---
 
+## v1.40.0
+
+- ✅ **[Design][Branding] Logo polish pass** — refined logo concept for geometry balance, contrast, and small-size legibility; shipped final web SVG plus favicon-ready variants. (v1.40.0)
+- ✅ **[Canvas UX] Upgrade canvas toward jsoncanvas-level experience** — canvas rendering moved closer to jsoncanvas.org capabilities with wide mode, curvier edges, pan/zoom, markdown nodes, directed edges, file card previews, and site-matched styling. (v1.40.0)
+
 ## v1.39.0
 
 - ✅ **P0: OnyxFolio → InkStone rename cleanup** — created new `inkstone` Pinecone index (namespace `codebase`), migrated all codebase records from `onyxfolio`; removed stale OnyxFolio paths from `.claude/settings.local.json`; created session memory files. Demo canvas already had correct name from prior commit. (v1.39.0)
