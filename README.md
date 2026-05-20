@@ -250,6 +250,16 @@ The import chain is strictly one-way: `config ← obsidian_syntax / dataview ←
 | `/books/project-hail-mary` | Example of a private note placeholder |
 | `/blog/my-writing-process` | Canvas diagram — writing workflow with colored nodes and edges |
 
+## Documentation vault
+
+`InkStone_Docs/` ships with the repo as the official documentation site — itself an InkStone vault. Serve it with:
+
+```bash
+VAULT_PATH=InkStone_Docs/ python3 app.py
+```
+
+Covers Getting Started, Writing, Site Structure, Features, and Deployment across 33 pages.
+
 ---
 
 ## License

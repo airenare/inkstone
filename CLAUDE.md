@@ -196,6 +196,21 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 | `gallery/arts/Watercolor Algorithms.md` | `/gallery/arts/watercolor-algorithms` | Subfolder post with wiki-links |
 | `blog/My Writing Process__website.canvas` | `/blog/my-writing-process` | Published canvas (`__website` filename marker; JSON graph only) |
 
+### Documentation Vault
+
+`InkStone_Docs/` is the official documentation site — a self-hosted InkStone vault committed to the repo. Serve it with `VAULT_PATH=InkStone_Docs/ /home/air/venv/3.14/bin/python3 app.py`. It is a standalone vault (no live-site vault locally). 33 files across 6 sections:
+
+| Section | Pages |
+|---------|-------|
+| `getting-started/` | Getting Started, Quick Start, Installation, Configuration |
+| `writing/` | Publishing Notes, Frontmatter Reference, Markdown Features, Links and Embeds, Images and Media, Dataview Queries, Canvas Boards, Obsidian Bases, Note Templates |
+| `site-structure/` | URL Mapping, Page Types, Navigation |
+| `features/` | Theming, Branding, Search and Tags, Multilingual, Private Notes, Comments, Social Links, SEO and Feeds |
+| `deployment/` | Local Development, Docker, Production Deployment |
+| root | `InkStone Docs.md` (homepage) |
+
+Keep in sync when features are added, changed, or removed. Update the relevant doc page(s) in the same commit.
+
 ## Workflow Rules
 
 - **Context retrieval:** At the start of every session, search the `inkstone` Pinecone index (namespace `codebase`) with a query relevant to the task at hand — e.g. "routing and data flow" or "how does callout rendering work". Pull 3–5 records. This replaces re-reading source files for architectural questions and keeps context usage low.
