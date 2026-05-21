@@ -2,7 +2,9 @@
 website: true
 title: Images and Media
 date: 2026-01-01
-summary: "Lightbox images, sliders, captions, banner images, video, and audio embeds."
+summary: Lightbox images, sliders, captions, banner images, video, and audio embeds.
+featured: true
+priority: 4
 ---
 
 ## Single image — lightbox
@@ -20,6 +22,39 @@ Renders as a clickable image that opens a full-screen lightbox.
 ```
 
 The caption is shown below the image and as alt text.
+
+## Centered image
+
+Use the `inline` flag to render a centered block figure that is not part of the lightbox:
+
+```markdown
+![[photo.jpg|inline]]
+![[photo.jpg|inline 400]]
+![[photo.jpg|inline 400 A caption]]
+```
+
+## Float image beside text
+
+Use `left` or `right` to float an image so surrounding text wraps beside it:
+
+```markdown
+![[photo.jpg|left]]
+![[photo.jpg|right 300]]
+![[photo.jpg|left 300 A caption]]
+```
+
+The image floats until the text runs out or until a horizontal rule clears the float:
+
+```markdown
+![[photo.jpg|left 250]]
+This paragraph wraps beside the image.
+
+---
+
+This paragraph is below the image at full width.
+```
+
+Float images do not open a lightbox when clicked.
 
 ## Slider
 
@@ -79,3 +114,15 @@ When InkStone resolves `![[filename]]`, it searches in this order:
 
 > [!tip] Keep images close to their notes
 > Put images in a `_attachments/` subfolder next to the markdown file. A post in `blog/` uses `blog/_attachments/`. This keeps attachments scoped and portable.
+
+## Flag reference
+
+| Syntax | Effect |
+|--------|--------|
+| `![[img.jpg]]` | Lightbox gallery image |
+| `![[img.jpg\|inline]]` | Centred block figure, not in lightbox |
+| `![[img.jpg\|left]]` | Float left, text wraps right |
+| `![[img.jpg\|right]]` | Float right, text wraps left |
+| `![[img.jpg\|300]]` | Max-width 300 px |
+| `![[img.jpg\|My Caption]]` | Caption below image |
+| `![[img.jpg\|left 300 My Caption]]` | Combine flags freely |

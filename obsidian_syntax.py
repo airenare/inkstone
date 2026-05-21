@@ -288,22 +288,38 @@ def _resolve_attachment(filename, folder):
 
 
 def _parse_caption(cap):
-    """Parse the pipe argument of ![[file|...]] into (inline, width, caption)."""
+    """Parse ![[file|...]] pipe arg into (inline, float_side, width, caption).
+
+    float_side is 'left', 'right', or None. inline and float_side are
+    mutually exclusive; if 'inline' appears, float_side stays None.
+    """
     if not cap:
-        return False, None, ""
+        return False, None, None, ""
     text = cap.strip()
+
     is_inline = text == "inline" or text.startswith("inline ")
     if is_inline:
         text = text[len("inline"):].strip()
+
+    float_side = None
+    if not is_inline:
+        if text == "left" or text.startswith("left "):
+            float_side = "left"
+            text = text[len("left"):].strip()
+        elif text == "right" or text.startswith("right "):
+            float_side = "right"
+            text = text[len("right"):].strip()
+
     parts = text.split(None, 1)
     width = None
     if parts and parts[0].isdigit():
         width = parts[0]
         text = parts[1] if len(parts) > 1 else ""
-    elif not is_inline and text.isdigit():
+    elif not is_inline and float_side is None and text.isdigit():
         width = text
         text = ""
-    return is_inline, width, text
+
+    return is_inline, float_side, width, text
 
 
 def convert_media(md, md_path):
@@ -428,9 +444,30 @@ def convert_media(md, md_path):
                     f'<audio src="{href}" controls></audio>'
                 )
             else:
-                is_inline, width, img_caption = _parse_caption(caption)
+                is_inline, float_side, width, img_caption = (
+                    _parse_caption(caption)
+                )
                 width_attr = f' style="max-width:{width}px"' if width else ""
-                if is_inline:
+                if float_side:
+                    if gallery:
+                        output.append(flush_gallery())
+                    img_tag = (
+                        f'<img src="{href}" alt="{img_caption}"'
+                        f'{width_attr} loading="lazy">'
+                    )
+                    css_class = f"figure-{float_side}"
+                    if img_caption:
+                        output.append(
+                            f'<figure class="{css_class}">{img_tag}'
+                            f'<figcaption>{img_caption}</figcaption></figure>'
+                        )
+                    else:
+                        output.append(
+                            f'<figure class="{css_class}">{img_tag}</figure>'
+                        )
+                elif is_inline:
+                    if gallery:
+                        output.append(flush_gallery())
                     img_tag = (
                         f'<img src="{href}"{width_attr}'
                         f' loading="lazy">'

@@ -197,6 +197,7 @@ hr {
     border: none;
     border-top: 1px solid var(--border);
     margin: 2em 0;
+    clear: both;
 }
 
 img{
@@ -1596,6 +1597,41 @@ figcaption {
     color: var(--text-muted);
     text-align: center;
     font-style: italic;
+}
+
+figure.figure-left,
+figure.figure-right {
+    display: block;
+    max-width: 45%;
+    margin-bottom: 1em;
+}
+
+figure.figure-left {
+    float: left;
+    margin-right: 1.5em;
+    margin-left: 0;
+}
+
+figure.figure-right {
+    float: right;
+    margin-left: 1.5em;
+    margin-right: 0;
+}
+
+figure.figure-left img,
+figure.figure-right img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 600px) {
+    figure.figure-left,
+    figure.figure-right {
+        float: none;
+        max-width: 100%;
+        margin: 1.5em auto;
+    }
 }
 
 
