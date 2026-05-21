@@ -151,7 +151,22 @@
       "Bash(curl -s http://localhost:8000/blog/my-writing-process)",
       "Bash(pkill -f \"python3.*app.py\")",
       "Bash(VAULT_PATH=/home/air/Documents/Obsidian/obsidian/antonbakulin.com /home/air/venv/3.14/bin/python3 app.py)",
-      "Bash(curl -s http://localhost:8000/inkstone/documentation-map)"
+      "Bash(curl -s http://localhost:8000/inkstone/documentation-map)",
+      "Bash(mkdir -p /home/air/Documents/GithubRepos/InkStone/frontend/static/old_logo)",
+      "Bash(mv /home/air/Documents/GithubRepos/InkStone/frontend/static/favicon-16.png /home/air/Documents/GithubRepos/InkStone/frontend/static/favicon-32.png /home/air/Documents/GithubRepos/InkStone/frontend/static/favicon-192.png /home/air/Documents/GithubRepos/InkStone/frontend/static/favicon-512.png /home/air/Documents/GithubRepos/InkStone/frontend/static/favicon.ico /home/air/Documents/GithubRepos/InkStone/frontend/static/logo.svg /home/air/Documents/GithubRepos/InkStone/frontend/static/old_logo/)",
+      "Bash(mkdir -p /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/_attachments /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/getting-started /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/writing /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/site-structure /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/features /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/deployment)",
+      "Bash(cp /home/air/Documents/GithubRepos/InkStone/frontend/static/InkStoneLogo/InkStoneLogo.png /home/air/Documents/GithubRepos/InkStone/InkStone_Docs/_attachments/InkStoneLogo.png)",
+      "Bash(VAULT_PATH=./InkStone_Docs /home/air/venv/3.14/bin/python3 app.py)",
+      "Bash(curl -s http://127.0.0.1:8000/getting-started)",
+      "Bash(curl -s http://127.0.0.1:8000/writing/markdown-features)",
+      "Bash(curl -s http://127.0.0.1:8000/deployment/docker)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/getting-started)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/getting-started/quick-start)",
+      "Bash(curl -s http://127.0.0.1:8000/getting-started/quick-start)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/features/comments)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/features/social-links)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/features/branding)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://127.0.0.1:8000/writing/note-templates)"
     ]
   }
 }
