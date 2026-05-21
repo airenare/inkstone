@@ -9,7 +9,7 @@ priority: 0
 
 > [!tip]+ Local (recommended for writing)
 > ```bash
-> git clone https://github.com/your-org/inkstone
+> git clone https://github.com/airenare/inkstone.git
 > cd inkstone
 > pip install -r requirements.txt
 > VAULT_PATH=/path/to/your/vault python3 app.py

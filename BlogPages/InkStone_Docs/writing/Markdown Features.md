@@ -122,7 +122,7 @@ def hello(name: str) -> str:
 
 ````markdown
 ```bash
-git clone https://github.com/your-org/inkstone
+git clone https://github.com/airenare/inkstone.git
 cd inkstone && pip install -r requirements.txt
 ```
 ````

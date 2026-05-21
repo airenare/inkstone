@@ -15,7 +15,7 @@ priority: 0
 ## Setup and run
 
 ```bash
-git clone https://github.com/your-org/inkstone
+git clone https://github.com/airenare/inkstone.git
 cd inkstone
 pip install -r requirements.txt
 python3 app.py
