@@ -2,7 +2,9 @@
 website: true
 title: Configuration Reference
 date: 2026-01-01
-summary: "All environment variables and .env options."
+summary: All environment variables and .env options.
+featured: true
+priority: 2
 ---
 
 InkStone is configured entirely through environment variables. Create a `.env` file in the project root:

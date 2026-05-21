@@ -2,7 +2,9 @@
 website: true
 title: Links and Embeds
 date: 2026-01-01
-summary: "Wiki-links, aliases, anchors, block references, and note transclusion."
+summary: Wiki-links, aliases, anchors, block references, and note transclusion.
+featured: true
+priority: 3
 ---
 
 ## Wiki-links

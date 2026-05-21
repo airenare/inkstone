@@ -2,7 +2,9 @@
 website: true
 title: Note Templates
 date: 2026-01-01
-summary: "Create new notes with correct InkStone frontmatter using QuickAdd or Obsidian's core Templates plugin."
+summary: Create notes with correct InkStone frontmatter using QuickAdd or Obsidian's Templates plugin.
+featured: true
+priority: 8
 ---
 
 The demo vault ships with five ready-to-use templates in `templates/`. Two Obsidian plugins can use them to auto-fill frontmatter when you create a new note.

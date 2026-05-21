@@ -2,7 +2,9 @@
 website: true
 title: Theming
 date: 2026-01-01
-summary: "Dark/light/system mode toggle, default theme, and the Omarchy theme."
+summary: Dark/light/system mode toggle, default theme, and the Omarchy theme.
+featured: true
+priority: 0
 ---
 
 ## Three-state theme toggle

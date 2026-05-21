@@ -2,7 +2,9 @@
 website: true
 title: Multilingual
 date: 2026-01-01
-summary: "Publish notes in multiple languages with filename suffixes and UI translations."
+summary: Publish notes in multiple languages with filename suffixes and UI translations.
+featured: true
+priority: 3
 ---
 
 ## Language variants via filename suffix

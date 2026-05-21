@@ -2,7 +2,7 @@
 website: true
 title: Frontmatter Reference
 date: 2026-01-01
-summary: "Every frontmatter field InkStone recognises, with type and example."
+summary: Every frontmatter field InkStone recognises, with type and example.
 featured: true
 priority: 1
 ---

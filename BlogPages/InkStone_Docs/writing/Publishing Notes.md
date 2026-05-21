@@ -2,7 +2,7 @@
 website: true
 title: Publishing Notes
 date: 2026-01-01
-summary: "The minimum frontmatter to publish a note, plus all optional fields."
+summary: The minimum frontmatter to publish a note, plus all optional fields.
 featured: true
 priority: 0
 ---

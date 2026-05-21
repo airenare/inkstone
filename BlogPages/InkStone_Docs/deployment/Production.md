@@ -2,7 +2,9 @@
 website: true
 title: Production Deployment
 date: 2026-01-01
-summary: "Deploy with Coolify, configure webhooks, and set up SSL."
+summary: Deploy with Coolify, configure webhooks, and set up SSL.
+featured: true
+priority: 2
 ---
 
 > [!warning] Use gunicorn in production

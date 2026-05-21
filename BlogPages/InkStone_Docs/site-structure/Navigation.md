@@ -2,7 +2,9 @@
 website: true
 title: Navigation
 date: 2026-01-01
-summary: "How nav links are generated, how to pin standalone pages, and breadcrumb behaviour."
+summary: How nav links are generated, how to pin standalone pages, and breadcrumb behaviour.
+featured: true
+priority: 2
 ---
 
 ## Auto-generated nav

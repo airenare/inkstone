@@ -2,7 +2,9 @@
 website: true
 title: SEO and Feeds
 date: 2026-01-01
-summary: "RSS feeds, sitemap, OpenGraph meta tags, JSON-LD structured data, and print styles."
+summary: RSS feeds, sitemap, OpenGraph meta tags, JSON-LD structured data, and print styles.
+featured: true
+priority: 7
 ---
 
 ## RSS

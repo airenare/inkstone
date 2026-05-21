@@ -2,8 +2,11 @@
 website: true
 title: Dataview Queries
 date: 2026-01-01
-summary: "Server-side TABLE and LIST queries with FROM, WHERE, SORT, LIMIT, and GROUP BY."
-tags: [dataview]
+summary: Server-side TABLE and LIST queries with FROM, WHERE, SORT, LIMIT, and GROUP BY.
+tags:
+  - dataview
+featured: true
+priority: 5
 ---
 
 > [!note] No plugin required
@@ -104,4 +107,4 @@ This note is called `= this.title`.
 There are `= dv.pages("#python").length` Python posts in the vault.
 ```
 
-Inline queries use the `= expression` syntax inside backticks.
+Inline queries use the `= expression` syntax inside backticks. Live example — this page is called `= this.title` and the vault currently has `= dv.pages("#python").length` Python-tagged posts.

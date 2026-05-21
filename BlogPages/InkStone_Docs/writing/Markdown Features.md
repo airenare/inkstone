@@ -2,8 +2,12 @@
 website: true
 title: Markdown Features
 date: 2026-01-01
-summary: "Callouts, checkboxes, highlights, math, footnotes, and syntax highlighting."
-tags: [markdown, syntax]
+summary: Callouts, checkboxes, highlights, math, footnotes, and syntax highlighting.
+tags:
+  - markdown
+  - syntax
+featured: true
+priority: 2
 ---
 
 ## Callouts

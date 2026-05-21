@@ -2,7 +2,9 @@
 website: true
 title: Page Types
 date: 2026-01-01
-summary: "homepage, listing, book, and translations — what each type does."
+summary: homepage, listing, book, and translations — what each type does.
+featured: true
+priority: 1
 ---
 
 The `type:` frontmatter field controls how InkStone renders a note. Most notes have no `type:` and render as standard posts.

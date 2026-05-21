@@ -2,7 +2,9 @@
 website: true
 title: Private Notes
 date: 2026-01-01
-summary: "Per-note access tokens and the master ACCESS_TOKEN for protecting content."
+summary: Per-note access tokens and the master ACCESS_TOKEN for protecting content.
+featured: true
+priority: 4
 ---
 
 ## Notes without website: true

@@ -2,7 +2,9 @@
 website: true
 title: Social Links
 date: 2026-01-01
-summary: "Add social profile links to the site footer — icon + handle, detected automatically from the URL."
+summary: Add social profile links to the site footer — icon + handle, detected automatically from the URL.
+featured: true
+priority: 6
 ---
 
 Add one key per platform to your **root homepage** frontmatter. InkStone detects the network from the key name, extracts the handle from the URL, and renders icon + handle in the footer.

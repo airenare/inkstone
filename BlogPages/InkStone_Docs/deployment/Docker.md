@@ -2,7 +2,9 @@
 website: true
 title: Docker
 date: 2026-01-01
-summary: "Run InkStone in a container with a mounted vault or a cloned private repo."
+summary: Run InkStone in a container with a mounted vault or a cloned private repo.
+featured: true
+priority: 1
 ---
 
 ## Basic run

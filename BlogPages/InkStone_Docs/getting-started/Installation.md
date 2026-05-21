@@ -2,7 +2,9 @@
 website: true
 title: Installation
 date: 2026-01-01
-summary: "Requirements, install paths, and first-run checklist."
+summary: Requirements, install paths, and first-run checklist.
+featured: true
+priority: 1
 ---
 
 ## Requirements

@@ -1,0 +1,16 @@
+views:
+  - type: table
+    name: Table
+    filters:
+      and:
+        - file.folder.startsWith("InkStone_Docs")
+        - type != "listing"
+        - file.ext == "md"
+        - file.folder == "InkStone_Docs/deployment"
+    order:
+      - file.name
+      - featured
+      - priority
+      - summary
+    columnSize:
+      file.name: 171
