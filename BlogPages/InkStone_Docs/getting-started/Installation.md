@@ -16,7 +16,7 @@ priority: 1
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/your-org/inkstone
+git clone https://github.com/airenare/inkstone.git
 cd inkstone
 
 # 2. Install dependencies
