@@ -657,6 +657,8 @@ def convert_dataview_inline(md, note_ctx, dataview_index=None):
     special keys: file.name, file.link, file.ctime, tags.
     `this.field` is an alias for the top-level field name.
     dataview_index is required for dv.pages(...) expressions.
+
+    Fenced code blocks are passed through untouched.
     """
     # Skip multi-backtick code spans; only match single-backtick `= expr`
     pattern = r'(``+[^`].*?``+)|`= ([^`]+)`'
@@ -684,4 +686,22 @@ def convert_dataview_inline(md, note_ctx, dataview_index=None):
         except Exception:
             return f'<span class="dv-inline dv-inline-error">{expr}</span>'
 
-    return re.sub(pattern, repl, md)
+    _fence_open = re.compile(r"^(`{3,}|~{3,})")
+    lines = md.split("\n")
+    output = []
+    fence_marker = None
+
+    for line in lines:
+        if fence_marker is None:
+            m = _fence_open.match(line)
+            if m:
+                fence_marker = m.group(1)
+                output.append(line)
+            else:
+                output.append(re.sub(pattern, repl, line))
+        else:
+            output.append(line)
+            if re.match(r"^" + re.escape(fence_marker) + r"`*~*\s*$", line):
+                fence_marker = None
+
+    return "\n".join(output)
