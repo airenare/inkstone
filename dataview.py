@@ -354,6 +354,34 @@ def _parse_dv_query(query_text):
 # QUERY EXECUTOR
 # =========================================
 
+def _folder_matches(file_folder, from_folder):
+    """True if file_folder is exactly from_folder or a subfolder of it."""
+    ff = file_folder.rstrip("/")
+    target = from_folder.rstrip("/")
+    return ff == target or ff.startswith(target + "/")
+
+
+def _filter_by_folder(posts, from_folder):
+    """Filter posts to those at or below from_folder.
+
+    Tries progressively shorter suffixes so that a vault-name prefix in
+    the FROM clause (e.g. FROM "VaultName/subfolder") still resolves
+    correctly when dv_folder is computed relative to VAULT_PATH.
+    """
+    parts = from_folder.split("/")
+    for start in range(len(parts)):
+        candidate = "/".join(parts[start:])
+        matched = [
+            p for p in posts
+            if _folder_matches(
+                p.get("file", {}).get("folder", ""), candidate
+            )
+        ]
+        if matched:
+            return matched
+    return []
+
+
 def _execute_dv_query(parsed, dataview_index):
     """Execute a parsed Dataview TABLE or LIST query and return an HTML string."""
     # --- Filter by FROM ---
@@ -364,6 +392,10 @@ def _execute_dv_query(parsed, dataview_index):
         if m:
             tag = m.group(1).lower()
             posts = [p for p in posts if tag in p.get("tags", [])]
+        else:
+            folder = from_clause.strip('"').strip("'").rstrip("/")
+            if folder:
+                posts = _filter_by_folder(posts, folder)
 
     # --- Build context dicts ---
     contexts = []
