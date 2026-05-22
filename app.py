@@ -112,6 +112,7 @@ def inject_globals():
             and url.count("/") == 1
             and route.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG
             and not (route["post"].get("metadata") or {}).get("nav_hidden")
+            and (route["post"].get("metadata") or {}).get("menu_order") is None
         )
     else:
         # Non-default language: show sections at /{section}/{lang}
@@ -121,6 +122,7 @@ def inject_globals():
             if route.get("lang") == current_lang
             and url.count("/") == 2
             and not (route["post"].get("metadata") or {}).get("nav_hidden")
+            and (route["post"].get("metadata") or {}).get("menu_order") is None
         )
 
     # Language-aware menu posts; fall back to default lang if none found

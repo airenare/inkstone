@@ -62,3 +62,11 @@ def test_nav_hidden_section_still_routable(client):
     resp = client.get("/hidden")
     assert resp.status_code == 200
     assert b"Hidden Section" in resp.data
+
+
+def test_menu_order_section_not_duplicated_in_nav(client):
+    """A section with menu_order must appear only once (in menu_posts, not nav_sections)."""
+    resp = client.get("/")
+    assert resp.status_code == 200
+    html = resp.data.decode()
+    assert html.count(">Blog<") == 1
