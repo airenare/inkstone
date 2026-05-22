@@ -70,20 +70,24 @@ def convert_links(md, url_index=None):
         r"\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
     )
 
-    # Combined: code spans (skip) | wiki-links (convert).
-    # Uses backreference \1 so the closing backtick string must have the same
-    # length as the opening — prevents ` ``` ` from being misread as a span.
+    # Combined: HTML code elements (skip) | backtick spans (skip) | wiki-links.
+    # convert_transclusion runs before this and may insert <code>...</code> HTML;
+    # those must be skipped so [[...]] inside rendered code blocks isn't converted.
+    # The backtick branch uses a backreference so ` ``` ` isn't misread as a span.
     _combined = re.compile(
-        r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)"
+        r"(<code>[\s\S]*?</code>)"
+        r"|(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\2(?!`)"
         r"|\[\[([^|\]#^]+)(?:[#^]([^|\]]+))?(?:\|([^\]]+))?\]\]"
     )
 
     def repl(match):
-        if match.group(1) is not None:  # code span — leave untouched
+        if match.group(1) is not None:  # HTML code element — leave untouched
             return match.group(0)
-        target = match.group(2).strip()
-        anchor_text = match.group(3).strip() if match.group(3) else None
-        display = (match.group(4) or
+        if match.group(2) is not None:  # backtick span — leave untouched
+            return match.group(0)
+        target = match.group(3).strip()
+        anchor_text = match.group(4).strip() if match.group(4) else None
+        display = (match.group(5) or
                    (f"{target} › {anchor_text}" if anchor_text else target)).strip()
         slug = slugify(target).lower()
         url = url_index.get(slug) if url_index else None
