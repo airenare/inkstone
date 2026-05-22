@@ -1,7 +1,7 @@
 ---
 website: true
 title: Frontmatter Reference
-date: 2026-01-01
+date: 2026-05-21
 summary: Every frontmatter field InkStone recognises, with type and example.
 featured: true
 priority: 1
@@ -21,6 +21,7 @@ priority: 1
 | `author` | string or list | Shown in post meta and JSON-LD. | `author: "Jane Doe"` |
 | `tags` | list | Content tags. Creates `/tag/<name>` archive pages. Merged with inline `#hashtags`. | `tags: [python, philosophy]` |
 | `menu_order` | integer | Pins this post to the top nav. Lower value = further left. Appended after section links. | `menu_order: 1` |
+| `nav_hidden` | boolean | Hides this section from the auto-generated top nav. The section remains routable. Only meaningful on `type: listing` or `type: homepage` files. | `nav_hidden: true` |
 | `access_token` | string | Per-note private access token. Share URL as `/slug?token=secret`. | `access_token: mysecret` |
 | `lang` | string | Language code for this note variant. Serves at `/{slug}/{lang}` and adds language toggle. | `lang: ru` |
 | `language` | string | Root homepage only. Sets site default language for `<html lang="">`. | `language: en` |
