@@ -715,9 +715,15 @@ def load_posts():
 
         banner = metadata.get("banner")
         if banner and not banner.startswith(("http://", "https://")):
-            _folder = os.path.dirname(filepath)
-            _candidate = os.path.normpath(os.path.join(_folder, banner))
             _vault_real = os.path.realpath(VAULT_PATH)
+            if banner.startswith("/"):
+                _candidate = os.path.normpath(
+                    os.path.join(VAULT_PATH, banner.lstrip("/"))
+                )
+            else:
+                _candidate = os.path.normpath(
+                    os.path.join(os.path.dirname(filepath), banner)
+                )
             if os.path.isfile(_candidate) and os.path.realpath(
                 _candidate
             ).startswith(_vault_real + os.sep):
