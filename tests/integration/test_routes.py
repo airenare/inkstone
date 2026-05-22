@@ -70,3 +70,12 @@ def test_menu_order_section_not_duplicated_in_nav(client):
     assert resp.status_code == 200
     html = resp.data.decode()
     assert html.count(">Blog<") == 1
+
+
+def test_menu_order_listing_links_to_section_url(client):
+    """A type:listing page with menu_order must link to /section, not /section/section."""
+    resp = client.get("/")
+    assert resp.status_code == 200
+    html = resp.data.decode()
+    assert 'href="/blog"' in html
+    assert 'href="/blog/blog"' not in html
