@@ -1,7 +1,7 @@
 ---
 website: true
 title: Dataview Queries
-date: 2026-05-21
+date: 2026-05-22
 summary: Server-side TABLE and LIST queries with FROM, WHERE, SORT, LIMIT, and GROUP BY.
 tags:
   - dataview
@@ -14,49 +14,65 @@ priority: 5
 
 ## TABLE
 
-Basic table of all published notes with their dates:
+Basic table of published notes from the `writing` folder with their dates and summary:
+
+
+> [!bug] Investigation needed
+> For some reason the WHERE logic is inverted in Obsidian editor. Shows correctly on the webpage though.
 
 ```dataview
-TABLE date, summary FROM ""
+TABLE date, summary
+FROM "InkStone_Docs/writing"
+WHERE type != listing
 ```
 
-With column aliases using `AS`:
-
-```dataview
-TABLE date AS "Published", author AS "By", summary AS "Description"
-```
+---
 
 ## LIST
 
-Simple list of note titles:
+Simple list of note titles from `features` folder and their summaries:
 
 ```dataview
-LIST FROM ""
+LIST summary
+FROM "InkStone_Docs/features"
 ```
+
+---
 
 ## FROM
 
 Restrict the source set. Sources can be combined with `AND`/`OR`:
 
-```dataview
-LIST FROM #python
-```
+
+> [!bug] Known bug
+> Only applies the last argument, so the `AND/OR` operators don't work here.
 
 ```dataview
-TABLE date FROM "blog"
+LIST 
+FROM "InkStone_Docs/writing" OR "InkStone_Docs/features" OR "InkStone_Docs/deployment"
+WHERE type != listing
 ```
 
+
+> [!bug] Known bug
+> Tables with `AND/OR` operator in `FROM` block are not rendered on the website.
+
 ```dataview
-TABLE date FROM [[Getting Started]]
+TABLE
+FROM "InkStone_Docs/writing" OR "InkStone_Docs/features"
+WHERE type != listing
 ```
+
+---
 
 ## WHERE
 
 Filter rows by a condition:
 
 ```dataview
-TABLE date, summary
-WHERE date > 2025-01-01
+TABLE summary
+FROM "InkStone_Docs"
+WHERE type = "listing"
 ```
 
 ```dataview
