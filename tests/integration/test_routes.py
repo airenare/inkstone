@@ -47,3 +47,18 @@ def test_search_no_results(client):
     resp = client.get("/search?q=zzznomatchxxx")
     assert resp.status_code == 200
     assert b"Simple Post" not in resp.data
+
+
+def test_nav_hidden_section_not_in_nav(client):
+    """Sections with nav_hidden: true must not appear in the top nav."""
+    resp = client.get("/")
+    assert resp.status_code == 200
+    # The title must not appear in the nav rendered on the homepage
+    assert b"Hidden Section" not in resp.data
+
+
+def test_nav_hidden_section_still_routable(client):
+    """nav_hidden only hides from nav — the section must still load."""
+    resp = client.get("/hidden")
+    assert resp.status_code == 200
+    assert b"Hidden Section" in resp.data
