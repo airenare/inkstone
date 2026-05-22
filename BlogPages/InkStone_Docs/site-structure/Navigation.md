@@ -1,7 +1,7 @@
 ---
 website: true
 title: Navigation
-date: 2026-01-01
+date: 2026-05-21
 summary: How nav links are generated, how to pin standalone pages, and breadcrumb behaviour.
 featured: true
 priority: 2
@@ -21,6 +21,21 @@ vault/
 Produces nav links: **Blog · Gallery · Projects** (in filesystem order).
 
 No configuration required. Add a `type: listing` file to a folder — it appears in the nav.
+
+## Hiding sections from the nav
+
+A section appears in the nav by default. To hide it, add `nav_hidden: true` to the listing or homepage file for that section:
+
+```yaml
+---
+website: true
+type: listing
+title: Archive
+nav_hidden: true
+---
+```
+
+The section is still fully routable — visitors can reach it via direct links or wiki-links. It simply won't appear as a nav item.
 
 ## Pinning pages with menu_order
 
