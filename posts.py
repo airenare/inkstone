@@ -8,7 +8,7 @@ from datetime import datetime, date as date_type
 
 import yaml
 
-from config import VAULT_PATH
+from config import VAULT_PATH, vault_attachment_href
 from converters import slugify, render_markdown, extract_h1
 from view_helpers import get_related
 from bases import (
@@ -714,6 +714,18 @@ def load_posts():
         is_featured = bool(metadata.get("featured"))
 
         banner = metadata.get("banner")
+        if banner and not banner.startswith(("http://", "https://")):
+            _folder = os.path.dirname(filepath)
+            _candidate = os.path.normpath(os.path.join(_folder, banner))
+            _vault_real = os.path.realpath(VAULT_PATH)
+            if os.path.isfile(_candidate) and os.path.realpath(
+                _candidate
+            ).startswith(_vault_real + os.sep):
+                banner = vault_attachment_href(
+                    os.path.relpath(_candidate, VAULT_PATH)
+                )
+            else:
+                banner = None
         banner_x = metadata.get("banner_x")
         banner_y = metadata.get("banner_y")
         # author: string or list — normalise to a list for the template
