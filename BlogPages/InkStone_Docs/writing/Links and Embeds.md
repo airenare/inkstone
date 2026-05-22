@@ -67,14 +67,18 @@ See [[Publishing Notes^important-para]] for details.
 `![[Note Title]]` embeds the full content of another published note inline:
 
 ```markdown
-![[Quick Start]]
+![[Transcluded Note]]
 ```
+
+![[Transcluded Note]]
 
 Embed a single section by adding a heading anchor:
 
 ```markdown
-![[Quick Start#Your first note]]
+![[Transcluded Note#Why?]]
 ```
+
+![[Transcluded Note#Why?]]
 
 > [!warning] Published notes only
 > Transclusion only works for notes that have `website: true` and exist in the same vault. References to unpublished or missing notes render as a broken-link placeholder.

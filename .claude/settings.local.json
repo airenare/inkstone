@@ -175,7 +175,9 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:8000/blog\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:8000/gallery\")",
       "Bash(curl -s \"http://localhost:8000/inkstone_docs/writing/dataview-queries\")",
-      "Bash(curl -s \"http://localhost:8000/blog/engine-features\")"
+      "Bash(curl -s \"http://localhost:8000/blog/engine-features\")",
+      "Bash(curl -s http://127.0.0.1:8000/transcluded-note)",
+      "Bash(curl -s http://127.0.0.1:8000/writing/links-and-embeds)"
     ]
   }
 }

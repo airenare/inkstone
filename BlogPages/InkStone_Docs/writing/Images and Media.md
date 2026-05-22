@@ -7,73 +7,125 @@ featured: true
 priority: 4
 ---
 
+
+> [!Tip] Disclaimer
+> Some media placement variants may not render correctly inside Obsidian, but they will appear as intended on the website. If needed, run InkStone locally to preview the final result.
+
 ## Single image — lightbox
 
 ```markdown
-![[photo.jpg]]
+![[terminal.jpg]]
 ```
+![[terminal.jpg]]
+> Renders as a clickable image that opens a full-screen lightbox.
 
-Renders as a clickable image that opens a full-screen lightbox.
-
+---
 ## Caption
 
 ```markdown
-![[photo.jpg|A descriptive caption]]
+![[keyboard.jpg|The caption is shown below the image and as alt text.]]
 ```
 
-The caption is shown below the image and as alt text.
+![[keyboard.jpg|The caption is shown below the image and as alt text.]]
 
+---
 ## Centered image
 
 Use the `inline` flag to render a centered block figure that is not part of the lightbox:
 
 ```markdown
-![[photo.jpg|inline]]
-![[photo.jpg|inline 400]]
-![[photo.jpg|inline 400 A caption]]
+![[desk.jpg|inline]]
+![[desk.jpg|inline 400]]
+![[desk.jpg|inline 400 A caption]]
 ```
 
+![[desk.jpg|inline]]
+![[desk.jpg|inline 400]]
+![[desk.jpg|inline 400 A caption]]
+
+---
 ## Float image beside text
 
 Use `left` or `right` to float an image so surrounding text wraps beside it:
 
 ```markdown
-![[photo.jpg|left]]
-![[photo.jpg|right 300]]
-![[photo.jpg|left 300 A caption]]
+![[desk.jpg|left]]
+![[desk.jpg|right 300]]
+![[desk.jpg|left 300 A caption]]
 ```
-
-The image floats until the text runs out or until a horizontal rule clears the float:
-
-```markdown
-![[photo.jpg|left 250]]
-This paragraph wraps beside the image.
+![[desk.jpg|left]]
 
 ---
 
-This paragraph is below the image at full width.
+![[desk.jpg|right 300]]
+
+---
+
+![[desk.jpg|left 300 A caption]]
+
+---
+
+The image floats until the text runs out or until a horizontal rule `---` clears the float (until a better way found):
+
+---
+
+```markdown
+![[desk.jpg|left 250]]
+This paragraph wraps beside the image.
+
+| ------------------------------------------------------------>
+
+| ------------------------------------------------------------>
+
+| ------------------------------------------------------------>
+
+---
+
+This paragraph is below the image at full width. ------------------------------------------------------------> 
 ```
 
-Float images do not open a lightbox when clicked.
+![[desk.jpg|left 250]]
+This paragraph wraps beside the image.
 
+| ------------------------------------------------------------>
+
+| ------------------------------------------------------------>
+
+| ------------------------------------------------------------>
+
+---
+
+This paragraph is below the image at full width. ------------------------------------------------------------> 
+> [! note]
+> Float images do not open a lightbox when clicked.
+
+---
 ## Slider
 
 Multiple embeds **on the same line** become a swipeable slider:
 
 ```markdown
-![[photo1.jpg]] ![[photo2.jpg]] ![[photo3.jpg]]
+![[desk.jpg]] ![[keyboard.jpg]] ![[terminal.jpg]]
 ```
 
+![[desk.jpg]] ![[keyboard.jpg]] ![[terminal.jpg]]
+
+---
 ## Separate gallery
 
 Multiple embeds **on separate lines** become a lightbox gallery (thumbnails, numbered, navigable):
 
 ```markdown
-![[photo1.jpg]]
-![[photo2.jpg]]
-![[photo3.jpg]]
+![[desk.jpg]]
+![[keyboard.jpg]]
+![[terminal.jpg]]
 ```
 
+![[desk.jpg]]
+![[keyboard.jpg]]
+![[terminal.jpg]]
+
+---
 ## Banner image
 
 Set a banner with `banner:` in frontmatter. The value is the filename inside `_attachments/`:
@@ -88,6 +140,7 @@ banner_y: 0.3
 
 `banner_y` is the vertical focal point: `0.0` = top crop, `1.0` = bottom crop, `0.5` = centre (default).
 
+---
 ## Video
 
 ```markdown
@@ -96,6 +149,7 @@ banner_y: 0.3
 
 Renders a native `<video>` element with controls.
 
+---
 ## Audio
 
 ```markdown
@@ -104,6 +158,7 @@ Renders a native `<video>` element with controls.
 
 Renders a native `<audio>` element with controls.
 
+---
 ## Attachment lookup order
 
 When InkStone resolves `![[filename]]`, it searches in this order:
@@ -115,6 +170,7 @@ When InkStone resolves `![[filename]]`, it searches in this order:
 > [!tip] Keep images close to their notes
 > Put images in a `_attachments/` subfolder next to the markdown file. A post in `blog/` uses `blog/_attachments/`. This keeps attachments scoped and portable.
 
+---
 ## Flag reference
 
 | Syntax | Effect |
