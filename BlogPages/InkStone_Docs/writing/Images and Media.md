@@ -6,6 +6,7 @@ summary: Lightbox images, sliders, float layout, centered figures, captions, ban
 featured: true
 priority: 4
 banner: /_attachments/desk.jpg
+banner_y: 1
 ---
 
 
@@ -134,8 +135,10 @@ Set a banner with `banner:` in frontmatter. The value is the filename inside `_a
 ```yaml
 ---
 website: true
-banner: cover.jpg
-banner_y: 0.3
+banner: desk.jpg # when the image is in the same folder as the note
+banner: _attachments/desk.jpg # if the _attachments folder is in the same folder as the note
+banner: /_attachments/desk.jpg # if the _attachments folder is in the root of the vault (as set on this page)
+banner_y: 1.0
 ---
 ```
 
