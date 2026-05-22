@@ -788,7 +788,7 @@ def load_posts():
         if menu_order_raw is not None:
             menu_posts.append({
                 "title": title,
-                "url_path": url_path,
+                "url_path": section_url if (is_listing or is_homepage) else url_path,
                 "menu_order": int(menu_order_raw),
                 "lang": lang,
             })
