@@ -5,6 +5,7 @@ date: 2026-05-21
 summary: Lightbox images, sliders, float layout, centered figures, captions, banners, video, and audio.
 featured: true
 priority: 4
+banner: _attachments/desk.jpg
 ---
 
 
