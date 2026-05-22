@@ -105,6 +105,16 @@ def convert_checkboxes(md):
     fence_marker = None
     _fence_open = re.compile(r"^(`{3,}|~{3,})")
 
+    # Detect the indent unit from the smallest non-zero indent present
+    indent_sizes = []
+    for ln in lines:
+        m2 = re.match(r'^(\s+)- \[([ xX])\]', ln)
+        if m2:
+            size = len(m2.group(1).replace("\t", "    "))
+            if size > 0:
+                indent_sizes.append(size)
+    indent_unit = min(indent_sizes) if indent_sizes else 4
+
     def close_lists(to_level=0):
         while len(stack) > to_level:
             out.append("</ul>")
@@ -133,7 +143,7 @@ def convert_checkboxes(md):
         if match:
             indent, checked, text = match.groups()
             indent = indent.replace("\t", "    ")
-            level = len(indent) // 4
+            level = len(indent) // indent_unit
             checked_attr = "checked" if checked.lower() == "x" else ""
 
             while len(stack) < level + 1:
