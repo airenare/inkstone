@@ -129,6 +129,8 @@ slug: my-post         # optional; auto-generated from title if omitted; non-ASCI
 priority: 0           # featured posts only; 0 = top, then 1, 2… (date breaks ties)
 summary: "..."        # shown on listing pages; auto-derived from content if omitted
 menu_order: 1         # pin this post to the top nav; lower = further left; appended after section links
+nav_hidden: true      # listing/homepage only; hides section from top nav while keeping
+                      #   it routable; visitors can still reach it via direct link
 author: "Jane Doe"    # optional; shown in post meta and JSON-LD (string or list)
 tags:                 # user content tags — shown as clickable badges, used for /tag/<name>
   - python            #   archive pages, search filtering, related posts, and Dataview FROM queries
