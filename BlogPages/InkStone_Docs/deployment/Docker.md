@@ -1,7 +1,7 @@
 ---
 website: true
 title: Docker
-date: 2026-01-01
+date: 2026-05-21
 summary: Run InkStone in a container with a mounted vault or a cloned private repo.
 featured: true
 priority: 1

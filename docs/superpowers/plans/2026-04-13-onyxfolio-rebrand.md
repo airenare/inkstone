@@ -1,8 +1,8 @@
-# OnyxFolio Rebrand Implementation Plan
+# InkStone Rebrand Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rename the project from "Obsidian Blog Engine" to "OnyxFolio" across all files in the repo.
+**Goal:** Rename the project from "Obsidian Blog Engine" to "InkStone" across all files in the repo.
 
 **Architecture:** Pure rename — no logic changes. Six files contain the old name; each gets updated in its own commit. GitHub repo rename is a manual step via `gh` CLI.
 
@@ -32,7 +32,7 @@
 
 Open `README.md`. Change line 1:
 ```markdown
-# OnyxFolio
+# InkStone
 ```
 Add tagline on line 2:
 ```markdown
@@ -48,8 +48,8 @@ cd obsidian-blog-engine
 ```
 Replace with:
 ```
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
 ```
 
 - [ ] **Step 3: Replace Docker image name**
@@ -61,8 +61,8 @@ docker run -p 8000:8000 -v /path/to/vault:/vault obsidian-blog
 ```
 Replace with:
 ```
-docker build -t onyxfolio .
-docker run -p 8000:8000 -v /path/to/vault:/vault onyxfolio
+docker build -t inkstone .
+docker run -p 8000:8000 -v /path/to/vault:/vault inkstone
 ```
 
 - [ ] **Step 4: Scan for any remaining old name occurrences**
@@ -76,7 +76,7 @@ Expected: no output.
 
 ```bash
 git add README.md
-git commit -m "rebrand: update README to OnyxFolio"
+git commit -m "rebrand: update README to InkStone"
 ```
 
 ---
@@ -88,7 +88,7 @@ git commit -m "rebrand: update README to OnyxFolio"
 
 - [ ] **Step 1: Replace project name in description**
 
-Find every occurrence of `Obsidian Blog Engine` in `CLAUDE.md` and replace with `OnyxFolio`.
+Find every occurrence of `Obsidian Blog Engine` in `CLAUDE.md` and replace with `InkStone`.
 
 ```bash
 grep -n "Obsidian Blog Engine" CLAUDE.md
@@ -105,7 +105,7 @@ Expected: no output.
 
 ```bash
 git add CLAUDE.md
-git commit -m "rebrand: update CLAUDE.md to OnyxFolio"
+git commit -m "rebrand: update CLAUDE.md to InkStone"
 ```
 
 ---
@@ -123,7 +123,7 @@ Line 1 of `converters.py` currently reads:
 ```
 Change to:
 ```python
-"""Markdown rendering pipeline for OnyxFolio.
+"""Markdown rendering pipeline for InkStone.
 ```
 
 - [ ] **Step 2: Verify**
@@ -155,7 +155,7 @@ Line 3 of `base.html` currently reads:
 ```
 Change to:
 ```html
-<!-- onyxfolio v{{ app_version }} -->
+<!-- inkstone v{{ app_version }} -->
 ```
 
 - [ ] **Step 2: Verify**
@@ -187,7 +187,7 @@ grep -n "Obsidian Blog Engine\|obsidian blog" "BlogPages/Test Website.md"
 
 - [ ] **Step 2: Replace all occurrences**
 
-Replace every instance of `Obsidian Blog Engine` with `OnyxFolio` in `BlogPages/Test Website.md`.
+Replace every instance of `Obsidian Blog Engine` with `InkStone` in `BlogPages/Test Website.md`.
 
 - [ ] **Step 3: Verify**
 
@@ -200,7 +200,7 @@ Expected: no output.
 
 ```bash
 git add "BlogPages/Test Website.md"
-git commit -m "rebrand: update vault homepage to OnyxFolio"
+git commit -m "rebrand: update vault homepage to InkStone"
 ```
 
 ---
@@ -217,7 +217,7 @@ grep -r "Obsidian Blog Engine\|obsidian-blog-engine\|obsidian_blog_engine" \
   --include="*.py" --include="*.md" --include="*.html" \
   --include="*.txt" --include="*.sh" .
 ```
-Expected: only the spec doc (`docs/superpowers/specs/2026-04-13-onyxfolio-rebrand-design.md`) should appear — that one is intentional historical record, leave it.
+Expected: only the spec doc (`docs/superpowers/specs/2026-04-13-inkstone-rebrand-design.md`) should appear — that one is intentional historical record, leave it.
 
 - [ ] **Step 2: Fix any unexpected hits**
 
@@ -256,13 +256,13 @@ git push origin v1.14.0
 - [ ] **Step 1: Rename via gh CLI**
 
 ```bash
-gh repo rename onyxfolio --repo airenare/Obsidian-Blog-Engine
+gh repo rename inkstone --repo airenare/Obsidian-Blog-Engine
 ```
 
 - [ ] **Step 2: Update remote URL locally**
 
 ```bash
-git remote set-url origin https://github.com/airenare/onyxfolio
+git remote set-url origin https://github.com/airenare/inkstone
 ```
 
 - [ ] **Step 3: Verify**
@@ -272,8 +272,8 @@ git remote -v
 ```
 Expected:
 ```
-origin  https://github.com/airenare/onyxfolio (fetch)
-origin  https://github.com/airenare/onyxfolio (push)
+origin  https://github.com/airenare/inkstone (fetch)
+origin  https://github.com/airenare/inkstone (push)
 ```
 
 - [ ] **Step 4: Push everything**
@@ -287,6 +287,6 @@ git push
 ## Done Criteria
 
 - [ ] No file in the repo (excluding the spec doc) contains "Obsidian Blog Engine" or "obsidian-blog-engine"
-- [ ] README opens with `# OnyxFolio` and tagline
-- [ ] GitHub repo URL is `github.com/airenare/onyxfolio`
+- [ ] README opens with `# InkStone` and tagline
+- [ ] GitHub repo URL is `github.com/airenare/inkstone`
 - [ ] VERSION is `1.14.0`, tagged `v1.14.0`

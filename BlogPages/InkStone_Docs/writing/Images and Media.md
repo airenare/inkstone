@@ -1,8 +1,8 @@
 ---
 website: true
 title: Images and Media
-date: 2026-01-01
-summary: "Lightbox images, sliders, float layout, centered figures, captions, banners, video, and audio."
+date: 2026-05-21
+summary: Lightbox images, sliders, float layout, centered figures, captions, banners, video, and audio.
 featured: true
 priority: 4
 ---

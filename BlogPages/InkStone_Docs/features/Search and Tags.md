@@ -1,7 +1,7 @@
 ---
 website: true
 title: Search and Tags
-date: 2026-01-01
+date: 2026-05-21
 summary: Full-text search, tag pages, tags index, and inline hashtags.
 featured: true
 priority: 2

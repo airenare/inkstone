@@ -1,7 +1,7 @@
 ---
 website: true
 title: Obsidian Bases
-date: 2026-01-01
+date: 2026-05-21
 summary: Publish .base table views as auto-updating post indexes with filters and sorting.
 featured: true
 priority: 7

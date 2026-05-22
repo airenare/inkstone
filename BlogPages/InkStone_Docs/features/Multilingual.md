@@ -1,7 +1,7 @@
 ---
 website: true
 title: Multilingual
-date: 2026-01-01
+date: 2026-05-21
 summary: Publish notes in multiple languages with filename suffixes and UI translations.
 featured: true
 priority: 3

@@ -4,13 +4,23 @@ views:
     filters:
       and:
         - file.folder.startsWith("InkStone_Docs")
-        - type != "listing"
+        - type == "listing"
+        - type != "homepage"
         - file.ext == "md"
-        - file.folder == "InkStone_Docs/deployment"
     order:
       - file.name
       - featured
       - priority
+      - menu_order
       - summary
+      - date
+      - file.folder
+    sort:
+      - property: file.folder
+        direction: ASC
+      - property: priority
+        direction: ASC
     columnSize:
       file.name: 171
+      note.priority: 85
+      note.menu_order: 83

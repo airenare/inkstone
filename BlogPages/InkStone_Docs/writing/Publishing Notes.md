@@ -1,7 +1,7 @@
 ---
 website: true
 title: Publishing Notes
-date: 2026-01-01
+date: 2026-05-21
 summary: The minimum frontmatter to publish a note, plus all optional fields.
 featured: true
 priority: 0
@@ -28,12 +28,13 @@ The URL is derived from the note's location in the vault:
 - `About.md` (vault root) → `/about`
 
 The slug part comes from the title, following these rules:
+
 - Spaces become hyphens
 - Text is lowercased
 - Non-ASCII characters are transliterated to ASCII (e.g. Cyrillic, Greek)
 - Special characters are stripped
 
-## Title resolution order
+## Title resolution order ^important-para
 
 InkStone resolves the post title in this priority order:
 
@@ -74,6 +75,6 @@ slug: hello-world
 ---
 ```
 
-The note will be served at `/hello-world` regardless of the title.
+The note will be served at `/hello-world` instead of `/privet-mir` regardless of the title.
 
 For the full list of frontmatter fields, see [[Frontmatter Reference]].

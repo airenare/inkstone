@@ -1,7 +1,7 @@
 ---
 website: true
 title: Note Templates
-date: 2026-01-01
+date: 2026-05-21
 summary: Create notes with correct InkStone frontmatter using QuickAdd or Obsidian's Templates plugin.
 featured: true
 priority: 8

@@ -1,7 +1,7 @@
 ---
 website: true
 title: Installation
-date: 2026-01-01
+date: 2026-05-21
 summary: Requirements, install paths, and first-run checklist.
 featured: true
 priority: 1

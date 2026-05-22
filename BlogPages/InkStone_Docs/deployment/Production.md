@@ -1,7 +1,7 @@
 ---
 website: true
 title: Production Deployment
-date: 2026-01-01
+date: 2026-05-21
 summary: Deploy with Coolify, configure webhooks, and set up SSL.
 featured: true
 priority: 2

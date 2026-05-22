@@ -1,4 +1,4 @@
-# OnyxFolio Documentation Audit & Reorganization — Design Spec
+# InkStone Documentation Audit & Reorganization — Design Spec
 
 ## Goal
 
@@ -8,7 +8,7 @@ Improve documentation across three locations so that new users can get a site li
 
 - **New users** (just cloned, want their vault live) — served by BlogPages/ getting-started content and README quick-start
 - **Developers / contributors** (want to understand the engine) — served by BlogPages/ architecture post and README project structure
-- **Existing users** (configuring features) — served by antonbakulin.com/onyxfolio reference docs
+- **Existing users** (configuring features) — served by antonbakulin.com/inkstone reference docs
 
 ## Doc locations and responsibilities
 
@@ -16,7 +16,7 @@ Improve documentation across three locations so that new users can get a site li
 |---|---|---|
 | `BlogPages/` | New users + developers | First contact: get live fast + showcase features + architecture deep-dive |
 | `README.md` | Developers evaluating or contributing | Project overview, quick-start, frontmatter reference, deployment |
-| `antonbakulin.com/onyxfolio` | Existing users | Complete per-feature reference; links are the canonical answer for "how do I configure X" |
+| `antonbakulin.com/inkstone` | Existing users | Complete per-feature reference; links are the canonical answer for "how do I configure X" |
 
 BlogPages links to antonbakulin.com for deep configuration details — it is not self-contained documentation.
 
@@ -36,7 +36,7 @@ Content sections:
    - Coolify: vault repo + `VAULT_REPO` build arg (link to Deployment doc on antonbakulin.com)
 3. **Point at your vault** — `VAULT_PATH=/path/to/vault` in `.env`; or edit notes in `BlogPages/` to try features first
 4. **Your first published note** — minimum frontmatter (`website: true`, `title`, `date`)
-5. **Next steps** — link to antonbakulin.com/onyxfolio for full configuration reference
+5. **Next steps** — link to antonbakulin.com/inkstone for full configuration reference
 
 Stays short: one page, no deep explanations.
 
@@ -101,7 +101,7 @@ Add multilingual fields: `language:` (root homepage default language), `lang:` (
 
 ---
 
-## Area 3: antonbakulin.com/onyxfolio docs
+## Area 3: antonbakulin.com/inkstone docs
 
 Targeted additions only. No structural changes.
 

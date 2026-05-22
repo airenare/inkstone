@@ -1,7 +1,7 @@
 ---
 website: true
 title: Links and Embeds
-date: 2026-01-01
+date: 2026-05-21
 summary: Wiki-links, aliases, anchors, block references, and note transclusion.
 featured: true
 priority: 3
@@ -14,8 +14,11 @@ priority: 3
 ```markdown
 Read more in [[Frontmatter Reference]].
 ```
+Read more in [[Frontmatter Reference]].
 
-InkStone matches by slugified title, slugified filename, or the note's explicit `slug:` frontmatter — whichever matches first.
+> InkStone matches by slugified title, slugified filename, or the note's explicit `slug:` frontmatter — whichever matches first.
+
+---
 
 ## Aliases
 
@@ -24,6 +27,9 @@ InkStone matches by slugified title, slugified filename, or the note's explicit 
 ```markdown
 See the [[Configuration Reference|config docs]] for all options.
 ```
+See the [[Configuration Reference|config docs]] for all options.
+
+---
 
 ## Heading anchors
 
@@ -32,8 +38,11 @@ Link to a specific heading within a note by appending `#Heading`:
 ```markdown
 [[Markdown Features#Callouts]]
 ```
+[[Markdown Features#Callouts]]
 
 Renders as a link that scrolls directly to the Callouts section.
+
+---
 
 ## Block references
 
@@ -48,6 +57,10 @@ Link to it from another note:
 ```markdown
 See [[Publishing Notes^important-para]] for details.
 ```
+See [[Publishing Notes^important-para]] for details. 
+> ↑ This will send you to the **Title resolution order** paragraph of **Publishing Notes** page.
+
+---
 
 ## Note transclusion
 

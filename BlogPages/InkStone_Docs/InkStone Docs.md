@@ -6,7 +6,6 @@ language: en
 show_search: true
 default_theme: dark
 icon: /static/InkStoneLogo.png
-featured: true
 ---
 # InkStone
 

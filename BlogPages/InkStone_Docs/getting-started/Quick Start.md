@@ -1,8 +1,8 @@
 ---
 website: true
 title: Quick Start
-date: 2026-01-01
-summary: "Get InkStone running and publish your first note in under 5 minutes."
+date: 2026-05-21
+summary: Get InkStone running and publish your first note in under 5 minutes.
 featured: true
 priority: 0
 ---

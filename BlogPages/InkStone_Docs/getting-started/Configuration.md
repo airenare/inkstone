@@ -1,7 +1,7 @@
 ---
 website: true
 title: Configuration Reference
-date: 2026-01-01
+date: 2026-05-21
 summary: All environment variables and .env options.
 featured: true
 priority: 2

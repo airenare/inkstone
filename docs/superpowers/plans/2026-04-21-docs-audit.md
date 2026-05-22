@@ -6,7 +6,7 @@
 
 **Architecture:** Three independent areas of work — BlogPages (demo vault shipped with the engine), README.md (GitHub developer-facing), and antonbakulin.com Obsidian vault docs (user reference). Each area is self-contained and can be done in any order, though BlogPages tasks should be committed together. No engine code changes.
 
-**Tech Stack:** Markdown, YAML frontmatter, Python/Flask OnyxFolio engine (for smoke-testing BlogPages changes)
+**Tech Stack:** Markdown, YAML frontmatter, Python/Flask InkStone engine (for smoke-testing BlogPages changes)
 
 ---
 
@@ -19,11 +19,11 @@
 - `BlogPages/Test Website.md` — add "New here?" callout + developer post link
 - `BlogPages/blog/How This Blog Works.md` — update internal Post Dict table and Frontmatter Reference section; add framing sentence
 - `README.md` — restructure features list, fix project structure, fix URLs, fix type: language, add multilingual frontmatter fields
-- `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/Features.md` — add Multilingual section
-- `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/Getting Started.md` — add missing frontmatter fields to quick reference
-- `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/docs/Frontmatter Reference.md` — add `language:` and `lang:` fields
+- `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/Features.md` — add Multilingual section
+- `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/Getting Started.md` — add missing frontmatter fields to quick reference
+- `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/docs/Frontmatter Reference.md` — add `language:` and `lang:` fields
 
-**Note:** antonbakulin.com files live in the Obsidian vault at `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/`. They are not part of the OnyxFolio git repo — do not try to commit them.
+**Note:** antonbakulin.com files live in the Obsidian vault at `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/`. They are not part of the InkStone git repo — do not try to commit them.
 
 ---
 
@@ -40,7 +40,7 @@ website: true
 title: Start Here
 menu_order: 1
 date: 2026-04-21
-summary: "Get OnyxFolio running and your first note live — three paths to choose from."
+summary: "Get InkStone running and your first note live — three paths to choose from."
 ---
 
 # Start Here
@@ -54,8 +54,8 @@ Get your Obsidian vault live on the web. Pick one path below.
 **Requirements:** Python 3.11+, Git
 
 ```bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
 pip install -r requirements.txt
 python3 app.py
 # → http://127.0.0.1:8000
@@ -75,10 +75,10 @@ The server watches your files and reloads automatically — no restart needed.
 ## Option B — Docker
 
 ```bash
-git clone https://github.com/airenare/onyxfolio
-cd onyxfolio
-docker build -t onyxfolio .
-docker run -p 8000:8000 -v /path/to/your/vault:/vault onyxfolio
+git clone https://github.com/airenare/inkstone
+cd inkstone
+docker build -t inkstone .
+docker run -p 8000:8000 -v /path/to/your/vault:/vault inkstone
 # → http://127.0.0.1:8000
 ```
 
@@ -90,7 +90,7 @@ If no `/vault` is mounted, the bundled demo vault loads instead.
 
 For a production site that updates automatically when you push your vault to GitHub:
 
-→ See the [Deployment guide](https://antonbakulin.com/onyxfolio/deployment) for step-by-step instructions.
+→ See the [Deployment guide](https://antonbakulin.com/inkstone/deployment) for step-by-step instructions.
 
 ---
 
@@ -127,7 +127,7 @@ That note is now live. Its URL is `/my-first-post` if it's in the vault root, or
 
 Full configuration reference — theming, Dataview, multilingual, deployment, and more:
 
-→ [antonbakulin.com/onyxfolio](https://antonbakulin.com/onyxfolio)
+→ [antonbakulin.com/inkstone](https://antonbakulin.com/inkstone)
 ```
 
 - [ ] **Step 2: Start the server and verify**
@@ -175,7 +175,7 @@ Run: `head -30 "BlogPages/Test Website.md"`
 
 - [ ] **Step 2: Add the "New here?" callout and developer link**
 
-After the opening `# OnyxFolio` heading and the first paragraph ("A lightweight blog engine..."), and before the `---` divider that leads into "What it does", insert:
+After the opening `# InkStone` heading and the first paragraph ("A lightweight blog engine..."), and before the `---` divider that leads into "What it does", insert:
 
 ```markdown
 > [!tip] New here?
@@ -360,7 +360,7 @@ Replace everything from `## Features` up to (but not including) `## Frontmatter 
 - **Auto-listings** — folders with no explicit index file get an auto-generated listing page automatically
 - **Banner images** — `banner: "url"` in frontmatter for a hero image; `banner_x`/`banner_y` control the focal point
 - **Vault-wide attachments** — media resolution falls back to vault root `_attachments/`, then `ATTACHMENTS_PATH` from `.env`
-- **Favicon** — default OnyxFolio favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
+- **Favicon** — default InkStone favicon included; override by placing `favicon.ico`, `favicon.png`, or `favicon.svg` in your vault root
 - **Author field** — `author:` frontmatter (string or list) shown below the post title and in JSON-LD
 - **Date last modified** — `updated:` frontmatter shows "Updated …" in post meta and populates `dateModified` in JSON-LD
 - **Site icon** — `icon: path/to/image` shows an image beside the site title; cascades to all child pages unless overridden
@@ -508,9 +508,9 @@ git commit -m "docs: fix README project structure, demo URLs, type: language, ad
 ## Task 7: antonbakulin.com `Features.md` — add Multilingual section
 
 **Files:**
-- Modify: `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/Features.md`
+- Modify: `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/Features.md`
 
-**Note:** This file is in the Obsidian vault, not the OnyxFolio repo. No git commit needed.
+**Note:** This file is in the Obsidian vault, not the InkStone repo. No git commit needed.
 
 - [ ] **Step 1: Read the current file**
 
@@ -540,7 +540,7 @@ Open the file in Obsidian or a Markdown viewer. Confirm the new section renders 
 ## Task 8: antonbakulin.com `Getting Started.md` — add missing frontmatter fields
 
 **Files:**
-- Modify: `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/Getting Started.md`
+- Modify: `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/Getting Started.md`
 
 **Note:** This file is in the Obsidian vault. No git commit needed.
 
@@ -574,7 +574,7 @@ Open the file and confirm the four new lines appear in the YAML block in the cor
 ## Task 9: antonbakulin.com `docs/Frontmatter Reference.md` — add multilingual fields
 
 **Files:**
-- Modify: `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/onyxfolio/docs/Frontmatter Reference.md`
+- Modify: `/Users/anton/Library/Mobile Documents/iCloud~md~obsidian/Documents/AirVault/antonbakulin.com/inkstone/docs/Frontmatter Reference.md`
 
 **Note:** This file is in the Obsidian vault. No git commit needed.
 

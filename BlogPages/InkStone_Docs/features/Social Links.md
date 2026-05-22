@@ -1,7 +1,7 @@
 ---
 website: true
 title: Social Links
-date: 2026-01-01
+date: 2026-05-21
 summary: Add social profile links to the site footer — icon + handle, detected automatically from the URL.
 featured: true
 priority: 6

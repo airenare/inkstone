@@ -1,7 +1,7 @@
 ---
 website: true
 title: Comments
-date: 2026-01-01
+date: 2026-05-21
 summary: Add a Giscus comment section to posts using GitHub Discussions as the backend.
 featured: true
 priority: 5

@@ -1,8 +1,8 @@
 ---
 website: true
 title: URL Mapping
-date: 2026-01-01
-summary: "How vault folder paths become website URLs."
+date: 2026-05-21
+summary: How vault folder paths become website URLs.
 featured: true
 priority: 0
 ---

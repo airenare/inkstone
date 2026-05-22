@@ -1,7 +1,7 @@
 ---
 website: true
 title: Dataview Queries
-date: 2026-01-01
+date: 2026-05-21
 summary: Server-side TABLE and LIST queries with FROM, WHERE, SORT, LIMIT, and GROUP BY.
 tags:
   - dataview
