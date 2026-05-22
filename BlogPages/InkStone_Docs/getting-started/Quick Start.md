@@ -7,14 +7,18 @@ featured: true
 priority: 0
 ---
 
-> [!tip]+ Local (recommended for writing)
+> [!tip]+ Local
 > ```bash
 > git clone https://github.com/airenare/inkstone.git
 > cd inkstone
 > pip install -r requirements.txt
 > VAULT_PATH=/path/to/your/vault python3 app.py
 > ```
-> Open [http://localhost:5000](http://localhost:5000).
+> Alternatively, create `.env` and write `VAULT_PATH=/path/to/your/vault` in it. Then just:
+> ```bash
+> python3 app.py
+> ```
+> Open [http://localhost:8000](http://localhost:8000).
 
 > [!info]+ Docker
 > ```bash

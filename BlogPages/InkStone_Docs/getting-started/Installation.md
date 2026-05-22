@@ -55,4 +55,4 @@ See [[Docker]] for compose examples and private vault setup.
 - [ ] `VAULT_PATH` set in `.env` or as an environment variable
 - [ ] At least one note has `website: true` in frontmatter
 - [ ] Server running (`python3 app.py`)
-- [ ] Site visible at `http://localhost:5000`
+- [ ] Site visible at `http://localhost:8000`

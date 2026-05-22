@@ -8,13 +8,19 @@ default_theme: dark
 icon: /static/InkStoneLogo.png
 featured: true
 ---
+# InkStone
 
-![[InkStoneLogo.png | Left]]
-
+![[InkStoneLogo.png|left 270]]
 # Turn your Obsidian vault into a website.
-# Turn your Obsidian vault into a website.
 
-InkStone is a Python/Flask server that reads your Obsidian vault and serves it as a live website. Add `website: true` to any note — it's published. Your folder structure becomes your URL structure. No build step, no export.
+
+**InkStone** is a Python/Flask server that reads your Obsidian vault and serves it as a live website. 
+
+Add `website: true` to any note — it's published. 
+
+Your folder structure becomes your URL structure. 
+
+No build step, no export.
 
 ---
 
