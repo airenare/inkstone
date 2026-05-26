@@ -108,6 +108,8 @@ def convert_canvas_embed(md, url_index=None):
     # Build stem → filepath index from vault
     canvas_index = {}
     vault = _config.VAULT_PATH
+    if not vault:
+        return md
     try:
         for root, _dirs, files in os.walk(vault):
             for fname in files:
@@ -156,7 +158,7 @@ def convert_canvas_embed(md, url_index=None):
             except Exception:
                 return (
                     f'<em class="canvas-embed-error">'
-                    f"Canvas error: {stem}</em>"
+                    f"Canvas error: {_html_module.escape(stem)}</em>"
                 )
 
         output.append(pattern.sub(_repl, line))
