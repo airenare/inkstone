@@ -23,3 +23,7 @@ Code block example that must not be evaluated:
 ```
 `= this.title`
 ```
+
+Canvas embed example:
+
+![[embed_canvas]]

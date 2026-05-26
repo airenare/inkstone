@@ -89,3 +89,12 @@ def test_dataview_table_listing_file_link(client):
     # The Blog listing page is at /blog; its file.link must NOT be /blog/blog
     assert 'href="/blog"' in html
     assert 'href="/blog/blog"' not in html
+
+
+def test_canvas_embed_renders_in_post(client):
+    """![[embed_canvas]] in a post must render an inline canvas-embed div."""
+    resp = client.get("/blog/dataview-post")
+    assert resp.status_code == 200
+    html = resp.data.decode()
+    assert 'class="canvas-embed"' in html
+    assert "![[embed_canvas]]" not in html
