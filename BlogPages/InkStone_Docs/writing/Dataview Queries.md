@@ -34,6 +34,11 @@ FROM "InkStone_Docs/writing"
 WHERE !contains(type, listing)
 ```
 
+
+> [!question] Investigation needed
+> Obsidian loves to mirror '=' and '!=' results, even if the query is 'contains(foo, bar) / !contains(foo, bar)'. Both render correctly by InkStone though.
+
+
 ---
 
 ## LIST
@@ -43,31 +48,31 @@ Simple list of note titles from `features` folder and their summaries:
 ```dataview
 LIST summary
 FROM "InkStone_Docs/features"
+SORT title asc
 ```
 
 ---
 
 ## FROM
 
-Restrict the source set. Sources can be combined with `AND`/`OR`:
-
+All listing pages from three folders, using FROM to restrict the source set and combining sources with `AND`/`OR`:
 ```dataview
-LIST 
+LIST summary
 FROM "InkStone_Docs/writing" OR "InkStone_Docs/features" OR "InkStone_Docs/deployment"
-WHERE type != listing
+WHERE type = listing
 ```
-
+Same in form of a table:
 ```dataview
-TABLE
-FROM "InkStone_Docs/writing" OR "InkStone_Docs/features"
-WHERE type != listing
+TABLE summary
+FROM "InkStone_Docs/writing" OR "InkStone_Docs/features" OR "InkStone_Docs/deployment"
+WHERE type = listing
 ```
 
 ---
 
 ## WHERE
 
-Filter rows by a condition. Both `=`/`!=` comparison syntax and `contains()`/`!contains()` syntax work — use `contains()` for compatibility with the Obsidian editor:
+Filter rows by a condition. Both  ` = ` /  ` != ` comparison syntax and `contains()` / `!contains()` syntax work — stick to `contains()` for compatibility with the Obsidian editor (but it can still be inverted in Obsidian):
 
 ```dataview
 TABLE summary
@@ -78,17 +83,15 @@ WHERE contains(type, listing)
 ```dataview
 TABLE title, date
 WHERE featured = true
+LIMIT 10
 ```
-
-```dataview
-TABLE date
-WHERE author = "Anton Bakulin"
-```
+---
 
 ## SORT
-	
+
 ```dataview
 TABLE date, title
+FROM "InkStone_Docs/features"
 SORT date DESC
 ```
 
