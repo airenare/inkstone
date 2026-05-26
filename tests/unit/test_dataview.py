@@ -148,3 +148,94 @@ def test_inline_skips_multi_backtick_span():
     md = "Example: `` `= this.title` ``"
     result = convert_dataview_inline(md, ctx)
     assert "dv-inline" not in result
+
+
+# --- Bug fixes ---
+
+def test_table_auto_file_column():
+    """TABLE without WITHOUT ID must include an auto File column."""
+    index = _make_index(_make_post("Alpha", folder="blog"))
+    parsed = _parse_dv_query("TABLE date\nFROM \"blog\"")
+    result = _execute_dv_query(parsed, index)
+    assert "<th>File</th>" in result
+    assert "<th>date</th>" in result
+
+
+def test_table_without_id_no_auto_file():
+    """TABLE WITHOUT ID must NOT add the auto File column."""
+    index = _make_index(_make_post("Alpha", folder="blog"))
+    parsed = _parse_dv_query("TABLE WITHOUT ID date\nFROM \"blog\"")
+    result = _execute_dv_query(parsed, index)
+    assert "<th>File</th>" not in result
+    assert "<th>date</th>" in result
+
+
+def test_from_or_list():
+    """LIST FROM 'a' OR 'b' must return posts from both folders."""
+    index = _make_index(
+        _make_post("Writing Post", folder="writing"),
+        _make_post("Features Post", folder="features"),
+        _make_post("Other Post", folder="other"),
+    )
+    parsed = _parse_dv_query('LIST\nFROM "writing" OR "features"')
+    result = _execute_dv_query(parsed, index)
+    assert "Writing Post" in result
+    assert "Features Post" in result
+    assert "Other Post" not in result
+
+
+def test_from_or_table():
+    """TABLE FROM 'a' OR 'b' must render both folders, not be empty."""
+    index = _make_index(
+        _make_post("Writing Post", folder="writing"),
+        _make_post("Features Post", folder="features"),
+    )
+    parsed = _parse_dv_query('TABLE\nFROM "writing" OR "features"')
+    result = _execute_dv_query(parsed, index)
+    assert "Writing Post" in result
+    assert "Features Post" in result
+
+
+def test_from_and_filters_intersection():
+    """LIST FROM 'folder' AND #tag must return only posts matching both."""
+    index = _make_index(
+        _make_post("Tagged Blog", folder="blog", tags=["python"]),
+        _make_post("Untagged Blog", folder="blog"),
+        _make_post("Tagged Other", folder="other", tags=["python"]),
+    )
+    parsed = _parse_dv_query('LIST\nFROM "blog" AND #python')
+    result = _execute_dv_query(parsed, index)
+    assert "Tagged Blog" in result
+    assert "Untagged Blog" not in result
+    assert "Tagged Other" not in result
+
+
+def test_contains_unquoted_needle():
+    """contains(field, value) without quotes must work."""
+    index = _make_index(
+        _make_post("Listing Page", metadata={"type": "listing"}),
+        _make_post("Normal Post", metadata={"type": "post"}),
+    )
+    parsed = _parse_dv_query("LIST\nWHERE contains(type, listing)")
+    result = _execute_dv_query(parsed, index)
+    assert "Listing Page" in result
+    assert "Normal Post" not in result
+
+
+def test_not_contains_unquoted_needle():
+    """!contains(field, value) without quotes must work."""
+    index = _make_index(
+        _make_post("Listing Page", metadata={"type": "listing"}),
+        _make_post("Normal Post", metadata={"type": "post"}),
+    )
+    parsed = _parse_dv_query("LIST\nWHERE !contains(type, listing)")
+    result = _execute_dv_query(parsed, index)
+    assert "Normal Post" in result
+    assert "Listing Page" not in result
+
+
+def test_inline_dollar_equals_syntax():
+    """`$= expr` must be evaluated the same as `= expr`."""
+    ctx = {"title": "My Note", "file": {"name": "My Note"}}
+    result = convert_dataview_inline("Title: `$= this.title`", ctx)
+    assert '<span class="dv-inline">My Note</span>' in result

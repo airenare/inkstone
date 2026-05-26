@@ -171,7 +171,7 @@ def _eval_dv_condition(condition, ctx):
     if len(parts) > 1:
         return any(_eval_dv_condition(p, ctx) for p in parts)
 
-    m = re.match(r'^!contains\((.+),\s*"([^"]*)"\)$', condition)
+    m = re.match(r'^!contains\((.+),\s*"?([^",)]*)"?\)$', condition)
     if m:
         val = _eval_dv_expr(m.group(1).strip(), ctx)
         needle = m.group(2).lower()
@@ -179,7 +179,7 @@ def _eval_dv_condition(condition, ctx):
             return needle not in [str(v).lower() for v in val]
         return needle not in str(val).lower()
 
-    m = re.match(r'^contains\((.+),\s*"([^"]*)"\)$', condition)
+    m = re.match(r'^contains\((.+),\s*"?([^",)]*)"?\)$', condition)
     if m:
         val = _eval_dv_expr(m.group(1).strip(), ctx)
         needle = m.group(2).lower()
@@ -382,20 +382,47 @@ def _filter_by_folder(posts, from_folder):
     return []
 
 
+def _apply_from_clause(posts, from_clause):
+    """Filter posts by a FROM expression supporting OR and AND operators."""
+    from_clause = from_clause.strip()
+    # OR has lower precedence — split on it first
+    or_parts = re.split(r"\s+OR\s+", from_clause, flags=re.IGNORECASE)
+    if len(or_parts) > 1:
+        seen = set()
+        result = []
+        for part in or_parts:
+            for p in _apply_from_clause(posts, part.strip()):
+                key = p.get("filepath", id(p))
+                if key not in seen:
+                    seen.add(key)
+                    result.append(p)
+        return result
+
+    # AND has higher precedence
+    and_parts = re.split(r"\s+AND\s+", from_clause, flags=re.IGNORECASE)
+    if len(and_parts) > 1:
+        result = posts
+        for part in and_parts:
+            result = _apply_from_clause(result, part.strip())
+        return result
+
+    # Single term — tag or folder
+    term = from_clause.strip('"').strip("'").rstrip("/")
+    if not term:
+        return posts
+    if term.startswith("#"):
+        tag = term[1:].lower()
+        return [p for p in posts if tag in p.get("tags", [])]
+    return _filter_by_folder(posts, term)
+
+
 def _execute_dv_query(parsed, dataview_index):
     """Execute a parsed Dataview TABLE or LIST query and return an HTML string."""
     # --- Filter by FROM ---
     posts = list(dataview_index.values())
     from_clause = (parsed.get("from") or "").strip()
     if from_clause:
-        m = re.match(r"^#(.+)$", from_clause)
-        if m:
-            tag = m.group(1).lower()
-            posts = [p for p in posts if tag in p.get("tags", [])]
-        else:
-            folder = from_clause.strip('"').strip("'").rstrip("/")
-            if folder:
-                posts = _filter_by_folder(posts, folder)
+        posts = _apply_from_clause(posts, from_clause)
 
     # --- Build context dicts ---
     contexts = []
@@ -489,7 +516,9 @@ def _execute_dv_query(parsed, dataview_index):
         return html
 
     # --- TABLE rendering ---
-    columns = parsed.get("columns") or []
+    columns = list(parsed.get("columns") or [])
+    if not parsed.get("without_id"):
+        columns = [{"expr": "file.link", "label": "File"}] + columns
     group_by = (parsed.get("group_by") or "").strip()
 
     if group_by:
@@ -660,8 +689,8 @@ def convert_dataview_inline(md, note_ctx, dataview_index=None):
 
     Fenced code blocks are passed through untouched.
     """
-    # Skip multi-backtick code spans; only match single-backtick `= expr`
-    pattern = r'(``+[^`].*?``+)|`= ([^`]+)`'
+    # Skip multi-backtick code spans; match `= expr` and `$= expr` (Obsidian JS syntax)
+    pattern = r'(``+[^`].*?``+)|`\$?= ([^`]+)`'
 
     def repl(match):
         if match.group(1) is not None:
