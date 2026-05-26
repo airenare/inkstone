@@ -7,6 +7,10 @@ featured: true
 priority: 4
 banner: /_attachments/desk.jpg
 banner_y: 1
+tags:
+  - writing
+  - media
+  - images
 ---
 
 

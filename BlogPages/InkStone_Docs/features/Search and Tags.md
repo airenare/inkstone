@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Full-text search, tag pages, tags index, and inline hashtags.
 featured: true
 priority: 2
+tags:
+  - features
 ---
 
 ## Full-text search

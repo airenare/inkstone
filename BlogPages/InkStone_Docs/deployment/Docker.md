@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Run InkStone in a container with a mounted vault or a cloned private repo.
 featured: true
 priority: 1
+tags:
+  - deployment
 ---
 
 ## Quick start with docker compose

@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Add a Giscus comment section to posts using GitHub Discussions as the backend.
 featured: true
 priority: 5
+tags:
+  - features
 ---
 
 InkStone supports opt-in comments via **Giscus** — a lightweight system backed by GitHub Discussions. When the three env vars are set, a comment section appears at the bottom of every post and book page.

@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Per-note access tokens and the master ACCESS_TOKEN for protecting content.
 featured: true
 priority: 4
+tags:
+  - features
 ---
 
 ## Notes without website: true

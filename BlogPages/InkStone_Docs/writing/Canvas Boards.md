@@ -5,6 +5,9 @@ date: 2026-05-21
 summary: Publish Obsidian .canvas files as interactive boards with pan, zoom, and node previews.
 featured: true
 priority: 6
+tags:
+  - writing
+  - canvas
 ---
 
 ## Publishing a canvas

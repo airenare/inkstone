@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Run InkStone locally with hot-reload for writing and development.
 featured: true
 priority: 0
+tags:
+  - deployment
 ---
 
 ## Requirements

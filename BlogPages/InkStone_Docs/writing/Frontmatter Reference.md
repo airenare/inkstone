@@ -5,6 +5,10 @@ date: 2026-05-21
 summary: Every frontmatter field InkStone recognises, with type and example.
 featured: true
 priority: 1
+tags:
+  - writing
+  - frontmatter
+  - reference
 ---
 
 | Field | Type | Description | Example |

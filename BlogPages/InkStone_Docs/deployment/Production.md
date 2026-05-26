@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Deploy with Coolify, configure webhooks, and set up SSL.
 featured: true
 priority: 2
+tags:
+  - deployment
 ---
 
 > [!warning] Use gunicorn in production

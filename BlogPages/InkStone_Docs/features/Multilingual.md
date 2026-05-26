@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Publish notes in multiple languages with filename suffixes and UI translations.
 featured: true
 priority: 3
+tags:
+  - features
 ---
 
 ## Language variants via filename suffix

@@ -5,6 +5,10 @@ date: 2026-05-21
 summary: Wiki-links, aliases, anchors, block references, and note transclusion.
 featured: true
 priority: 3
+tags:
+  - writing
+  - links
+  - embeds
 ---
 
 ## Wiki-links

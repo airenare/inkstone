@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: RSS feeds, sitemap, OpenGraph meta tags, JSON-LD structured data, and print styles.
 featured: true
 priority: 7
+tags:
+  - features
 ---
 
 ## RSS

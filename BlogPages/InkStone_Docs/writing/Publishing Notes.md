@@ -5,6 +5,9 @@ date: 2026-05-21
 summary: The minimum frontmatter to publish a note, plus all optional fields.
 featured: true
 priority: 0
+tags:
+  - writing
+  - publishing
 ---
 
 ## Minimum frontmatter

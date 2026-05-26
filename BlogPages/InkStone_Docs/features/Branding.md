@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Favicon override, site icon beside the title, and per-section header title — all via frontmatter.
 featured: true
 priority: 1
+tags:
+  - features
 ---
 
 Three branding elements are controllable from your vault: the **favicon**, the **icon** beside the site title, and the **header title text** (`site_title`).

@@ -6,6 +6,7 @@ summary: Callouts, checkboxes, highlights, math, footnotes, and syntax highlight
 tags:
   - markdown
   - syntax
+  - writing
 featured: true
 priority: 2
 ---

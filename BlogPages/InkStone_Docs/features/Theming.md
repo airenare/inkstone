@@ -5,6 +5,8 @@ date: 2026-05-21
 summary: Dark/light/system mode toggle, default theme, and the Omarchy theme.
 featured: true
 priority: 0
+tags:
+  - features
 ---
 
 ## Three-state theme toggle
