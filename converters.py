@@ -103,7 +103,7 @@ def convert_canvas_embed(md, url_index=None):
     matching embeds.  Unrecognised embeds are left for convert_transclusion().
     Runs after convert_media() so image/video embeds are already resolved.
     """
-    from canvas import render_canvas  # lazy import — canvas.py imports converters
+    from canvas import render_canvas, canvas_filename_publish_meta  # lazy import — canvas.py imports converters
 
     # Build stem → filepath index from vault
     canvas_index = {}
@@ -114,10 +114,12 @@ def convert_canvas_embed(md, url_index=None):
         for root, _dirs, files in os.walk(vault):
             for fname in files:
                 if fname.endswith(".canvas"):
-                    stem = fname[:-7]
                     fpath = os.path.join(root, fname)
-                    canvas_index[stem.lower()] = fpath
-                    canvas_index[slugify(stem).lower()] = fpath
+                    _, display_stem, raw_stem = canvas_filename_publish_meta(fname)
+                    for s in {raw_stem, display_stem}:
+                        if s:
+                            canvas_index[s.lower()] = fpath
+                            canvas_index[slugify(s).lower()] = fpath
     except OSError:
         return md
 

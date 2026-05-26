@@ -70,6 +70,23 @@ def test_canvas_embed_skipped_in_code_block(tmp_path, monkeypatch):
     assert "![[diagram]]" in result
 
 
+def test_canvas_embed_by_display_title(tmp_path, monkeypatch):
+    """![[Display Title]] embeds a __website-suffixed canvas by its display name."""
+    import config
+    monkeypatch.setattr(config, "VAULT_PATH", str(tmp_path))
+    canvas = tmp_path / "My Diagram__website.canvas"
+    canvas.write_text(
+        '{"nodes":[{"id":"n1","type":"text","text":"Hi","x":0,"y":0,'
+        '"width":100,"height":80}],"edges":[]}',
+        encoding="utf-8",
+    )
+
+    from converters import convert_canvas_embed
+    result = convert_canvas_embed("![[My Diagram]]", url_index=None)
+    assert 'class="canvas-embed"' in result
+    assert "![[My Diagram]]" not in result
+
+
 def test_canvas_embed_no_canvas_files(tmp_path, monkeypatch):
     """When the vault has no .canvas files the markdown is returned unchanged."""
     import config
