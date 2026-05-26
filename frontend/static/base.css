@@ -1930,6 +1930,16 @@ figure.figure-right img {
     transform: translateY(-50%);
 }
 
+/* Inline canvas embed (inside a note) */
+.canvas-embed {
+    margin: 1.5em 0;
+}
+
+.canvas-embed .canvas-view {
+    height: 400px;
+    margin: 0;
+}
+
 
 /* =========================================
    COLLAPSIBLE CALLOUTS (details/summary)
