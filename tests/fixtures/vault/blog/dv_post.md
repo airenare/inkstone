@@ -12,6 +12,12 @@ FROM "blog"
 WHERE title != "Dataview Post"
 ```
 
+```dataview
+TABLE
+FROM "blog"
+WHERE contains(type, listing)
+```
+
 Code block example that must not be evaluated:
 
 ```

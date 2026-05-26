@@ -79,3 +79,13 @@ def test_menu_order_listing_links_to_section_url(client):
     html = resp.data.decode()
     assert 'href="/blog"' in html
     assert 'href="/blog/blog"' not in html
+
+
+def test_dataview_table_listing_file_link(client):
+    """TABLE file.link for a listing page must point to /section, not /section/slug."""
+    resp = client.get("/blog/dataview-post")
+    assert resp.status_code == 200
+    html = resp.data.decode()
+    # The Blog listing page is at /blog; its file.link must NOT be /blog/blog
+    assert 'href="/blog"' in html
+    assert 'href="/blog/blog"' not in html

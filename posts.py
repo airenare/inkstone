@@ -676,11 +676,14 @@ def load_posts():
         for alias in aliases:
             url_index[slugify(str(alias)).lower()] = url_path
 
-        # Update dataview entry with web URL, section, and clickable link
-        dataview_index[filepath]["url_path"] = url_path
+        # Update dataview entry with web URL, section, and clickable link.
+        # Listing/homepage files are served at section_url_p1, not their
+        # slug-based url_path — use index_url so file.link points to the
+        # real routable URL (same logic as the wiki-link index above).
+        dataview_index[filepath]["url_path"] = index_url
         dataview_index[filepath]["section"] = section
         dataview_index[filepath]["file"]["link"] = (
-            f'<a href="{url_path}">{title}</a>'
+            f'<a href="{index_url}">{title}</a>'
         )
 
         candidates.append((filepath, f, metadata, md, title, slug,
