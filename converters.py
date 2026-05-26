@@ -28,6 +28,7 @@ from obsidian_syntax import (
     convert_math,
 )
 from dataview import convert_dataview, convert_dataview_inline
+import config as _config
 
 # Re-export so callers that do `from converters import slugify` keep working
 __all__ = [
@@ -35,6 +36,7 @@ __all__ = [
     "extract_h1",
     "strip_leading_h1",
     "render_markdown",
+    "convert_canvas_embed",
 ]
 
 
@@ -94,11 +96,80 @@ def _restore_mermaid(html_str, blocks):
     return html_str
 
 
+def convert_canvas_embed(md, url_index=None):
+    """Replace ![[CanvasName]] / ![[CanvasName.canvas]] with inline SVG embeds.
+
+    Scans VAULT_PATH for .canvas files, builds a stem lookup, and substitutes
+    matching embeds.  Unrecognised embeds are left for convert_transclusion().
+    Runs after convert_media() so image/video embeds are already resolved.
+    """
+    from canvas import render_canvas  # lazy import — canvas.py imports converters
+
+    # Build stem → filepath index from vault
+    canvas_index = {}
+    vault = _config.VAULT_PATH
+    try:
+        for root, _dirs, files in os.walk(vault):
+            for fname in files:
+                if fname.endswith(".canvas"):
+                    stem = fname[:-7]
+                    fpath = os.path.join(root, fname)
+                    canvas_index[stem.lower()] = fpath
+                    canvas_index[slugify(stem).lower()] = fpath
+    except OSError:
+        return md
+
+    if not canvas_index:
+        return md
+
+    _fence_open = re.compile(r"^(`{3,}|~{3,})")
+    pattern = re.compile(r'!\[\[([^|\]#\n]+?)(?:\|[^\]]*)?\]\]')
+    lines = md.split("\n")
+    output = []
+    fence_marker = None
+
+    for line in lines:
+        if fence_marker is None:
+            m = _fence_open.match(line)
+            if m:
+                fence_marker = m.group(1)
+                output.append(line)
+                continue
+        else:
+            output.append(line)
+            if re.match(r"^" + re.escape(fence_marker) + r"`*~*\s*$", line):
+                fence_marker = None
+            continue
+
+        def _repl(match):
+            raw = match.group(1).strip()
+            stem = raw[:-7] if raw.lower().endswith(".canvas") else raw
+            filepath = (
+                canvas_index.get(stem.lower())
+                or canvas_index.get(slugify(stem).lower())
+            )
+            if not filepath:
+                return match.group(0)
+            try:
+                canvas_html = render_canvas(filepath, url_index=url_index)
+                return f'<div class="canvas-embed">\n{canvas_html}\n</div>'
+            except Exception:
+                return (
+                    f'<em class="canvas-embed-error">'
+                    f"Canvas error: {stem}</em>"
+                )
+
+        output.append(pattern.sub(_repl, line))
+
+    return "\n".join(output)
+
+
 def render_markdown(md, path, url_index=None, dataview_index=None,
                     note_metadata=None, skip_strip_h1=False):
     if not skip_strip_h1:
         md = strip_leading_h1(md)
     md = convert_media(md, path)
+    md = convert_canvas_embed(md, url_index)
     if dataview_index is not None:
         md = convert_transclusion(md, dataview_index)
     md = convert_links(md, url_index)
