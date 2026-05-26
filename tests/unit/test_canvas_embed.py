@@ -19,6 +19,8 @@ def test_canvas_embed_by_stem(tmp_path, monkeypatch):
     assert 'class="canvas-embed"' in result
     assert 'class="canvas-view"' in result
     assert "![[my_diagram]]" not in result
+    assert "Before" in result
+    assert "After" in result
 
 
 def test_canvas_embed_with_canvas_extension(tmp_path, monkeypatch):
@@ -35,6 +37,7 @@ def test_canvas_embed_with_canvas_extension(tmp_path, monkeypatch):
     from converters import convert_canvas_embed
     result = convert_canvas_embed("![[my_diagram.canvas]]", url_index=None)
     assert 'class="canvas-embed"' in result
+    assert 'class="canvas-view"' in result
     assert "![[my_diagram.canvas]]" not in result
 
 
