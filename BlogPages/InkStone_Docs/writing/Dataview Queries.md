@@ -109,13 +109,14 @@ LIMIT 5
 
 
 > [!NOTE] Note
-> This is a cool one, as it renders a separate table for each group (folders in this case), but does not work like that in Obsidian, so to view the result you will have to render in on the website.
+> This one is pretty neat — it renders a separate table for each group (folders, in this case). Unfortunately, Obsidian doesn’t display it correctly, so you’ll need to view it on the website to see the intended result.
 
 Group results under a heading per unique value:
+
 Each group gets its own heading; rows under it list notes from that folder.
 
 ```dataview
-TABLE title, date
+TABLE summary
 GROUP BY file.folder
 ```
 
@@ -129,17 +130,17 @@ Use backtick expressions in running text for single-value outputs:
 ```markdown
 Live example — This note is called `= this.title`.
 
-There are `= dv.pages("#python").length` Python posts in the vault.
+There are `$= dv.pages("#database").length` Python posts in the vault.
 ```
 
 
 Live example — This page is called `= this.title` and the vault currently has `= dv.pages("#database").length` Python-tagged posts.
 
 
-Both syntaxes work — use `$=` for compatibility with the Obsidian editor:
+Both syntaxes work — use `$=` for compatibility with the Obsidian editor (JS queries need to be turned on in settings):
 
-1. `$= dv.pages("#database").length`
-2. `= dv.pages("#database").length`
+1. Using `$=`: `$= dv.pages("#database").length`
+2. Using `=`: `= dv.pages("#database").length`
 
 
 

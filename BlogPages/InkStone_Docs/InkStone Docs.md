@@ -6,6 +6,7 @@ language: en
 show_search: true
 default_theme: dark
 icon: /static/InkStoneLogo.png
+summary: Homepage of the InkStone documentation website.
 ---
 # InkStone
 

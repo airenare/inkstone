@@ -1,5 +1,7 @@
 ---
 website: true
+title: Transcluded Note
+summary: Embed the full content of this note into another page using transclusion syntax.
 ---
 InkStone lets you embed the full content of any note into another page using Obsidian's transclusion syntax: `![[Note Title]]`. The embedded note renders inline, exactly as it would on its own page.
 

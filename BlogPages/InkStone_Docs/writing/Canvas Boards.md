@@ -19,7 +19,7 @@ My Board__website.canvas
 ```
 
 > [!warning] Use the filename marker
-> Do **not** add `"website": true` inside the canvas JSON. Obsidian overwrites the JSON on every save and will erase it. The `__website` filename suffix is the only reliable way to publish a canvas.
+> Do **not** add `"website": true` inside the canvas JSON. Obsidian may overwrite the JSON on save and will erase it. The `__website` filename suffix is the only reliable way to publish a canvas.
 
 The title is the filename with `__website` stripped: `My Board__website.canvas` → title "My Board", URL `/my-board`.
 
