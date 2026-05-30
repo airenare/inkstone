@@ -51,6 +51,27 @@ def strip_leading_h1(md):
 # OBSIDIAN LINK PARSER
 # =========================================
 
+_WIKI_TARGET_SUFFIXES = ("__website__featured", "__featured__website",
+                         "__featured", "__website")
+_WIKI_EXTENSIONS = (".canvas", ".base", ".md")
+
+
+def _clean_wiki_target(target):
+    """Strip path prefix, known file extensions, and __website/__featured from
+    a wiki-link target so it matches the clean title stored in url_index."""
+    name = target.split("/")[-1].split("\\")[-1]
+    for ext in _WIKI_EXTENSIONS:
+        if name.lower().endswith(ext):
+            name = name[: -len(ext)]
+            break
+    low = name.lower()
+    for suffix in _WIKI_TARGET_SUFFIXES:
+        if low.endswith(suffix):
+            name = name[: -len(suffix)].rstrip()
+            break
+    return name
+
+
 def convert_links(md, url_index=None):
     """Convert [[Wiki Links]] and [[Title|Display Text]] to markdown links.
 
@@ -87,12 +108,25 @@ def convert_links(md, url_index=None):
             return match.group(0)
         target = match.group(3).strip()
         anchor_text = match.group(4).strip() if match.group(4) else None
-        display = (match.group(5) or
-                   (f"{target} › {anchor_text}" if anchor_text else target)).strip()
-        slug = slugify(target).lower()
-        url = url_index.get(slug) if url_index else None
-        base = url or ("/" + slug)
+        alias = match.group(5).strip() if match.group(5) else None
+
+        # Strip path prefix / extension / __website suffixes for lookup + display
+        clean = _clean_wiki_target(target)
+        clean_slug = slugify(clean).lower()
+        raw_slug = slugify(target).lower()
+        url = None
+        if url_index:
+            url = url_index.get(clean_slug) or url_index.get(raw_slug)
+        base = url or ("/" + (clean_slug or raw_slug))
         anchor = ("#" + slugify(anchor_text).lower()) if anchor_text else ""
+
+        # Display text: clean the alias too if it contains marker suffixes
+        if alias:
+            display = _clean_wiki_target(alias)
+        elif anchor_text:
+            display = f"{clean} › {anchor_text}"
+        else:
+            display = clean
         return f"[{display}]({base}{anchor})"
 
     return _combined.sub(repl, md)
