@@ -148,8 +148,12 @@ def convert_canvas_embed(md, url_index=None):
         def _repl(match):
             raw = match.group(1).strip()
             stem = raw[:-7] if raw.lower().endswith(".canvas") else raw
+            # Obsidian wiki-links may include a path prefix — resolve by basename
+            stem_base = stem.split("/")[-1].split("\\")[-1]
             filepath = (
-                canvas_index.get(stem.lower())
+                canvas_index.get(stem_base.lower())
+                or canvas_index.get(slugify(stem_base).lower())
+                or canvas_index.get(stem.lower())
                 or canvas_index.get(slugify(stem).lower())
             )
             if not filepath:
