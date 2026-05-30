@@ -75,6 +75,13 @@
 
 </article>
 
+{% if prev_post or next_post %}
+<nav class="post-nav">
+{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev">← {{ prev_post.title }}</a>{% endif %}
+{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next">{{ next_post.title }} →</a>{% endif %}
+</nav>
+{% endif %}
+
 {% if related %}
 <section class="related-posts">
 <h2 class="related-title">{{ ui_strings.get('See also', 'See also') }}</h2>
@@ -88,13 +95,6 @@
 {% endfor %}
 </div>
 </section>
-{% endif %}
-
-{% if prev_post or next_post %}
-<nav class="post-nav">
-{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev">← {{ prev_post.title }}</a>{% endif %}
-{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next">{{ next_post.title }} →</a>{% endif %}
-</nav>
 {% endif %}
 
 {% if giscus_config %}

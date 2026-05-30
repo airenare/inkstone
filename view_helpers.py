@@ -23,17 +23,29 @@ def build_breadcrumbs(url_path, post_title, section_routes, home_label="Home"):
 
 
 def get_adjacent_posts(post, all_posts):
-    """Return (prev_post, next_post) ordered by date within the same section.
+    """Return (prev_post, next_post) in listing reading order.
 
-    prev = older post (lower date), next = newer post (higher date).
-    Posts without a date are excluded from ordering.
+    Order mirrors the listing page: featured posts first (sorted by priority
+    asc, then date desc), followed by regular posts (date desc).  No prev is
+    returned for the very first post in the list.
     """
     section = post["section"]
-    ordered = sorted(
-        [p for p in all_posts.values()
-         if p["section"] == section and p["date"]],
-        key=lambda p: p["date"],
+    section_posts = [p for p in all_posts.values() if p["section"] == section]
+
+    def _ts(p):
+        d = p.get("date")
+        return d.timestamp() if d else 0
+
+    featured = sorted(
+        [p for p in section_posts if p.get("featured")],
+        key=lambda p: (p.get("priority") or 0, -_ts(p)),
     )
+    regular = sorted(
+        [p for p in section_posts if not p.get("featured")],
+        key=lambda p: -_ts(p),
+    )
+    ordered = featured + regular
+
     idx = next(
         (i for i, p in enumerate(ordered)
          if p["url_path"] == post["url_path"]),
