@@ -38,6 +38,22 @@ File nodes show the post's title and full body HTML. The linked vault file must 
 
 Edges drawn with `fromEnd`/`toEnd` in Obsidian get SVG arrow markers pointing toward the target node. Bidirectional and undirected edges render without arrowheads.
 
+## Embedding a canvas in a note
+
+You can embed a published canvas inline inside any markdown note using the standard wiki-link embed syntax:
+
+```
+![[My Board__website]]
+```
+
+or with the explicit extension:
+
+```
+![[My Board__website.canvas]]
+```
+
+The canvas renders as a fully interactive block — pan, zoom, wide mode, and all — right inside the note body. The canvas must be published (via the `__website` filename suffix) for the embed to resolve; if it isn't, the syntax is left as-is in the output.
+
 ## Controls
 
 | Action | How |
