@@ -77,10 +77,12 @@ Each segment is a clickable link. The breadcrumb reflects the URL structure — 
 
 ## Next / Previous navigation
 
-Within a section, posts show previous/next links at the bottom:
+Posts show previous/next links that let the reader continue through the section in listing order:
 
 ```
-← Older post title          Newer post title →
+← Previous post title          Next post title →
 ```
 
-Ordering is by `date:` frontmatter descending (newest first on listing pages, so "newer" = more recent date).
+The reading sequence mirrors the listing page: featured posts first (sorted by `priority:` ascending, then `date:` descending), followed by regular posts (sorted by `date:` descending). The very first post in the sequence has no left arrow; the very last has no right arrow.
+
+The nav block appears above the **See also** block at the bottom of each post.
