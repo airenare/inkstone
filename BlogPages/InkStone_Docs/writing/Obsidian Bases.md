@@ -51,11 +51,14 @@ limit: 10
 
 ## Filters
 
+> [!tip] Tip
+> Just use Obsidian's native bases editor. It gives a real time feedback and easy to use GUI.
+
 | Filter expression | Matches |
 |---|---|
 | `file.hasTag("python")` | Notes tagged `#python` |
 | `file.tags.contains("python")` | Same — alternative syntax |
-| `file.inFolder("blog")` | Notes inside the `blog/` folder |
+| `file.inFolder("blog")` | Notes inside the `blog/` folder (path relative to vault root) |
 | `date > 2025-01-01` | Notes published after Jan 1 2025 |
 | `featured = true` | Featured notes |
 | `filter1 and filter2` | Both conditions must match |
@@ -67,3 +70,25 @@ limit: 10
 - Column order, sort direction, and limit from the base YAML are respected.
 - The engine executes the filter against the live post index — the table updates automatically when notes change (no restart needed).
 - The rendered table links each title to the post's URL.
+
+## Embedding a base in a note
+
+Embed a published base table inline inside any markdown note:
+
+```
+![[Posts__website.base]]
+![[Posts__website]]
+```
+
+Obsidian's link picker may insert a full vault-relative path — that works too:
+
+```
+![[writing/Posts__website.base|Posts__website]]
+```
+
+InkStone strips the path prefix, `.base` extension, and `__website` marker automatically, so both the resolved URL and the displayed link text are clean.
+
+## Example
+[[Writing Reference Base__website.base]]
+
+![[Writing Reference Base__website.base]]

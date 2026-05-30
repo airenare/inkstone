@@ -86,3 +86,10 @@ Embed a single section by adding a heading anchor:
 
 > [!warning] Published notes only
 > Transclusion only works for notes that have `website: true` and exist in the same vault. References to unpublished or missing notes render as a broken-link placeholder.
+---
+
+## Canvas and base embeds
+
+`![[BoardName.canvas]]` and `![[QueryName.base]]` embed interactive canvas boards and base table views inline. See [[Canvas Boards]] and [[Obsidian Bases]] for details.
+
+InkStone also handles path-prefixed links that Obsidian's link picker generates, and strips `__website` / `__featured` markers and file extensions from both URLs and display text automatically — so `[[blog/My Board__website.canvas|My Board__website]]` renders as a clean link titled "My Board".
