@@ -123,7 +123,21 @@ def _eval_filter_expr(expr_str, note_ctx):
     if m:
         target = m.group(1).rstrip("/").lower()
         note_folder = ((note_ctx.get("file") or {}).get("folder") or "").lower()
-        return note_folder == target or note_folder.startswith(target + "/")
+        # Direct match: dv_folder is relative to VAULT_PATH
+        if note_folder == target or note_folder.startswith(target + "/"):
+            return True
+        # Vault-sub-root match: Obsidian writes paths relative to its own
+        # vault root, which may be a parent of VAULT_PATH. Check whether
+        # note_folder (or a prefix of it) appears as a path suffix of target.
+        # e.g. target="inkstone_docs/writing", note_folder="writing" → match
+        # e.g. target="inkstone_docs/writing", note_folder="writing/sub" → match
+        if note_folder:
+            parts = note_folder.split("/")
+            for i in range(len(parts), 0, -1):
+                seg = "/".join(parts[:i])
+                if target == seg or target.endswith("/" + seg):
+                    return True
+        return False
 
     # file.hasLink("note") — not implementable without a link graph; pass through
     if re.match(r'^file\.hasLink\(', expr_str, re.IGNORECASE):
