@@ -393,6 +393,12 @@ nav a.nav-active {
     font-weight: 600;
 }
 
+nav a.nav-home {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.5rem;
+}
+
 /* Header controls (theme toggle) */
 .header-controls {
     display: flex;
