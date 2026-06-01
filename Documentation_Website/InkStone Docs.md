@@ -5,7 +5,7 @@ title: InkStone
 language: en
 show_search: true
 default_theme: dark
-icon: /static/InkStoneLogo.png
+icon: /_attachments/InkStoneLogo.png
 summary: Homepage of the InkStone documentation website.
 ---
 # InkStone
@@ -28,7 +28,7 @@ No build step, no export.
 ### [[Get Started]] — Three ways to run InkStone and your first published note.
 ```dataview
 LIST summary 
-FROM "InkStone_Docs/getting-started"
+FROM "getting-started"
 WHERE type != "listing"
 SORT priority ASC
 ```
@@ -36,7 +36,7 @@ SORT priority ASC
 ### [[Writing]] — How to write and publish notes with InkStone.
 ```dataview
 LIST summary 
-FROM "InkStone_Docs/writing"
+FROM "writing"
 WHERE type != "listing"
 SORT priority ASC
 ```
@@ -44,7 +44,7 @@ SORT priority ASC
 ### [[Site Structure]] — How vault folders, file types, and frontmatter map to URLs and pages.
 ```dataview
 LIST summary 
-FROM "InkStone_Docs/site-structure"
+FROM "site-structure"
 WHERE type != "listing"
 SORT priority ASC
 ```
@@ -52,7 +52,7 @@ SORT priority ASC
 ### [[Features]] — Theming, search, multilingual, private notes, SEO, and more.
 ```dataview
 LIST summary 
-FROM "InkStone_Docs/features"
+FROM "features"
 WHERE type != "listing"
 SORT priority ASC
 ```
@@ -60,7 +60,7 @@ SORT priority ASC
 ### [[Deployment]] — Local development, Docker, and production deployment options.
 ```dataview
 LIST summary 
-FROM "InkStone_Docs/deployment"
+FROM "deployment"
 WHERE type != "listing"
 SORT priority ASC
 ```
