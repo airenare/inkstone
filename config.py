@@ -13,10 +13,10 @@ VAULT_PATH = os.getenv("VAULT_PATH")
 if not VAULT_PATH or not os.path.exists(VAULT_PATH):
     print(
         f"WARNING: VAULT_PATH '{VAULT_PATH}' not found. "
-        "Falling back to './BlogPages' (demo vault).",
+        "Falling back to './Documentation_Website'.",
         file=sys.stderr,
     )
-    VAULT_PATH = "./BlogPages"
+    VAULT_PATH = "./Documentation_Website"
 
 # Optional vault-wide attachments directory.
 # Set ATTACHMENTS_PATH in .env to a directory that is checked as a fallback
