@@ -94,8 +94,12 @@ def _resolve_icon_override(url_path):
                 icon_url = icon
             else:
                 icon_url = vault_attachment_href(icon)
-            return {"header_icon": icon_url, "header_site_title": st}
-    return {"header_icon": None, "header_site_title": None}
+            return {
+                "header_icon": icon_url,
+                "header_site_title": st,
+                "header_home_url": candidate,
+            }
+    return {"header_icon": None, "header_site_title": None, "header_home_url": None}
 
 
 @app.context_processor
@@ -166,6 +170,7 @@ def inject_globals():
         "site_default_theme": post_store.DEFAULT_THEME,
         "header_icon": icon_ctx["header_icon"],
         "header_site_title": icon_ctx["header_site_title"],
+        "header_home_url": icon_ctx["header_home_url"],
         "current_lang": current_lang,
         "default_lang": post_store.DEFAULT_LANG,
         "available_langs": post_store.AVAILABLE_LANGS,
