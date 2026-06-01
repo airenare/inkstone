@@ -106,35 +106,56 @@ def _resolve_icon_override(url_path):
 def inject_globals():
     current_lang = _detect_current_lang(request.path)
     multilingual = len(post_store.AVAILABLE_LANGS) > 1
+    icon_ctx = _resolve_icon_override(request.path)
+    # section_root is "/" at the top level, or e.g. "/docs" inside a section
+    # with its own site_title — used to scope nav to the active level.
+    section_root = icon_ctx["header_home_url"] or "/"
 
-    # Language-aware top-level nav sections — (url, label) tuples
+    def _in_section(url, extra_depth=0):
+        """True if url is a direct child of section_root at extra_depth levels down."""
+        if section_root == "/":
+            return url.count("/") == 1 + extra_depth
+        return (
+            url.startswith(section_root + "/")
+            and url.count("/") == section_root.count("/") + 1 + extra_depth
+        )
+
+    # Nav sections scoped to the active section level
     if not multilingual or current_lang == post_store.DEFAULT_LANG:
         top_sections = sorted(
             (url, route["post"].get("title", url.lstrip("/").title()))
             for url, route in post_store.SECTION_ROUTES.items()
             if url not in ("/", f"/{current_lang}")
-            and url.count("/") == 1
+            and _in_section(url)
             and route.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG
             and not (route["post"].get("metadata") or {}).get("nav_hidden")
             and (route["post"].get("metadata") or {}).get("menu_order") is None
         )
     else:
-        # Non-default language: show sections at /{section}/{lang}
+        # Non-default language: sections live one level deeper (/{section}/{lang})
         top_sections = sorted(
             (url, route["post"].get("title", url.lstrip("/").title()))
             for url, route in post_store.SECTION_ROUTES.items()
             if route.get("lang") == current_lang
-            and url.count("/") == 2
+            and _in_section(url, extra_depth=1)
             and not (route["post"].get("metadata") or {}).get("nav_hidden")
             and (route["post"].get("metadata") or {}).get("menu_order") is None
         )
 
-    # Language-aware menu posts; fall back to default lang if none found
+    # Menu posts scoped to the active section level
+    def _menu_in_section(p):
+        url = p["url_path"]
+        if section_root == "/":
+            return url.count("/") == 1
+        return url.startswith(section_root + "/")
+
     lang_menu = [p for p in post_store.MENU_POSTS
-                 if p.get("lang", post_store.DEFAULT_LANG) == current_lang]
+                 if p.get("lang", post_store.DEFAULT_LANG) == current_lang
+                 and _menu_in_section(p)]
     if not lang_menu and current_lang != post_store.DEFAULT_LANG:
         lang_menu = [p for p in post_store.MENU_POSTS
-                     if p.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG]
+                     if p.get("lang", post_store.DEFAULT_LANG) == post_store.DEFAULT_LANG
+                     and _menu_in_section(p)]
 
     # Language variants for the toggle: resolve by URL match so translated
     # pages with custom slugs (no /{lang} suffix) still map to the right group.
@@ -146,7 +167,6 @@ def inject_globals():
                 break
     lang_variants = post_store.LANG_GROUPS.get(base_url, {}) if multilingual else {}
 
-    icon_ctx = _resolve_icon_override(request.path)
     ui_strings = post_store.UI_TRANSLATIONS.get(current_lang, {})
 
     def localize_date(date_obj):
