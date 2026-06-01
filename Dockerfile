@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x /app/entrypoint.sh
 
 # VAULT_PATH=/vault is the production default.
-# config.py falls back to ./BlogPages if /vault does not exist.
+# config.py falls back to ./Documentation_Website if /vault does not exist.
 ENV VAULT_PATH=/vault
 
 EXPOSE 8000
