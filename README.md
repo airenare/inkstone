@@ -162,11 +162,15 @@ cd inkstone
 
 pip install -r requirements.txt
 
-# Point at your vault
-echo "VAULT_PATH=/path/to/your/vault" > .env
-
 python3 app.py
 # → http://127.0.0.1:8000
+```
+
+With no configuration, the server falls back to `Documentation_Website/` so you get a working site immediately. Point it at your own vault by setting `VAULT_PATH`:
+
+```bash
+echo "VAULT_PATH=/path/to/your/vault" > .env
+python3 app.py
 ```
 
 The server hot-reloads when vault files change.
