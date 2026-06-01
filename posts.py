@@ -1116,14 +1116,24 @@ def load_posts():
         meta = route["post"].get("metadata", {})
         icon = meta.get("icon") or None
         st = meta.get("site_title") or None
-        if icon or st:
-            icon_overrides[section_url] = {"icon": icon, "site_title": st}
+        ss = bool(meta["show_search"]) if "show_search" in meta else None
+        stags = bool(meta["show_tags"]) if "show_tags" in meta else None
+        if icon or st or ss is not None or stags is not None:
+            icon_overrides[section_url] = {
+                "icon": icon, "site_title": st,
+                "show_search": ss, "show_tags": stags,
+            }
     for url_path, post_data in all_posts.items():
         meta = post_data.get("metadata", {})
         icon = meta.get("icon") or None
         st = meta.get("site_title") or None
-        if icon or st:
-            icon_overrides[url_path] = {"icon": icon, "site_title": st}
+        ss = bool(meta["show_search"]) if "show_search" in meta else None
+        stags = bool(meta["show_tags"]) if "show_tags" in meta else None
+        if icon or st or ss is not None or stags is not None:
+            icon_overrides[url_path] = {
+                "icon": icon, "site_title": st,
+                "show_search": ss, "show_tags": stags,
+            }
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, default_theme,

@@ -15,7 +15,7 @@
 <ul class="labels-index">
 {% for label, count in labels %}
 <li>
-  <a href="/tag/{{ label }}" class="labels-index-link">{{ label }}</a>
+  <a href="/tag/{{ label }}{% if section %}?section={{ section }}{% endif %}" class="labels-index-link">{{ label }}</a>
   <span class="labels-index-count">{{ count }}</span>
 </li>
 {% endfor %}

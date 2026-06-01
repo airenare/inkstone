@@ -68,38 +68,54 @@ def _detect_current_lang(path):
 
 
 def _resolve_icon_override(url_path):
-    """Walk up the URL hierarchy to find the nearest icon/site_title override.
+    """Walk up the URL hierarchy collecting per-field overrides independently.
 
-    Returns {"icon": str|None, "site_title": str|None} for the most specific
-    ancestor (including the page itself) that has set either field, or both
-    values None if no ancestor has set anything.
+    Each field (icon+site_title pair, show_search, show_tags) is taken from
+    the most-specific ancestor that set it. Returns None for fields not set
+    anywhere in the hierarchy.
     """
     overrides = post_store.ICON_OVERRIDES
-    # Check from most-specific (current URL) up to root "/"
     parts = url_path.rstrip("/").split("/")
-    # Generate candidate paths from most- to least-specific
     candidates = []
     for i in range(len(parts), 0, -1):
         candidates.append("/".join(parts[:i]) or "/")
     candidates.append("/")
+
+    header_icon = None
+    header_site_title = None
+    header_home_url = None
+    show_search = None
+    show_tags = None
+
     for candidate in candidates:
-        if candidate in overrides:
-            ov = overrides[candidate]
-            icon = ov.get("icon")
+        if candidate not in overrides:
+            continue
+        ov = overrides[candidate]
+        if header_site_title is None:
+            icon = ov.get("icon") or ""
             st = ov.get("site_title")
-            # Build icon URL: vault-relative path served via /attachments/
-            # Absolute paths (e.g. /static/logo.svg) and full URLs used as-is;
-            # relative paths are resolved via the /attachments/ route.
-            if icon.startswith("/") or icon.startswith("http"):
-                icon_url = icon
-            else:
-                icon_url = vault_attachment_href(icon)
-            return {
-                "header_icon": icon_url,
-                "header_site_title": st,
-                "header_home_url": candidate,
-            }
-    return {"header_icon": None, "header_site_title": None, "header_home_url": None}
+            if icon or st:
+                header_site_title = st
+                header_home_url = candidate
+                if icon:
+                    # Absolute paths and full URLs used as-is; relative paths
+                    # are resolved via /attachments/.
+                    if icon.startswith("/") or icon.startswith("http"):
+                        header_icon = icon
+                    else:
+                        header_icon = vault_attachment_href(icon)
+        if show_search is None and ov.get("show_search") is not None:
+            show_search = ov["show_search"]
+        if show_tags is None and ov.get("show_tags") is not None:
+            show_tags = ov["show_tags"]
+
+    return {
+        "header_icon": header_icon,
+        "header_site_title": header_site_title,
+        "header_home_url": header_home_url,
+        "show_search": show_search,
+        "show_tags": show_tags,
+    }
 
 
 @app.context_processor
@@ -181,8 +197,12 @@ def inject_globals():
         "website_name": post_store.WEBSITE_NAMES.get(current_lang) or post_store.WEBSITE_NAME,
         "nav_sections": top_sections,
         "menu_posts": lang_menu,
-        "show_search": post_store.SHOW_SEARCH,
-        "show_tags": post_store.SHOW_TAGS,
+        "show_search": (icon_ctx["show_search"]
+                        if icon_ctx["show_search"] is not None
+                        else post_store.SHOW_SEARCH),
+        "show_tags": (icon_ctx["show_tags"]
+                      if icon_ctx["show_tags"] is not None
+                      else post_store.SHOW_TAGS),
         "current_url": request.url,
         "canonical_url": request.base_url,
         "app_version": VERSION,
@@ -343,12 +363,15 @@ def section_rss_feed(section):
 @app.route("/tags")
 def tags_index():
     post_store.maybe_reload()
+    section = request.args.get("section", "").rstrip("/")
     tag_counts = {}
     for p in post_store.ALL_POSTS.values():
+        if section and not p["url_path"].startswith(section + "/"):
+            continue
         for tag in p.get("tags", []):
             tag_counts[tag] = tag_counts.get(tag, 0) + 1
     tags = sorted(tag_counts.items())
-    return render_template("labels.html", labels=tags)
+    return render_template("labels.html", labels=tags, section=section)
 
 
 @app.route("/sitemap.xml")
@@ -377,23 +400,25 @@ def sitemap():
 @app.route("/tag/<tag>")
 def tag_archive(tag):
     post_store.maybe_reload()
+    section = request.args.get("section", "").rstrip("/")
     tag_lower = tag.lower()
     posts = sorted(
         (p for p in post_store.ALL_POSTS.values()
-         if tag_lower in p.get("tags", [])),
+         if tag_lower in p.get("tags", [])
+         and (not section or p["url_path"].startswith(section + "/"))),
         key=lambda p: p["date"] or datetime.min,
         reverse=True,
     )
     if not posts:
         abort(404)
-    # Build per-post prev/next within this tag (older ← / → newer)
     nav = {}
     for i, p in enumerate(posts):
         nav[p["url_path"]] = {
-            "prev": posts[i + 1] if i + 1 < len(posts) else None,  # older
-            "next": posts[i - 1] if i > 0 else None,               # newer
+            "prev": posts[i + 1] if i + 1 < len(posts) else None,
+            "next": posts[i - 1] if i > 0 else None,
         }
-    return render_template("tag.html", tag=tag, posts=posts, tag_nav=nav)
+    return render_template("tag.html", tag=tag, posts=posts, tag_nav=nav,
+                           section=section)
 
 
 @app.route("/search")
@@ -401,13 +426,18 @@ def search():
     post_store.maybe_reload()
     q = request.args.get("q", "").strip()
     label_filter = request.args.get("tag", "").strip().lower()
+    section = request.args.get("section", "").rstrip("/")
 
-    all_tags = post_store.ALL_TAGS
+    candidate_posts = [
+        p for p in post_store.ALL_POSTS.values()
+        if not section or p["url_path"].startswith(section + "/")
+    ]
+    all_tags = sorted({tag for p in candidate_posts for tag in p.get("tags", [])})
 
     results = []
     if q or label_filter:
         q_lower = q.lower()
-        for p in post_store.ALL_POSTS.values():
+        for p in candidate_posts:
             if label_filter and label_filter not in p.get("tags", []):
                 continue
             if q_lower and q_lower not in p["title"].lower() \
@@ -425,6 +455,7 @@ def search():
         query=q,
         selected_tag=label_filter,
         all_tags=all_tags,
+        section=section,
     )
 
 

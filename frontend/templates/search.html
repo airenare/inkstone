@@ -5,6 +5,7 @@
 <h2>{{ ui_strings.get('Search', 'Search') }}</h2>
 
 <form class="search-form" action="/search">
+{% if section %}<input type="hidden" name="section" value="{{ section }}">{% endif %}
 {% if current_lang != default_lang %}<input type="hidden" name="lang" value="{{ current_lang }}">{% endif %}
 
 <input type="text" name="q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…" autofocus>
