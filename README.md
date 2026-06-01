@@ -1,8 +1,20 @@
 # InkStone
 
+<img src="frontend/static/InkStoneLogo/InkStoneLogo.png" 
+  alt="InkStoneLogo" 
+  width="200" 
+  align="left" 
+  style="margin-right: 15px;">
+
 > Your notes, published.
 
-A lightweight Python/Flask server that turns an **Obsidian vault into a website**. Write in Obsidian, push to GitHub, see it live — no export step, no build pipeline, no CMS.
+
+A lightweight Python/Flask server that turns an **Obsidian vault into a website**. 
+
+Write in Obsidian, push to GitHub, see it live — no export step, no build pipeline, no CMS.
+
+<br clear="left" />
+
 
 ---
 
