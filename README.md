@@ -44,13 +44,14 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ### Dataview
 
-- **Table and list queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings
-- **Inline queries** — `` `= this.field` `` expressions in prose evaluated against the current note's frontmatter
+- **Table and list queries** — `TABLE` and `LIST` queries in fenced ` ```dataview ``` ` blocks executed server-side; supports `FROM`, `WHERE`, `SORT`, `LIMIT`, `GROUP BY` with per-group headings; `TABLE` auto-prepends a File column matching Obsidian's output; `FROM` supports `"folder1" OR "folder2"` and `AND` for multi-folder filtering
+- **Inline queries** — `` `= this.field` `` or `` `$= this.field` `` expressions in prose evaluated against the current note's frontmatter; `dv.pages("#tag").length` for vault-wide counts
 - **Obsidian Bases** — publish with `website: true` or filename marker `Title__website.base`; feature on listings with `featured: true` or filename marker `__featured`; views render as filtered, sorted HTML tables
 
 ### Canvas
 
 - **Visual boards** — publish a `.canvas` file by naming it `Your Title__website.canvas` (title is the part before `__website`; Obsidian won't strip this) or by legacy `"website": true` in the JSON. Interactive diagrams: pan by dragging, zoom with the scroll wheel (zoom-to-cursor), pinch-to-zoom on touch, fit-to-view button (⊡), and a wide-view button (⛶) that expands the canvas to nearly fill the browser window (press Esc to exit). Text nodes render the full markdown pipeline (callouts, tables, wiki-links, Dataview, etc.). File, link, and group node types supported; edges as directed SVG bezier curves with `fromEnd`/`toEnd` directionality per the jsoncanvas spec; file nodes link to published posts and embed a scrollable preview of the note body when the file resolves; file nodes that point at vault image/audio/video paths render that media in the card; link nodes show the domain and a ↗ icon; group nodes get a color tint; edge labels as HTML overlays; node borders follow Obsidian's 6 preset colors. If the site lives under a URL prefix (e.g. `/inkstone`), set `URL_PATH_PREFIX` in `.env` so `![[embeds]]` and canvas media use the correct `/inkstone/attachments/…` URLs.
+- **Inline canvas embeds** — use `![[CanvasName]]` or `![[CanvasName.canvas]]` anywhere in a note body to render that canvas as an interactive inline block (400 px tall, scrollable). The embed uses the same renderer as the standalone page; unresolved names are left for transclusion. Embeds inside fenced code blocks are never evaluated.
 
 ### Publishing & structure
 
@@ -106,10 +107,12 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 ```yaml
 ---
 website: true         # required to publish the note as a web page
-type: homepage        # optional: homepage | listing | book
-                      #   homepage — serves this note's content at the section root URL
-                      #   listing  — auto-generates a post index at the section root URL
-                      #   book     — uses the book template with cover/metadata header
+type: homepage        # optional: homepage | listing | book | translations
+                      #   homepage     — serves this note's content at the section root URL
+                      #   listing      — auto-generates a post index at the section root URL
+                      #   book         — uses the book template with cover/metadata header
+                      #   translations — UI string overrides for a language (no website: needed);
+                      #                  key/value pairs go in a fenced yaml block in the note body
 featured: true        # optional: highlight this post in the section's featured area
 show_search: true     # root homepage only: show a Search link in the top nav
 show_tags: true       # root homepage only: show a Tags link in the top nav
@@ -120,6 +123,8 @@ slug: my-post         # optional; auto-generated from title if omitted (non-ASCI
 priority: 0           # featured posts only; lower = higher (date breaks ties)
 summary: "..."        # shown on listing pages; auto-derived from content if omitted
 menu_order: 1         # pin to top nav; lower number = further left; appended after section links
+nav_hidden: true      # listing/homepage only: hides section from the top nav while keeping it
+                      #   routable; visitors can still reach it via direct link or wiki-link
 banner: "https://example.com/image.jpg"
 banner_x: 0.5         # horizontal focal point (0–1)
 banner_y: 0.4         # vertical focal point (0–1)
@@ -152,7 +157,7 @@ access_token: secret  # optional; notes without `website: true` are private by d
 **Requirements:** Python 3.11+
 
 ```bash
-git clone https://github.com/airenare/inkstone
+git clone https://github.com/airenare/InkStone
 cd inkstone
 
 pip install -r requirements.txt
@@ -216,20 +221,21 @@ edit note in Obsidian → git push vault → GitHub webhook → Coolify rebuild 
 app.py               Flask app, single catch-all route
 config.py            Loads .env, VAULT_PATH, tag constants
 obsidian_syntax.py   Obsidian-specific converters: wiki-links, callouts, embeds, math, block IDs
-dataview.py          Server-side Dataview query engine
+dataview.py          Server-side Dataview query engine (TABLE/LIST/FROM/WHERE/SORT/LIMIT/GROUP BY)
 bases.py             Obsidian Bases renderer (type:table filtered views)
 canvas.py            Canvas renderer (nodes + SVG edges → HTML)
-converters.py        Markdown pipeline coordinator; imports obsidian_syntax + dataview
+converters.py        Markdown pipeline coordinator; canvas embed converter
 posts.py             Four-pass vault loader, ALL_POSTS, SECTION_ROUTES, LANG_GROUPS
 view_helpers.py      Pure view utilities: breadcrumbs, adjacent posts, related posts
 frontend/
   templates/         base, index, post, listing, book, private, search, tag, 404
   static/            base.css, callouts-base.css, obsidian.css, omarchy.css, code.css
 BlogPages/           Bundled demo vault (fallback when no VAULT_PATH set)
+BlogPages/InkStone_Docs/   Official documentation site (serve as a standalone vault)
 Dockerfile
 ```
 
-The import chain is strictly one-way: `config ← obsidian_syntax / dataview ← converters ← posts ← app`.
+The import chain is strictly one-way: `config ← obsidian_syntax / dataview ← converters ← posts ← app`. `canvas.py` uses a lazy import inside `convert_canvas_embed()` to avoid a circular dependency.
 
 ---
 
@@ -240,25 +246,26 @@ The import chain is strictly one-way: `config ← obsidian_syntax / dataview ←
 | URL | Content |
 |---|---|
 | `/` | Engine homepage with feature overview |
-| `/start-here` | Getting-started guide — three paths to go live |
-| `/blog` | Blog listing with featured posts |
-| `/blog/how-this-blog-works` | Architecture deep-dive: two-pass loading, markdown pipeline, routing |
+| `/start-here` | Getting-started guide — three paths to go live (Russian translation at `/start-here/ru`) |
+| `/blog` | Blog listing with featured posts; Bases-powered "All Posts" view |
+| `/blog/how-this-blog-works` | Architecture deep-dive: four-pass loading, markdown pipeline, routing |
 | `/blog/writing-for-the-web` | Authoring workflow in Obsidian |
 | `/blog/engine-features` | Showcase: related posts, Dataview, block references, dark/light mode |
+| `/blog/video-test` | Embedded video demo |
 | `/gallery` | Image gallery with lightbox and slider |
 | `/books` | Dataview-powered bookshelf |
-| `/books/project-hail-mary` | Example of a private note placeholder |
+| `/books/project-hail-mary` | Private note placeholder example |
 | `/blog/my-writing-process` | Canvas diagram — writing workflow with colored nodes and edges |
 
 ## Documentation vault
 
-`InkStone_Docs/` ships with the repo as the official documentation site — itself an InkStone vault. Serve it with:
+`BlogPages/InkStone_Docs/` ships with the repo as the official documentation site — itself a self-contained InkStone vault. Serve it standalone with:
 
 ```bash
-VAULT_PATH=InkStone_Docs/ python3 app.py
+VAULT_PATH=BlogPages/InkStone_Docs python3 app.py
 ```
 
-Covers Getting Started, Writing, Site Structure, Features, and Deployment across 33 pages.
+Covers Getting Started, Writing, Site Structure, Features, and Deployment across 33 pages. The docs are also served as the `/inkstone-docs` section when you run the demo vault.
 
 ---
 

@@ -155,15 +155,18 @@ banner_y: 1.0
 ![[demo.mp4]]
 ```
 
+![[demo.mp4]]
+
 Renders a native `<video>` element with controls.
 
 ---
 ## Audio
 
 ```markdown
-![[podcast.mp3]]
+![[Tetris theme.mp3]]
 ```
 
+![[Tetris theme.mp3]]
 Renders a native `<audio>` element with controls.
 
 ---

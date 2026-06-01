@@ -3,7 +3,7 @@ views:
     name: Table
     filters:
       and:
-        - file.inFolder("writing")
+        - file.inFolder("InkStone_Docs/writing")
         - type != "listing"
         - '!file.ext.containsAny("base", "canvas")'
     order:

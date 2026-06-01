@@ -25,7 +25,7 @@ No build step, no export.
 ---
 
 ## Documentation
-### [[Getting Started]] — Three ways to run InkStone and your first published note.
+### [[Get Started]] — Three ways to run InkStone and your first published note.
 ```dataview
 LIST summary 
 FROM "InkStone_Docs/getting-started"

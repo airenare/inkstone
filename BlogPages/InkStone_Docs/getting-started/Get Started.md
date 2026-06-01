@@ -1,7 +1,7 @@
 ---
 website: true
 type: listing
-title: Getting Started
+title: Get Started
 summary: Three ways to run InkStone and your first published note.
 menu_order: 0
 ---

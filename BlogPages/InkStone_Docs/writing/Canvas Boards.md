@@ -56,10 +56,6 @@ Obsidian sometimes inserts the full vault-relative path when you use its link pi
 The canvas renders as a fully interactive block — pan, zoom, wide mode, and all — right inside the note body. The canvas must be published (via the `__website` filename suffix) for the embed to resolve; if it isn't, the syntax is left as-is in the output.
 
 Regular wiki-links (`[[My Board__website.canvas]]`) also resolve correctly — InkStone strips the path prefix, `.canvas` extension, and `__website` marker from both the URL and the displayed link text automatically.
-
-[[InkStone_Docs/writing/My Writing Process__website.canvas|My Writing Process__website]]
-![[InkStone_Docs/writing/My Writing Process__website.canvas|My Writing Process__website]]
-
 ## Controls
 
 | Action | How |
@@ -68,3 +64,12 @@ Regular wiki-links (`[[My Board__website.canvas]]`) also resolve correctly — I
 | Zoom | Scroll wheel |
 | Fit to view | Click the fit button (⛶) in the toolbar |
 | Wide mode | Click the wide-view button (⛶) — canvas fills the window; press Esc to exit |
+
+---
+
+## Examples
+
+Link: [[InkStone_Docs/writing/My Writing Process__website.canvas|My Writing Process__website]]
+
+![[InkStone_Docs/writing/My Writing Process__website.canvas|My Writing Process__website]]
+
