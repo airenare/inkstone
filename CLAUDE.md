@@ -22,7 +22,7 @@ docker build -t inkstone .
 docker run -p 8000:8000 -e VAULT_PATH=/vault -v /path/to/vault:/vault inkstone
 ```
 
-Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory. If `VAULT_PATH` is unset or missing, the app falls back to `./BlogPages` automatically.
+Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directory.
 
 **Optional env vars:**
 - `ACCESS_TOKEN` — master key that unlocks ALL private notes. Per-note access is controlled by `access_token:` frontmatter instead (each note has its own token, session tracks unlocked URLs individually). Both can coexist.
@@ -180,31 +180,15 @@ Images/videos must be in an `_attachments/` subfolder **relative to the `.md` fi
 
 ### Test Fixtures
 
-`BlogPages/` is the dev fallback vault (committed to repo):
-
-| Path | URL | Purpose |
-|------|-----|---------|
-| `Test Website.md` | `/` (homepage) | Site homepage |
-| `The Accidental Existentialist.md` | `/the-accidental-existentialist` | Root-level standalone page; pinned to nav via `menu_order: 1` |
-| `blog/Blog Index.md` | `/blog` (listing) | Blog section index |
-| `blog/test_post_1.md` | `/blog/test-post-one` | Featured post with images/callouts/checkboxes |
-| `blog/test_post_2.md` | `/blog/test-post-two` | Featured post with slider/callouts |
-| `blog/Python Ate My Homework.md` | `/blog/python-ate-my-homework` | Regular blog post |
-| `blog/The Philosophy of Semicolons.md` | `/blog/the-philosophy-of-semicolons` | Regular blog post |
-| `gallery/Gallery Index.md` | `/gallery` (listing) | Gallery section index with intro |
-| `gallery/Neon Dreams.md` | `/gallery/neon-dreams` | Gallery post |
-| `gallery/Pixel Sunset.md` | `/gallery/pixel-sunset` | Gallery post |
-| `gallery/Recursive Landscapes.md` | `/gallery/recursive-landscapes` | Gallery post |
-| `gallery/arts/Watercolor Algorithms.md` | `/gallery/arts/watercolor-algorithms` | Subfolder post with wiki-links |
-| `blog/My Writing Process__website.canvas` | `/blog/my-writing-process` | Published canvas (`__website` filename marker; JSON graph only) |
+`BlogPages/` is the dev vault — local only, not tracked in the repo (listed in `.gitignore`). It exists on the development machine and serves as a working example / test bed. Use `VAULT_PATH=BlogPages` to run it locally.
 
 ### Documentation Vault
 
-`InkStone_Docs/` is the official documentation site — a self-hosted InkStone vault committed to the repo. Serve it with `VAULT_PATH=InkStone_Docs/ /home/air/venv/3.14/bin/python3 app.py`. It is a standalone vault (no live-site vault locally). 33 files across 6 sections:
+`Documentation_Website/` is the official documentation site — a self-hosted InkStone vault tracked in the repo root. Serve it with `VAULT_PATH=Documentation_Website /home/air/venv/3.14/bin/python3 app.py`. It is a standalone vault. 33 files across 6 sections:
 
 | Section | Pages |
 |---------|-------|
-| `getting-started/` | Getting Started, Quick Start, Installation, Configuration |
+| `getting-started/` | Get Started, Quick Start, Installation, Configuration |
 | `writing/` | Publishing Notes, Frontmatter Reference, Markdown Features, Links and Embeds, Images and Media, Dataview Queries, Canvas Boards, Obsidian Bases, Note Templates |
 | `site-structure/` | URL Mapping, Page Types, Navigation |
 | `features/` | Theming, Branding, Search and Tags, Multilingual, Private Notes, Comments, Social Links, SEO and Feeds |
@@ -227,7 +211,6 @@ Keep in sync when features are added, changed, or removed. Update the relevant d
   - New feature → MINOR bump (e.g. `1.11.0` → `1.12.0`)
   - Breaking change → MAJOR bump (e.g. `1.11.0` → `2.0.0`)
   - Steps: edit `VERSION`, commit as `chore: bump version to X.Y.Z`, then `git tag vX.Y.Z && git push origin vX.Y.Z`
-- **Blog posts:** `BlogPages/` is the demo vault — it should showcase features well and stay clean. Files may be created, modified, reorganized, or deleted when needed to improve the demo (e.g. removing debug content, regrouping pages, adding better examples). Propose the change first and proceed only after the user agrees.
 - **Memory sync:** Whenever something valuable is saved to the local `~/.claude` memory store, also distill it into this file under the relevant section. This keeps preferences and context in sync across machines.
 - **TODO.md:** Project backlog lives in `TODO.md` at the repo root. Check it when the user asks to implement todos. When an item is done, move it to `DONE.md` (grouped by version) — do not leave ✅ items in TODO.md.
-- **Docs sync:** After every feature addition, change, or removal — update both `README.md` and the vault homepage (`BlogPages/Test Website.md`) to reflect the current state. Do this as part of the same commit, not as a separate step.
+- **Docs sync:** After every feature addition, change, or removal — update `README.md` and the relevant pages in `Documentation_Website/` to reflect the current state. Do this as part of the same commit, not as a separate step.
