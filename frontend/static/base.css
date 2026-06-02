@@ -1610,6 +1610,7 @@ figure.figure-left,
 figure.figure-right {
     display: block;
     max-width: 45%;
+    margin-top: 0;
     margin-bottom: 1em;
 }
 
