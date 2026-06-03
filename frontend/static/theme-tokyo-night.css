@@ -1,0 +1,242 @@
+/* =========================
+   THEME: TOKYO NIGHT
+   Deep navy with neon purple, pink, and cyan accents.
+   ========================= */
+
+
+/* DARK VARIABLE OVERRIDES */
+
+:root {
+    --bg:                  #1a1b26;
+    --bg-raised:           #16161e;
+    --bg-card:             #24283b;
+    --bg-stripe:           #1f2235;
+    --bg-hover:            #292e42;
+    --bg-interactive:      #24283b;
+    --border:              #3b4261;
+    --border-subtle:       #24283b;
+    --text:                #c0caf5;
+    --text-muted:          #9aa5ce;
+    --text-dim:            #565f89;
+    --accent:              #7aa2f7;
+    --site-title:          #c0caf5;
+    --mark-bg:             #e0af6833;
+    --mark-fg:             #e0af68;
+    --code-bg:             #0d0e16;
+    --inline-code-bg:      #24283b;
+    --inline-code-text:    #7dcfff;
+    --banner-gradient:     transparent, rgba(26,27,38,0.5), #1a1b26;
+    --banner-meta-color:   rgba(192, 202, 245, 0.75);
+    --tag-color:           #7dcfff;
+    --h1-color:            #f7768e;
+    --h2-color:            #9ece6a;
+    --h3-color:            #e0af68;
+    --h4-color:            #7aa2f7;
+    --h5-color:            #bb9af7;
+    --h6-color:            #7dcfff;
+    --callout-base-bg:     #24283b;
+    --callout-base-border: #7aa2f7;
+}
+
+
+/* LIGHT VARIABLE OVERRIDES — Tokyo Night Day */
+
+[data-theme="light"] {
+    --bg:                  #e1e2e7;
+    --bg-raised:           #d9dae0;
+    --bg-card:             #cbccd6;
+    --bg-stripe:           #c4c5cf;
+    --bg-hover:            #bcbdc8;
+    --bg-interactive:      #c8c9d4;
+    --border:              #9899a8;
+    --border-subtle:       #babbc6;
+    --text:                #343b58;
+    --text-muted:          #565a6e;
+    --text-dim:            #8990a8;
+    --accent:              #2e7de9;
+    --site-title:          #343b58;
+    --mark-bg:             #8c6c3e33;
+    --mark-fg:             #5c4000;
+    --code-bg:             #0d0e16;
+    --inline-code-bg:      #cbccd6;
+    --inline-code-text:    #0f4b6e;
+    --banner-gradient:     transparent, rgba(225,226,231,0.5), #e1e2e7;
+    --banner-meta-color:   rgba(52, 59, 88, 0.75);
+    --tag-color:           #0f4b6e;
+    --h1-color:            #8c4351;
+    --h2-color:            #485e30;
+    --h3-color:            #8f5e15;
+    --h4-color:            #2e7de9;
+    --h5-color:            #7847bd;
+    --h6-color:            #0f4b6e;
+    --callout-base-bg:     #cbccd6;
+    --callout-base-border: #2e7de9;
+}
+
+
+/* =========================
+   CALLOUT TYPE COLORS
+   ========================= */
+
+/* DARK */
+
+.callout-note {
+    background: #1e2540;
+    border-left-color: #7aa2f7;
+    color: #7aa2f7;
+}
+
+.callout-abstract {
+    background: #1a2f3a;
+    border-left-color: #7dcfff;
+    color: #7dcfff;
+}
+
+.callout-info {
+    background: #1e2540;
+    border-left-color: #7aa2f7;
+    color: #7aa2f7;
+}
+
+.callout-todo {
+    background: #1e2540;
+    border-left-color: #7dcfff;
+    color: #7dcfff;
+}
+
+.callout-tip {
+    background: #1a2f3a;
+    border-left-color: #7dcfff;
+    color: #7dcfff;
+}
+
+.callout-success {
+    background: #1e3028;
+    border-left-color: #9ece6a;
+    color: #9ece6a;
+}
+
+.callout-question {
+    background: #352c18;
+    border-left-color: #e0af68;
+    color: #e0af68;
+}
+
+.callout-warning {
+    background: #352a18;
+    border-left-color: #ff9e64;
+    color: #ff9e64;
+}
+
+.callout-failure {
+    background: #351e28;
+    border-left-color: #f7768e;
+    color: #f7768e;
+}
+
+.callout-danger {
+    background: #351e28;
+    border-left-color: #f7768e;
+    color: #f7768e;
+}
+
+.callout-bug {
+    background: #351e28;
+    border-left-color: #f7768e;
+    color: #f7768e;
+}
+
+.callout-example {
+    background: #2a1e40;
+    border-left-color: #bb9af7;
+    color: #bb9af7;
+}
+
+.callout-quote {
+    background: #282c40;
+    border-left-color: #9aa5ce;
+    color: #9aa5ce;
+}
+
+
+/* LIGHT */
+
+[data-theme="light"] .callout-note {
+    background: #b8c4e8;
+    border-left-color: #2e7de9;
+    color: #1a4fa0;
+}
+
+[data-theme="light"] .callout-abstract {
+    background: #b0cfe0;
+    border-left-color: #0f4b6e;
+    color: #0f4b6e;
+}
+
+[data-theme="light"] .callout-info {
+    background: #b8c4e8;
+    border-left-color: #2e7de9;
+    color: #1a4fa0;
+}
+
+[data-theme="light"] .callout-todo {
+    background: #b8c4e8;
+    border-left-color: #2e7de9;
+    color: #1a4fa0;
+}
+
+[data-theme="light"] .callout-tip {
+    background: #b0cfe0;
+    border-left-color: #0f4b6e;
+    color: #0f4b6e;
+}
+
+[data-theme="light"] .callout-success {
+    background: #c4d8b0;
+    border-left-color: #485e30;
+    color: #2e4010;
+}
+
+[data-theme="light"] .callout-question {
+    background: #e0d0a8;
+    border-left-color: #8f5e15;
+    color: #6a4000;
+}
+
+[data-theme="light"] .callout-warning {
+    background: #e0c8a8;
+    border-left-color: #965027;
+    color: #6a3000;
+}
+
+[data-theme="light"] .callout-failure {
+    background: #e0b8c0;
+    border-left-color: #8c4351;
+    color: #8c4351;
+}
+
+[data-theme="light"] .callout-danger {
+    background: #e0b8c0;
+    border-left-color: #8c4351;
+    color: #8c4351;
+}
+
+[data-theme="light"] .callout-bug {
+    background: #e0b8c0;
+    border-left-color: #8c4351;
+    color: #8c4351;
+}
+
+[data-theme="light"] .callout-example {
+    background: #d0c0e8;
+    border-left-color: #7847bd;
+    color: #5a2898;
+}
+
+[data-theme="light"] .callout-quote {
+    background: #c4c5cf;
+    border-left-color: #8990a8;
+    color: #565a6e;
+}
+
+[data-theme="light"] .callout-content { color: inherit; }

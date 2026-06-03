@@ -2,7 +2,8 @@
 website: true
 title: Theming
 date: 2026-05-21
-summary: Dark/light/system mode toggle, default theme, and the Omarchy theme.
+updated: 2026-06-03
+summary: Dark/light/system mode toggle, default theme, and built-in themes.
 featured: true
 priority: 0
 tags:
@@ -39,17 +40,36 @@ Accepted values: `dark`, `light`, `system`. Defaults to `system` if omitted.
 
 ## Built-in themes
 
-**Default (Catppuccin-inspired)** — loaded from `obsidian.css`. A dark/light pair with warm purples and clean typography.
-
-**Omarchy** — loaded from `omarchy.css`. An alternative palette for sites that match the Omarchy desktop environment.
-
-To switch to the Omarchy theme, add `theme: omarchy` in the root homepage frontmatter:
+Set a theme in the root homepage frontmatter:
 
 ```yaml
 ---
 website: true
 type: homepage
-theme: omarchy
+theme: nord
+---
+```
+
+All themes ship with full dark and light variants.
+
+| Theme | Value | Character |
+|---|---|---|
+| Obsidian (default) | `obsidian` | Catppuccin-inspired, warm purples |
+| Omarchy | `omarchy` | Catppuccin Mocha/Latte, colorful headings |
+| Nord | `nord` | Arctic blues, cool and desaturated |
+| Gruvbox | `gruvbox` | Warm retro browns and yellows |
+| Tokyo Night | `tokyo-night` | Deep navy with neon purple, pink, and cyan |
+| Solarized | `solarized` | Ethan Schoonover's precision color palette |
+| Paper | `paper` | Ink-on-paper minimal, sepia tones, no color gimmicks |
+
+## Per-page theme override
+
+Any individual page can override the site theme by adding `theme:` to its own frontmatter. This is useful for sections that need a distinct look.
+
+```yaml
+---
+website: true
+theme: gruvbox
 ---
 ```
 
@@ -57,10 +77,15 @@ theme: omarchy
 
 | File | Purpose |
 |---|---|
-| `obsidian.css` | Base dark/light theme (Catppuccin-inspired) + header and listing styles |
-| `omarchy.css` | Alternative Omarchy-native palette |
-| `callouts.css` | Per-type callout colours and icons |
-| `omarchy-callouts.css` | Callout styles for the Omarchy theme |
+| `base.css` | Layout, typography, CSS variable tokens |
+| `callouts-base.css` | Callout structure and icons |
 | `code.css` | Code block styling with language labels and copy button |
+| `theme-obsidian.css` | Default theme callout colours |
+| `theme-omarchy.css` | Omarchy palette + callout colours |
+| `theme-nord.css` | Nord palette + callout colours |
+| `theme-gruvbox.css` | Gruvbox palette + callout colours |
+| `theme-tokyo-night.css` | Tokyo Night palette + callout colours |
+| `theme-solarized.css` | Solarized palette + callout colours |
+| `theme-paper.css` | Paper palette + callout colours |
 
 All CSS files are in `frontend/static/`.

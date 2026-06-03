@@ -1,0 +1,242 @@
+/* =========================
+   THEME: SOLARIZED
+   Ethan Schoonover's precision colors — both dark and light iconic.
+   ========================= */
+
+
+/* DARK VARIABLE OVERRIDES */
+
+:root {
+    --bg:                  #002b36;
+    --bg-raised:           #073642;
+    --bg-card:             #0a3a48;
+    --bg-stripe:           #083540;
+    --bg-hover:            #0c3e4c;
+    --bg-interactive:      #0a3a48;
+    --border:              #1c4f5e;
+    --border-subtle:       #0a3a48;
+    --text:                #839496;
+    --text-muted:          #657b83;
+    --text-dim:            #4a6a72;
+    --accent:              #268bd2;
+    --site-title:          #eee8d5;
+    --mark-bg:             #b5890033;
+    --mark-fg:             #b58900;
+    --code-bg:             #00212b;
+    --inline-code-bg:      #073642;
+    --inline-code-text:    #2aa198;
+    --banner-gradient:     transparent, rgba(0,43,54,0.5), #002b36;
+    --banner-meta-color:   rgba(131, 148, 150, 0.75);
+    --tag-color:           #2aa198;
+    --h1-color:            #dc322f;
+    --h2-color:            #859900;
+    --h3-color:            #b58900;
+    --h4-color:            #268bd2;
+    --h5-color:            #d33682;
+    --h6-color:            #2aa198;
+    --callout-base-bg:     #073642;
+    --callout-base-border: #268bd2;
+}
+
+
+/* LIGHT VARIABLE OVERRIDES */
+
+[data-theme="light"] {
+    --bg:                  #fdf6e3;
+    --bg-raised:           #eee8d5;
+    --bg-card:             #e8e2d0;
+    --bg-stripe:           #e0dac8;
+    --bg-hover:            #d8d2c0;
+    --bg-interactive:      #e0dac8;
+    --border:              #c0baa8;
+    --border-subtle:       #d5cfbd;
+    --text:                #657b83;
+    --text-muted:          #839496;
+    --text-dim:            #93a1a1;
+    --accent:              #268bd2;
+    --site-title:          #073642;
+    --mark-bg:             #b5890033;
+    --mark-fg:             #7c5c00;
+    --code-bg:             #00212b;
+    --inline-code-bg:      #eee8d5;
+    --inline-code-text:    #2aa198;
+    --banner-gradient:     transparent, rgba(253,246,227,0.5), #fdf6e3;
+    --banner-meta-color:   rgba(101, 123, 131, 0.75);
+    --tag-color:           #2aa198;
+    --h1-color:            #dc322f;
+    --h2-color:            #859900;
+    --h3-color:            #b58900;
+    --h4-color:            #268bd2;
+    --h5-color:            #d33682;
+    --h6-color:            #2aa198;
+    --callout-base-bg:     #e8e2d0;
+    --callout-base-border: #268bd2;
+}
+
+
+/* =========================
+   CALLOUT TYPE COLORS
+   ========================= */
+
+/* DARK */
+
+.callout-note {
+    background: #073e52;
+    border-left-color: #268bd2;
+    color: #268bd2;
+}
+
+.callout-abstract {
+    background: #063a40;
+    border-left-color: #2aa198;
+    color: #2aa198;
+}
+
+.callout-info {
+    background: #073e52;
+    border-left-color: #268bd2;
+    color: #268bd2;
+}
+
+.callout-todo {
+    background: #073e52;
+    border-left-color: #268bd2;
+    color: #268bd2;
+}
+
+.callout-tip {
+    background: #063a40;
+    border-left-color: #2aa198;
+    color: #2aa198;
+}
+
+.callout-success {
+    background: #063018;
+    border-left-color: #859900;
+    color: #859900;
+}
+
+.callout-question {
+    background: #2a2000;
+    border-left-color: #b58900;
+    color: #b58900;
+}
+
+.callout-warning {
+    background: #2a1800;
+    border-left-color: #cb4b16;
+    color: #cb4b16;
+}
+
+.callout-failure {
+    background: #2a0a0a;
+    border-left-color: #dc322f;
+    color: #dc322f;
+}
+
+.callout-danger {
+    background: #2a0a0a;
+    border-left-color: #dc322f;
+    color: #dc322f;
+}
+
+.callout-bug {
+    background: #2a0a0a;
+    border-left-color: #dc322f;
+    color: #dc322f;
+}
+
+.callout-example {
+    background: #250a20;
+    border-left-color: #d33682;
+    color: #d33682;
+}
+
+.callout-quote {
+    background: #073642;
+    border-left-color: #839496;
+    color: #839496;
+}
+
+
+/* LIGHT */
+
+[data-theme="light"] .callout-note {
+    background: #c8dff0;
+    border-left-color: #268bd2;
+    color: #1a5e94;
+}
+
+[data-theme="light"] .callout-abstract {
+    background: #c0e0dc;
+    border-left-color: #2aa198;
+    color: #1a6e68;
+}
+
+[data-theme="light"] .callout-info {
+    background: #c8dff0;
+    border-left-color: #268bd2;
+    color: #1a5e94;
+}
+
+[data-theme="light"] .callout-todo {
+    background: #c8dff0;
+    border-left-color: #268bd2;
+    color: #1a5e94;
+}
+
+[data-theme="light"] .callout-tip {
+    background: #c0e0dc;
+    border-left-color: #2aa198;
+    color: #1a6e68;
+}
+
+[data-theme="light"] .callout-success {
+    background: #d8e0b0;
+    border-left-color: #859900;
+    color: #5a6a00;
+}
+
+[data-theme="light"] .callout-question {
+    background: #ece4b0;
+    border-left-color: #b58900;
+    color: #7c5c00;
+}
+
+[data-theme="light"] .callout-warning {
+    background: #eed8c0;
+    border-left-color: #cb4b16;
+    color: #8a2c00;
+}
+
+[data-theme="light"] .callout-failure {
+    background: #f0c8c8;
+    border-left-color: #dc322f;
+    color: #a01a18;
+}
+
+[data-theme="light"] .callout-danger {
+    background: #f0c8c8;
+    border-left-color: #dc322f;
+    color: #a01a18;
+}
+
+[data-theme="light"] .callout-bug {
+    background: #f0c8c8;
+    border-left-color: #dc322f;
+    color: #a01a18;
+}
+
+[data-theme="light"] .callout-example {
+    background: #eec8dc;
+    border-left-color: #d33682;
+    color: #8c1a50;
+}
+
+[data-theme="light"] .callout-quote {
+    background: #e0dac8;
+    border-left-color: #93a1a1;
+    color: #657b83;
+}
+
+[data-theme="light"] .callout-content { color: inherit; }

@@ -59,7 +59,10 @@ DEFAULT_THEME: str = "system"
 # (e.g. github:, mastodon:, bluesky:). Each entry: {name, icon, handle, url, rel}.
 SOCIAL_LINKS: list = []
 
-_VALID_THEMES = {"obsidian", "omarchy"}
+_VALID_THEMES = {
+    "obsidian", "omarchy", "nord", "gruvbox",
+    "tokyo-night", "solarized", "paper",
+}
 
 # ── Social network registry ───────────────────────────────────────────────────
 # Keys are the exact frontmatter field names users set on the root homepage,

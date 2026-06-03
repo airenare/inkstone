@@ -263,7 +263,7 @@ posts.py                Four-pass vault loader, ALL_POSTS, SECTION_ROUTES, LANG_
 view_helpers.py         Pure view utilities: breadcrumbs, adjacent posts, related posts
 frontend/
   templates/            base, index, post, listing, book, private, search, tag, 404
-  static/               base.css, callouts-base.css, obsidian.css, omarchy.css, code.css
+  static/               base.css, callouts-base.css, code.css, theme-*.css (7 built-in themes)
 Documentation_Website/  Official documentation site (an InkStone vault — serve with VAULT_PATH)
 Dockerfile
 ```

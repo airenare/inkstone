@@ -1,0 +1,242 @@
+/* =========================
+   THEME: NORD
+   Arctic Studio palette — cool blues and desaturated tones.
+   ========================= */
+
+
+/* DARK VARIABLE OVERRIDES */
+
+:root {
+    --bg:                  #2e3440;
+    --bg-raised:           #242933;
+    --bg-card:             #3b4252;
+    --bg-stripe:           #343a47;
+    --bg-hover:            #3d4455;
+    --bg-interactive:      #3b4252;
+    --border:              #4c566a;
+    --border-subtle:       #3b4252;
+    --text:                #d8dee9;
+    --text-muted:          #aeb3c0;
+    --text-dim:            #616e88;
+    --accent:              #88c0d0;
+    --site-title:          #eceff4;
+    --mark-bg:             #ebcb8b33;
+    --mark-fg:             #ebcb8b;
+    --code-bg:             #1c2028;
+    --inline-code-bg:      #3b4252;
+    --inline-code-text:    #88c0d0;
+    --banner-gradient:     transparent, rgba(46,52,64,0.5), #2e3440;
+    --banner-meta-color:   rgba(216, 222, 233, 0.75);
+    --tag-color:           #88c0d0;
+    --h1-color:            #bf616a;
+    --h2-color:            #a3be8c;
+    --h3-color:            #ebcb8b;
+    --h4-color:            #81a1c1;
+    --h5-color:            #b48ead;
+    --h6-color:            #88c0d0;
+    --callout-base-bg:     #3b4252;
+    --callout-base-border: #81a1c1;
+}
+
+
+/* LIGHT VARIABLE OVERRIDES */
+
+[data-theme="light"] {
+    --bg:                  #eceff4;
+    --bg-raised:           #e5e9f0;
+    --bg-card:             #d8dee9;
+    --bg-stripe:           #cdd3df;
+    --bg-hover:            #c6cdd9;
+    --bg-interactive:      #d0d6e2;
+    --border:              #9aa4b8;
+    --border-subtle:       #c3c9d6;
+    --text:                #2e3440;
+    --text-muted:          #4c566a;
+    --text-dim:            #7a8494;
+    --accent:              #5e81ac;
+    --site-title:          #2e3440;
+    --mark-bg:             #ebcb8b55;
+    --mark-fg:             #7c5c00;
+    --code-bg:             #1c2028;
+    --inline-code-bg:      #d8dee9;
+    --inline-code-text:    #5e81ac;
+    --banner-gradient:     transparent, rgba(236,239,244,0.5), #eceff4;
+    --banner-meta-color:   rgba(46, 52, 64, 0.75);
+    --tag-color:           #5e81ac;
+    --h1-color:            #bf616a;
+    --h2-color:            #4e7c3f;
+    --h3-color:            #8c6a00;
+    --h4-color:            #5e81ac;
+    --h5-color:            #8a5fa8;
+    --h6-color:            #4d8fa0;
+    --callout-base-bg:     #dce2ec;
+    --callout-base-border: #5e81ac;
+}
+
+
+/* =========================
+   CALLOUT TYPE COLORS
+   ========================= */
+
+/* DARK */
+
+.callout-note {
+    background: #2a3550;
+    border-left-color: #81a1c1;
+    color: #81a1c1;
+}
+
+.callout-abstract {
+    background: #2a3f45;
+    border-left-color: #88c0d0;
+    color: #88c0d0;
+}
+
+.callout-info {
+    background: #2a3550;
+    border-left-color: #81a1c1;
+    color: #81a1c1;
+}
+
+.callout-todo {
+    background: #2a3550;
+    border-left-color: #88c0d0;
+    color: #88c0d0;
+}
+
+.callout-tip {
+    background: #2a3f45;
+    border-left-color: #8fbcbb;
+    color: #8fbcbb;
+}
+
+.callout-success {
+    background: #2a3d2e;
+    border-left-color: #a3be8c;
+    color: #a3be8c;
+}
+
+.callout-question {
+    background: #3d3626;
+    border-left-color: #ebcb8b;
+    color: #ebcb8b;
+}
+
+.callout-warning {
+    background: #3d3020;
+    border-left-color: #d08770;
+    color: #d08770;
+}
+
+.callout-failure {
+    background: #3d2a2a;
+    border-left-color: #bf616a;
+    color: #bf616a;
+}
+
+.callout-danger {
+    background: #3d2a2a;
+    border-left-color: #bf616a;
+    color: #bf616a;
+}
+
+.callout-bug {
+    background: #3d2a2a;
+    border-left-color: #bf616a;
+    color: #bf616a;
+}
+
+.callout-example {
+    background: #362a40;
+    border-left-color: #b48ead;
+    color: #b48ead;
+}
+
+.callout-quote {
+    background: #333a47;
+    border-left-color: #aeb3c0;
+    color: #aeb3c0;
+}
+
+
+/* LIGHT */
+
+[data-theme="light"] .callout-note {
+    background: #c8d5e8;
+    border-left-color: #5e81ac;
+    color: #3b5580;
+}
+
+[data-theme="light"] .callout-abstract {
+    background: #bfd9e3;
+    border-left-color: #5ba8be;
+    color: #2d7a92;
+}
+
+[data-theme="light"] .callout-info {
+    background: #c8d5e8;
+    border-left-color: #5e81ac;
+    color: #3b5580;
+}
+
+[data-theme="light"] .callout-todo {
+    background: #c8d5e8;
+    border-left-color: #5e81ac;
+    color: #3b5580;
+}
+
+[data-theme="light"] .callout-tip {
+    background: #bfd9e3;
+    border-left-color: #5ba8be;
+    color: #2d7a92;
+}
+
+[data-theme="light"] .callout-success {
+    background: #ccdfc8;
+    border-left-color: #5a8f47;
+    color: #3a6430;
+}
+
+[data-theme="light"] .callout-question {
+    background: #ecddb5;
+    border-left-color: #c09a2a;
+    color: #7c6400;
+}
+
+[data-theme="light"] .callout-warning {
+    background: #e8d0c0;
+    border-left-color: #c0704a;
+    color: #8a4020;
+}
+
+[data-theme="light"] .callout-failure {
+    background: #e0c5c5;
+    border-left-color: #bf616a;
+    color: #8f3040;
+}
+
+[data-theme="light"] .callout-danger {
+    background: #e0c5c5;
+    border-left-color: #bf616a;
+    color: #8f3040;
+}
+
+[data-theme="light"] .callout-bug {
+    background: #e0c5c5;
+    border-left-color: #bf616a;
+    color: #8f3040;
+}
+
+[data-theme="light"] .callout-example {
+    background: #d5c8e0;
+    border-left-color: #8a5fa8;
+    color: #6b3d8a;
+}
+
+[data-theme="light"] .callout-quote {
+    background: #cdd3df;
+    border-left-color: #7a8494;
+    color: #4c566a;
+}
+
+[data-theme="light"] .callout-content { color: inherit; }
