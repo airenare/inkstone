@@ -2,6 +2,7 @@
 website: true
 title: Multilingual
 date: 2026-05-21
+updated: 2026-06-03
 summary: Publish notes in multiple languages with filename suffixes and UI translations.
 featured: true
 priority: 3
@@ -72,12 +73,61 @@ Tags: Теги
 "All tags": Все теги
 "min read": мин чтения
 Featured: Избранное
-"Posted on": Опубликовано
-"Updated": Обновлено
-"Related": Похожие записи
+Updated: Обновлено
+"No tags yet.": Тегов пока нет.
+"No posts yet.": Постов пока нет.
 ```
 ````
 
-Keys are the English UI strings. Values are the replacements shown when the visitor views a page with `lang: ru` content or when the site default language is Russian.
+Keys are the English UI strings exactly as shown in the reference below — spelling and punctuation must match precisely.
+
+## Full string reference
+
+| Key | Where it appears |
+|---|---|
+| `Search` | Nav bar search link |
+| `Tags` | Nav bar tags link |
+| `All tags` | Tags index heading |
+| `No tags yet.` | Tags page when no tags exist |
+| `No posts yet.` | Listing page when section is empty |
+| `No results` | Search page when query has no hits |
+| `results` | Search result count (plural) |
+| `result` | Search result count (singular) |
+| `for` | Search: "No results **for** …" |
+| `tagged` | Search: "results **tagged** …" |
+| `Featured` | Listing page section heading |
+| `All Posts` | Listing page section heading |
+| `See also` | Related posts heading |
+| `Contents` | Table of contents heading |
+| `Updated` | Post meta: "**Updated** Jan 1, 2026" |
+| `by` | Post meta: "**by** Author Name" |
+| `min read` | Post meta: "5 **min read**" |
+| `Read it in` | Language unavailable placeholder |
+| `Not yet translated` | Language unavailable placeholder |
+| `Translation unavailable` | Language unavailable placeholder |
+| `This page is not yet available in` | Language unavailable placeholder |
+| `built with` | Footer attribution line |
+
+### Date localisation
+
+`localize_date` translates the month name and date format. Override month names individually and set `date_format` to rearrange the order:
+
+````markdown
+```yaml
+date_format: "{day} {month} {year}"
+January: январь
+February: февраль
+March: март
+April: апрель
+May: май
+June: июнь
+July: июль
+August: август
+September: сентябрь
+October: октябрь
+November: ноябрь
+December: декабрь
+```
+````
 
 See [[Page Types#translations]] for the full type reference.
