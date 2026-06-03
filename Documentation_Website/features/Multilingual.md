@@ -115,18 +115,18 @@ Keys are the English UI strings exactly as shown in the reference below — spel
 ````markdown
 ```yaml
 date_format: "{day} {month} {year}"
-January: январь
-February: февраль
-March: март
-April: апрель
-May: май
-June: июнь
-July: июль
-August: август
-September: сентябрь
-October: октябрь
-November: ноябрь
-December: декабрь
+January: января
+February: февраля
+March: марта
+April: апреля
+May: мая
+June: июня
+July: июля
+August: августа
+September: сентября
+October: октября
+November: ноября
+December: декабря
 ```
 ````
 
