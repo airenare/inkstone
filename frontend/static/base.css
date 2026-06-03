@@ -230,6 +230,15 @@ video {
     transition: transform 0.2s;
 }
 
+img[data-gallery] {
+    cursor: pointer;
+}
+
+img[data-gallery]:hover {
+    opacity: 0.88;
+    transition: opacity 0.15s;
+}
+
 .lightbox {
     position:fixed;
     inset:0;

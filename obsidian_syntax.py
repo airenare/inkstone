@@ -501,7 +501,10 @@ def convert_media(md, md_path):
                         output.append(flush_gallery())
                     img_tag = (
                         f'<img src="{href}" alt="{img_caption}"'
-                        f'{width_attr} loading="lazy">'
+                        f'{width_attr}'
+                        f' data-gallery="gallery" data-src="{href}"'
+                        f' data-type="image" data-caption="{img_caption}"'
+                        f' loading="lazy">'
                     )
                     css_class = f"figure-{float_side}"
                     if img_caption:
@@ -518,6 +521,8 @@ def convert_media(md, md_path):
                         output.append(flush_gallery())
                     img_tag = (
                         f'<img src="{href}"{width_attr}'
+                        f' data-gallery="gallery" data-src="{href}"'
+                        f' data-type="image" data-caption="{img_caption}"'
                         f' loading="lazy">'
                     )
                     if img_caption:
