@@ -79,4 +79,5 @@ def test_float_left_figure_html():
     assert 'class="figure-left"' in result
     assert 'style="max-width:300px"' in result
     assert '<figcaption>My Alt</figcaption>' in result
-    assert "data-gallery" not in result
+    assert 'data-gallery="gallery"' in result
+    assert 'data-type="image"' in result
