@@ -14,16 +14,21 @@ tags:
 
 ## Coolify (recommended)
 
-[Coolify](https://coolify.io) is a self-hosted PaaS that handles Docker builds, SSL, and deployments.
+[Coolify](https://coolify.io) is a self-hosted PaaS that handles Docker deployments, SSL, and reverse proxying.
 
-1. Add a new resource → **Docker Compose** or **Dockerfile**
-2. Set the build arg `VAULT_REPO` to your vault's Git URL (if cloning at build time)
-3. Set environment variables: `SECRET_KEY`, `VAULT_PATH`, `HIDE_ATTRIBUTION`, etc.
+The easiest setup uses the pre-built image from GHCR — Coolify pulls it directly without building anything on your server:
+
+1. Add a new resource → **Docker Image**
+2. Set image to `ghcr.io/airenare/inkstone:latest`
+3. Set environment variables: `VAULT_REPO`, `SECRET_KEY`, `HIDE_ATTRIBUTION`, etc.
 4. Set the exposed port to `8000`
 5. Enable **Let's Encrypt** for automatic SSL
 6. Deploy
 
-On each deploy, Coolify builds the image, pulls the latest vault (if using `VAULT_REPO`), and restarts the container.
+The container entrypoint clones your vault on first start and pulls it on subsequent starts. No build step, no source checkout needed.
+
+> [!tip] Pinning to a version
+> Use a commit SHA tag (e.g. `ghcr.io/airenare/inkstone:abc1234`) instead of `latest` if you want explicit control over which InkStone version runs. Available tags are listed on the [GHCR package page](https://github.com/airenare/inkstone/pkgs/container/inkstone).
 
 ## Webhook for live updates
 

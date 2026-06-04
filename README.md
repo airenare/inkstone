@@ -209,28 +209,37 @@ Covers Getting Started, Writing, Site Structure, Features, and Deployment across
 
 ## Docker
 
+Pull the pre-built image from GitHub Container Registry — no build step needed:
+
+```bash
+docker pull ghcr.io/airenare/inkstone:latest
+docker run -p 8000:8000 \
+  -e VAULT_REPO=https://<token>@github.com/you/your-vault \
+  ghcr.io/airenare/inkstone:latest
+```
+
+Or build from source if you need local modifications:
+
 ```bash
 docker build -t inkstone .
 docker run -p 8000:8000 -v /path/to/vault:/vault inkstone
 ```
 
-Pass your vault path as a volume mount. To clone a private vault at build time, pass `VAULT_REPO` as a build arg (see Deployment below).
-
 ---
 
-## Deployment (Coolify + separate vault repo)
+## Deployment (Coolify + pre-built image)
 
-This is the recommended production setup. Your Obsidian vault lives in its own private GitHub repo. Pushing to it triggers a rebuild of the blog.
+The recommended production setup uses the pre-built image from GHCR. Your vault lives in its own private GitHub repo; the InkStone image is rebuilt automatically on every push to `main`.
 
-### 1. Dockerfile build arg
+### 1. Add a Coolify application
 
-Pass your vault repo URL as the `VAULT_REPO` build arg in Coolify's build settings:
+In Coolify → New Resource → **Docker Image**. Set the image to:
 
 ```
-VAULT_REPO=https://<token>@github.com/you/your-vault
+ghcr.io/airenare/inkstone:latest
 ```
 
-Use a [fine-grained personal access token](https://github.com/settings/tokens) scoped to read-only on that repo. The `.git` directory is removed after cloning so the token doesn't persist in the image.
+Set environment variables (`VAULT_REPO`, `SECRET_KEY`, etc.) in Coolify's env section — they are passed to the container at runtime and the entrypoint clones/pulls the vault on start.
 
 ### 2. Vault webhook → Coolify redeploy
 
@@ -244,8 +253,12 @@ In your vault's GitHub repo:
 From then on:
 
 ```
-edit note in Obsidian → git push vault → GitHub webhook → Coolify rebuild → site updated
+edit note in Obsidian → git push vault → GitHub webhook → Coolify pull latest image → site updated
 ```
+
+### 3. Auto-update when InkStone itself updates
+
+The repo ships a GitHub Actions workflow that builds and pushes a fresh image to GHCR on every push to `main`. To have your Coolify instance pick it up automatically, add your Coolify deploy webhook URL as a `COOLIFY_WEBHOOK` secret in your fork or in your own deployment pipeline.
 
 ---
 

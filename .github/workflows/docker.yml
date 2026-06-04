@@ -43,3 +43,11 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Trigger Coolify redeploy
+        run: |
+          if [ -n "$COOLIFY_WEBHOOK" ]; then
+            curl --silent --fail "$COOLIFY_WEBHOOK"
+          fi
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK }}

@@ -2,12 +2,25 @@
 website: true
 title: Docker
 date: 2026-05-21
-summary: Run InkStone in a container with a mounted vault or a cloned private repo.
+summary: Run InkStone in a container — pull the pre-built image or build from source.
 featured: true
 priority: 1
 tags:
   - deployment
 ---
+
+## Pre-built image (recommended)
+
+Every push to the InkStone `main` branch automatically builds and publishes a fresh image to GitHub Container Registry. Pull it directly — no build step, no cloning the repo:
+
+```bash
+docker pull ghcr.io/airenare/inkstone:latest
+docker run -p 8000:8000 \
+  -e VAULT_REPO=https://<token>@github.com/you/your-vault \
+  ghcr.io/airenare/inkstone:latest
+```
+
+To pin to a specific release instead of `latest`, use the commit SHA tag (e.g. `ghcr.io/airenare/inkstone:abc1234`). You can find available tags on the [package page](https://github.com/airenare/inkstone/pkgs/container/inkstone).
 
 ## Quick start with docker compose
 
