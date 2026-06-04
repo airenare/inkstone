@@ -30,6 +30,15 @@ The container entrypoint clones your vault on first start and pulls it on subseq
 > [!tip] Pinning to a version
 > Use a commit SHA tag (e.g. `ghcr.io/airenare/inkstone:abc1234`) instead of `latest` if you want explicit control over which InkStone version runs. Available tags are listed on the [GHCR package page](https://github.com/airenare/inkstone/pkgs/container/inkstone).
 
+### Keeping InkStone up to date
+
+When a new InkStone version is released, a fresh image is pushed to GHCR automatically. To pick it up:
+
+- **Manual** — click Redeploy in Coolify. Since the image is already built, it takes a few seconds.
+- **Scheduled** — in your Coolify app, enable **Scheduled Deployments** and set a cron expression (e.g. `0 3 * * *` for nightly at 3 AM). Coolify will pull `:latest` and redeploy on that schedule.
+
+There is no mechanism for instant push-triggered updates to third-party deployments — that would require adding a secret to the InkStone repo itself, which only the maintainer can do. Scheduled redeployment is the practical alternative.
+
 ## Webhook for live updates
 
 To update the site content without redeploying:

@@ -11,7 +11,7 @@ tags:
 
 ## Pre-built image (recommended)
 
-Every push to the InkStone `main` branch automatically builds and publishes a fresh image to GitHub Container Registry. Pull it directly — no build step, no cloning the repo:
+Every push to the InkStone `main` branch automatically builds and publishes a fresh image to GitHub Container Registry. Pull it directly — no build step, no cloning the repo, no compiler on your VPS:
 
 ```bash
 docker pull ghcr.io/airenare/inkstone:latest
@@ -20,7 +20,9 @@ docker run -p 8000:8000 \
   ghcr.io/airenare/inkstone:latest
 ```
 
-To pin to a specific release instead of `latest`, use the commit SHA tag (e.g. `ghcr.io/airenare/inkstone:abc1234`). You can find available tags on the [package page](https://github.com/airenare/inkstone/pkgs/container/inkstone).
+To pin to a specific release instead of `latest`, use the commit SHA tag (e.g. `ghcr.io/airenare/inkstone:abc1234`). Available tags are listed on the [package page](https://github.com/airenare/inkstone/pkgs/container/inkstone).
+
+To update InkStone, run `docker pull ghcr.io/airenare/inkstone:latest` and restart the container. If you use Coolify or another PaaS, you can schedule periodic redeployments to pick up new images automatically — see [[Production Deployment]].
 
 ## Quick start with docker compose
 
