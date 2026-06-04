@@ -61,6 +61,7 @@ social_links:
 | `linkedin` | LinkedIn | |
 | `facebook` | Facebook | |
 | `youtube` | YouTube | |
+| `telegram` | Telegram | |
 
 `rel="me"` is set on GitHub, Mastodon, and Bluesky — the platforms used for identity verification.
 
