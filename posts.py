@@ -5,6 +5,7 @@ import sys
 import threading
 import time
 from datetime import datetime, date as date_type
+from urllib.parse import urlparse
 
 import yaml
 
@@ -254,7 +255,6 @@ _SOCIAL_REGISTRY = {
 def _match_network(url):
     """Return the (key, network) pair from _SOCIAL_REGISTRY whose domains
     match the given URL's hostname, or None if no match is found."""
-    from urllib.parse import urlparse
     try:
         host = urlparse(url).hostname or ""
     except Exception:
