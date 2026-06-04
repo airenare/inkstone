@@ -240,3 +240,27 @@
 }
 
 [data-theme="light"] .callout-content { color: inherit; }
+
+
+/* =========================
+   LIGHT MODE: TRANSCLUSION + TOC
+   base.css hardcodes generic grays; override with warm gruvbox tones
+   ========================= */
+
+[data-theme="light"] .transclusion {
+    background: #f2e5bc;
+    border-left-color: #bdae93;
+}
+
+[data-theme="light"] .transclusion-title,
+[data-theme="light"] .transclusion-title a { color: #928374; }
+[data-theme="light"] .transclusion-body    { color: #665c54; }
+
+[data-theme="light"] .toc-block {
+    background: #ebdbb2;
+    border-color: #bdae93;
+}
+
+[data-theme="light"] .toc-block summary         { color: #3c3836; }
+[data-theme="light"] .toc-block .toc a          { color: #665c54; }
+[data-theme="light"] .toc-block .toc a:hover    { color: #b57614; }
