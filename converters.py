@@ -276,6 +276,9 @@ def render_markdown(md, path, url_index=None, dataview_index=None,
     md_obj = markdown.Markdown(
         extensions=["fenced_code", "tables", "toc", "md_in_html", "codehilite",
                     "footnotes"],
+        extension_configs={
+            "toc": {"slugify": lambda value, sep: slugify(value)},
+        },
         output_format="html5",
     )
     html_str = md_obj.convert(md)
