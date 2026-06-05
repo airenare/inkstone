@@ -77,13 +77,26 @@ Text wraps beside the image and returns to full width automatically once it clea
 ```markdown
 ![[desk.jpg|left 250]]
 This paragraph wraps beside the image. Once the text clears
-the bottom of the image it continues at full width naturally.
+the bottom of the image it continues at full width naturally. (x5)
 
-## New section
+### New section
 This heading clears the float automatically.
 ```
 > [! note]
 > Float images do not open a lightbox when clicked.
+
+Example: 
+
+![[desk.jpg|left 250]]
+This paragraph wraps beside the image. Once the text clears the bottom of the image it continues at full width naturally. 
+This paragraph wraps beside the image. Once the text clears the bottom of the image it continues at full width naturally.
+This paragraph wraps beside the image. Once the text clears the bottom of the image it continues at full width naturally.
+This paragraph wraps beside the image. Once the text clears the bottom of the image it continues at full width naturally. 
+This paragraph wraps beside the image. Once the text clears the bottom of the image it continues at full width naturally.
+
+### New section
+This heading clears the float automatically.
+
 
 ---
 ## Slider

@@ -14,11 +14,11 @@ tags:
 
 Every page includes a theme toggle in the header with three states:
 
-| Symbol | Mode |
-|---|---|
-| 🖥️ | System — follows the visitor's OS preference |
-| ☀ | Light |
-| ☾ | Dark |
+| Symbol | Mode                                         |
+| ------ | -------------------------------------------- |
+| 🖥️    | System — follows the visitor's OS preference |
+| ☀      | Light                                        |
+| ☾      | Dark                                         |
 
 The selection is stored in `localStorage` and persists across page loads.
 
