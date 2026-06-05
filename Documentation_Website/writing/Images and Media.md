@@ -2,6 +2,7 @@
 website: true
 title: Images and Media
 date: 2026-05-21
+updated: 2026-06-04
 summary: Lightbox images, sliders, float layout, centered figures, captions, banners, video, and audio.
 featured: true
 priority: 4
@@ -71,37 +72,16 @@ Use `left` or `right` to float an image so surrounding text wraps beside it:
 
 ---
 
-The image floats until the text runs out or until a horizontal rule `---` clears the float (until a better way found):
-
----
+Text wraps beside the image and returns to full width automatically once it clears the image height. A new heading also clears any preceding float. Use `---` only when you need to explicitly push content below the image mid-paragraph.
 
 ```markdown
 ![[desk.jpg|left 250]]
-This paragraph wraps beside the image.
+This paragraph wraps beside the image. Once the text clears
+the bottom of the image it continues at full width naturally.
 
-| ------------------------------------------------------------>
-
-| ------------------------------------------------------------>
-
-| ------------------------------------------------------------>
-
----
-
-This paragraph is below the image at full width. ------------------------------------------------------------> 
+## New section
+This heading clears the float automatically.
 ```
-
-![[desk.jpg|left 250]]
-This paragraph wraps beside the image.
-
-| ------------------------------------------------------------>
-
-| ------------------------------------------------------------>
-
-| ------------------------------------------------------------>
-
----
-
-This paragraph is below the image at full width. ------------------------------------------------------------> 
 > [! note]
 > Float images do not open a lightbox when clicked.
 
