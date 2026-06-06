@@ -77,8 +77,8 @@ Updated: Обновлено
 "No tags yet.": Тегов пока нет.
 "No posts yet.": Постов пока нет.
 "Read more": Читать далее
-Previous: Назад
-Next: Далее
+Previous: Предыдущий пост
+Next: Следующий пост
 ```
 ````
 
