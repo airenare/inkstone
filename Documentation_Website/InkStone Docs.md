@@ -5,7 +5,7 @@ title: InkStone
 language: en
 show_search: true
 default_theme: dark
-icon: /_attachments/InkStoneLogo.png
+icon: _attachments/InkStoneLogo.png
 summary: Homepage of the InkStone documentation website.
 social_links:
   - https://t.me/nexagenom
