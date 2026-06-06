@@ -5,6 +5,7 @@ import sys
 import threading
 import time
 from datetime import datetime, date as date_type
+from urllib.parse import urlparse
 
 import yaml
 
@@ -89,6 +90,7 @@ _SOCIAL_REGISTRY = {
         "name": "GitHub",
         "rel": "me noopener",
         "handle": _at,
+        "domains": ("github.com",),
         "icon": (
             "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 "
             "11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338"
@@ -108,6 +110,11 @@ _SOCIAL_REGISTRY = {
         "name": "Mastodon",
         "rel": "me noopener",
         "handle": _at,
+        "domains": (
+            "mastodon.social", "mastodon.online", "mastodon.world",
+            "fosstodon.org", "infosec.exchange", "hachyderm.io",
+            "chaos.social", "sigmoid.social", "kolektiva.social",
+        ),
         "icon": (
             "M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 "
             "15.792 0 11.813 0h-.03c-3.98 0-4.835.242-5.288.309C3.882.692 "
@@ -134,6 +141,7 @@ _SOCIAL_REGISTRY = {
         "name": "Bluesky",
         "rel": "me noopener",
         "handle": lambda url: "@" + _last_segment(url).removesuffix(".bsky.social"),
+        "domains": ("bsky.app",),
         "icon": (
             "M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561"
             " 1.266.902 1.565.139 1.908 0 3.08 0 3.768c0 .69.378 5.65.624 "
@@ -151,6 +159,7 @@ _SOCIAL_REGISTRY = {
         "name": "X / Twitter",
         "rel": "noopener",
         "handle": _at,
+        "domains": ("twitter.com", "x.com"),
         "icon": (
             "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231"
             "-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm"
@@ -161,6 +170,7 @@ _SOCIAL_REGISTRY = {
         "name": "Instagram",
         "rel": "noopener",
         "handle": _at,
+        "domains": ("instagram.com",),
         "icon": (
             "M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c"
             "-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905"
@@ -198,6 +208,7 @@ _SOCIAL_REGISTRY = {
         "rel": "noopener",
         # LinkedIn profile URLs are /in/username — strip the /in/ segment
         "handle": lambda url: _last_segment(url),
+        "domains": ("linkedin.com",),
         "icon": (
             "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037"
             "-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h"
@@ -214,6 +225,7 @@ _SOCIAL_REGISTRY = {
         "name": "Facebook",
         "rel": "noopener",
         "handle": _last_segment,
+        "domains": ("facebook.com", "fb.com"),
         "icon": (
             "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 "
             "4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0"
@@ -226,6 +238,7 @@ _SOCIAL_REGISTRY = {
         "name": "YouTube",
         "rel": "noopener",
         "handle": _at,
+        "domains": ("youtube.com", "youtu.be"),
         "icon": (
             "M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396"
             "-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 "
@@ -236,7 +249,40 @@ _SOCIAL_REGISTRY = {
             "M9.609 15.601V8.408l6.264 3.602z"
         ),
     },
+    "telegram": {
+        "name": "Telegram",
+        "rel": "noopener",
+        "handle": _at,
+        "domains": ("t.me", "telegram.me", "telegram.org"),
+        "icon": (
+            "M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12"
+            "-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002"
+            ".321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02"
+            ".472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 "
+            "1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124"
+            "-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977"
+            " 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024"
+            "c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48"
+            "-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297"
+            "-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 "
+            "6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"
+        ),
+    },
 }
+
+
+def _match_network(url):
+    """Return the (key, network) pair from _SOCIAL_REGISTRY whose domains
+    match the given URL's hostname, or None if no match is found."""
+    try:
+        host = urlparse(url).hostname or ""
+    except Exception:
+        return None
+    for key, network in _SOCIAL_REGISTRY.items():
+        for domain in network.get("domains", ()):
+            if host == domain or host.endswith("." + domain):
+                return key, network
+    return None
 
 
 def _resolve_theme(value, context=""):
@@ -877,13 +923,12 @@ def load_posts():
                 _dt = str(metadata.get("default_theme") or "system").lower()
                 default_theme = _dt if _dt in {"dark", "light", "system"} else "system"
                 social_links = []
-                for key, network in _SOCIAL_REGISTRY.items():
-                    url = metadata.get(key)
-                    if not url or not isinstance(url, str):
-                        continue
-                    url = url.strip()
-                    if not url.startswith("http"):
-                        continue
+                seen_urls = set()
+
+                def _append_social(url, network):
+                    if url in seen_urls:
+                        return
+                    seen_urls.add(url)
                     try:
                         handle = network["handle"](url)
                     except Exception:
@@ -895,6 +940,25 @@ def load_posts():
                         "url": url,
                         "rel": network["rel"],
                     })
+
+                for key, network in _SOCIAL_REGISTRY.items():
+                    url = metadata.get(key)
+                    if not url or not isinstance(url, str):
+                        continue
+                    url = url.strip()
+                    if not url.startswith("http"):
+                        continue
+                    _append_social(url, network)
+
+                for raw in (metadata.get("social_links") or []):
+                    if not isinstance(raw, str):
+                        continue
+                    raw = raw.strip()
+                    if not raw.startswith("http"):
+                        continue
+                    match = _match_network(raw)
+                    if match:
+                        _append_social(raw, match[1])
             section_routes[section_url] = {
                 "type": "homepage",
                 "post": post_data,

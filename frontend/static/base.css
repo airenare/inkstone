@@ -1690,6 +1690,16 @@ figure.figure-left {
     margin-left: 0;
 }
 
+article::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+h2, h3, h4, h5, h6 {
+    clear: both;
+}
+
 figure.figure-right {
     float: right;
     margin-left: 1.5em;

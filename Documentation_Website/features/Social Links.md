@@ -28,6 +28,27 @@ youtube: https://youtube.com/@yourname
 
 ---
 
+## Multiple accounts on the same platform
+
+If you have more than one profile on the same network, use the `social_links` list. Each entry is a plain URL — InkStone detects the network automatically from the domain.
+
+```yaml
+---
+website: true
+type: homepage
+title: My Site
+social_links:
+  - https://github.com/personal-account
+  - https://github.com/work-org
+  - https://bsky.app/profile/main.bsky.social
+  - https://bsky.app/profile/alt.bsky.social
+---
+```
+
+`social_links` entries are appended after any per-key entries, so you can mix both styles. Duplicate URLs are silently ignored.
+
+---
+
 ## Supported platforms
 
 | Key | Network | `rel="me"` |
@@ -40,8 +61,11 @@ youtube: https://youtube.com/@yourname
 | `linkedin` | LinkedIn | |
 | `facebook` | Facebook | |
 | `youtube` | YouTube | |
+| `telegram` | Telegram | |
 
 `rel="me"` is set on GitHub, Mastodon, and Bluesky — the platforms used for identity verification.
+
+URL-based detection in `social_links` works for all platforms above. Mastodon detection covers the most common hosted instances; self-hosted instances that aren't recognised fall back to the per-key `mastodon:` key instead.
 
 ---
 
@@ -60,4 +84,4 @@ InkStone takes the last path segment and prepends `@` where appropriate:
 
 ## Ordering
 
-Links appear in the footer in a fixed order: GitHub → Mastodon → Bluesky → X → Instagram → LinkedIn → Facebook → YouTube. Platforms you haven't set are simply omitted.
+Per-key links appear first, in registry order: GitHub → Mastodon → Bluesky → X → Instagram → LinkedIn → Facebook → YouTube. `social_links` entries follow in the order they are listed. Platforms you haven't set are simply omitted.

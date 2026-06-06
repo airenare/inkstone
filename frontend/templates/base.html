@@ -149,7 +149,7 @@ new MutationObserver(renderMermaid).observe(
 {% if lang_variants and lang_variants|length > 1 %}
 <div class="lang-toggle" aria-label="Switch language">{% for lc, lu in lang_variants.items() %}<a href="{{ lu }}" class="lang-option{% if lc == current_lang %} lang-active{% endif %}" aria-label="{{ lc|upper }}" data-lang="{{ lc }}">{{ lc|upper }}</a>{% endfor %}</div>
 {% endif %}
-<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">⊙</button>
+<button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🖥️</button>
 </div>
 </div>
 </header>
@@ -450,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function update() {
         const saved = localStorage.getItem("theme")
         if (!saved) {
-            btn.textContent = "⊙"
+            btn.textContent = "🖥️"
             btn.setAttribute("aria-label", "Theme: Auto")
             // Only listen to OS changes when the site default is system/OS
             if (def !== "dark" && def !== "light") {
