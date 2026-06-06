@@ -76,6 +76,9 @@ Featured: Избранное
 Updated: Обновлено
 "No tags yet.": Тегов пока нет.
 "No posts yet.": Постов пока нет.
+"Read more": Читать далее
+Previous: Назад
+Next: Далее
 ```
 ````
 
@@ -89,7 +92,7 @@ Keys are the English UI strings exactly as shown in the reference below — spel
 | `Tags` | Nav bar tags link |
 | `All tags` | Tags index heading |
 | `No tags yet.` | Tags page when no tags exist |
-| `No posts yet.` | Listing page when section is empty |
+| `No posts yet.` | Listing/feed page when section is empty |
 | `No results` | Search page when query has no hits |
 | `results` | Search result count (plural) |
 | `result` | Search result count (singular) |
@@ -97,6 +100,9 @@ Keys are the English UI strings exactly as shown in the reference below — spel
 | `tagged` | Search: "results **tagged** …" |
 | `Featured` | Listing page section heading |
 | `All Posts` | Listing page section heading |
+| `Read more` | Feed page: link to full post |
+| `Previous` | Feed/listing pagination: previous page |
+| `Next` | Feed/listing pagination: next page |
 | `See also` | Related posts heading |
 | `Contents` | Table of contents heading |
 | `Updated` | Post meta: "**Updated** Jan 1, 2026" |
