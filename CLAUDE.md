@@ -112,9 +112,13 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 ```yaml
 ---
 website: true         # required to publish the note as a web page
-type: homepage        # optional: homepage | listing | book | translations
+type: homepage        # optional: homepage | listing | feed | book | translations
                       #   homepage — serves this note's content at the section root URL
                       #   listing  — auto-generates a post index at the section root URL
+                      #   feed     — inline post stream; shows excerpt + "Read more" link per post
+                      #              authors mark excerpt cut with <!-- more --> in post body;
+                      #              posts without the marker auto-excerpt first ~500 chars;
+                      #              undated posts sort to the bottom of the stream
                       #   book     — uses the book template with cover/metadata header
                       #   translations — UI label overrides for a language (no website: needed)
 featured: true        # optional: shows post in the Featured section of the parent listing
@@ -170,7 +174,7 @@ title: '"Hello World" Considered Harmful'   # value → "Hello World" Considered
 title: "No quotes here: just a colon"       # value → No quotes here: just a colon
 ```
 
-**`type: listing` vs `type: homepage`:** `listing` renders an auto-generated post index; `homepage` renders the file's own markdown content. A section can only have one of each — if multiple files in the same folder have the same type, the last one loaded wins (undefined behavior; avoid).
+**`type: listing` vs `type: feed` vs `type: homepage`:** `listing` renders a card grid of post titles/summaries; `feed` renders a chronological inline stream with full excerpt HTML and "Read more" links; `homepage` renders the file's own markdown content. A section can only have one of each — if multiple files in the same folder have the same type, the last one loaded wins (undefined behavior; avoid).
 
 **`posts.py` globals:** `ALL_POSTS` (url_path → post dict), `SECTION_ROUTES` (section url → route dict), `WEBSITE_NAME` (from root homepage title).
 

@@ -478,7 +478,7 @@ def serve(path):
     if url_path in post_store.SECTION_ROUTES:
         route = post_store.SECTION_ROUTES[url_path]
 
-        if route["type"] == "listing":
+        if route["type"] in ("listing", "feed"):
             section = route["section"]
             if section:
                 section_posts = [
@@ -527,6 +527,29 @@ def serve(path):
             extra = {}
             if page_theme := _page_theme_css(route["post"]):
                 extra["theme_css"] = page_theme
+
+            if route["type"] == "feed":
+                # Feed is a flat chronological stream — all posts, no featured split.
+                # Posts without a date sort to the bottom (datetime.min fallback).
+                feed_page_size = 20
+                feed_page = max(1, request.args.get("page", 1, type=int))
+                feed_total = max(
+                    1,
+                    (len(section_posts) + feed_page_size - 1) // feed_page_size,
+                )
+                feed_page = min(feed_page, feed_total)
+                feed_posts = section_posts[
+                    (feed_page - 1) * feed_page_size: feed_page * feed_page_size
+                ]
+                return render_template(
+                    "feed.html",
+                    posts=feed_posts,
+                    listing=route["post"],
+                    page=feed_page,
+                    total_pages=feed_total,
+                    **extra,
+                )
+
             return render_template(
                 "listing.html",
                 featured=featured,

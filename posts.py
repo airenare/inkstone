@@ -313,6 +313,8 @@ DATE_FORMATS = [
 ]
 
 SUMMARY_LENGTH = 200
+_MORE_MARKER = "<!-- more -->"
+_AUTO_EXCERPT_CHARS = 500
 
 
 # =========================================
@@ -341,6 +343,40 @@ def _make_summary(html):
     if len(plain) <= SUMMARY_LENGTH:
         return plain
     return plain[:SUMMARY_LENGTH].rsplit(" ", 1)[0] + "\u2026"
+
+
+def _auto_excerpt_html(html):
+    """Return HTML of the first paragraph(s) up to ~_AUTO_EXCERPT_CHARS of
+    plain text. Cuts at paragraph boundaries so no tags are broken. Falls back
+    to the full html if no <p> blocks are found."""
+    paras = re.findall(r"<p>.*?</p>", html, re.DOTALL)
+    if not paras:
+        return html
+    collected, plain_len = [], 0
+    for p in paras:
+        plain = re.sub(r"<[^>]+>", "", p)
+        collected.append(p)
+        plain_len += len(plain)
+        if plain_len >= _AUTO_EXCERPT_CHARS:
+            break
+    return "\n".join(collected)
+
+
+def _make_excerpt_html(md, filepath, url_index, dataview_index, metadata, full_html):
+    """Return rendered HTML excerpt for feed pages.
+
+    If <!-- more --> is present, renders everything before it.
+    Otherwise auto-extracts the first paragraph(s) from full_html."""
+    pos = md.find(_MORE_MARKER)
+    if pos != -1:
+        excerpt_md = md[:pos].strip()
+        if excerpt_md:
+            excerpt_html, _ = render_markdown(
+                excerpt_md, filepath, url_index, dataview_index,
+                note_metadata=metadata,
+            )
+            return excerpt_html
+    return _auto_excerpt_html(full_html)
 
 
 def _section_from_filepath(filepath):
@@ -666,7 +702,7 @@ def load_posts():
         section_url_p1 = ("/" + section) if section else "/"
         index_url = (
             section_url_p1
-            if note_type_p1 in ("homepage", "listing")
+            if note_type_p1 in ("homepage", "listing", "feed")
             else url_path
         )
 
@@ -703,6 +739,9 @@ def load_posts():
         )
         html, toc = render_markdown(md, filepath, url_index, dataview_index,
                                     note_metadata=metadata)
+        excerpt_html = _make_excerpt_html(
+            md, filepath, url_index, dataview_index, metadata, html
+        )
         summary = metadata.get("summary") or _make_summary(html)
         priority_raw = metadata.get("priority")
         priority = float("inf") if priority_raw is None else int(priority_raw)
@@ -715,7 +754,7 @@ def load_posts():
                 else ("/" + lang)
         note_type = (metadata.get("type") or "").strip().lower()
         is_homepage = note_type == "homepage"
-        is_listing = note_type == "listing"
+        is_listing = note_type in ("listing", "feed")
         is_book = note_type == "book"
         is_featured = bool(metadata.get("featured"))
 
@@ -794,6 +833,7 @@ def load_posts():
             "updated": updated,
             "author": author,
             "html": body_html,
+            "excerpt_html": excerpt_html,
             "toc": toc,
             "reading_time": reading_time,
             "post_type": note_type,
@@ -819,7 +859,7 @@ def load_posts():
 
         if is_listing:
             section_routes[section_url] = {
-                "type": "listing",
+                "type": note_type,
                 "post": post_data,
                 "section": section,
                 "lang": lang,
@@ -894,6 +934,7 @@ def load_posts():
             "updated": None,
             "author": author,
             "html": html,
+            "excerpt_html": _auto_excerpt_html(html),
             "toc": "",
             "reading_time": 0,
             "post_type": "base",
@@ -944,6 +985,7 @@ def load_posts():
             "updated": None,
             "author": [],
             "html": html,
+            "excerpt_html": "",
             "toc": "",
             "reading_time": 0,
             "post_type": "canvas",
@@ -980,6 +1022,7 @@ def load_posts():
                     "updated": None,
                     "author": [],
                     "html": "",
+                    "excerpt_html": "",
                     "toc": "",
                     "reading_time": 0,
                     "post_type": "",
@@ -1004,7 +1047,7 @@ def load_posts():
             continue
         _meta = _entry.get("metadata") or {}
         _note_type = (_meta.get("type") or "").strip().lower()
-        if _note_type in ("translations", "homepage", "listing"):
+        if _note_type in ("translations", "homepage", "listing", "feed"):
             continue
         try:
             with open(_entry["filepath"], encoding="utf-8") as _fh:
@@ -1038,6 +1081,9 @@ def load_posts():
             ),
             "author": _author,
             "html": _html,
+            "excerpt_html": _make_excerpt_html(
+                _md, _entry["filepath"], url_index, dataview_index, _meta, _html
+            ),
             "toc": _toc,
             "reading_time": max(1, _word_count // 200),
             "post_type": _note_type or "post",
@@ -1061,7 +1107,7 @@ def load_posts():
         if entry.get("url_path")
         and entry["url_path"] not in all_posts
         and entry["url_path"] not in section_routes
-        and entry.get("metadata", {}).get("type") not in ("homepage", "listing")
+        and entry.get("metadata", {}).get("type") not in ("homepage", "listing", "feed")
     }
 
     # ---- Pre-compute related posts (O(n²) at load time, O(1) per request) ----
@@ -1086,7 +1132,7 @@ def load_posts():
     for _pd in _all_pd.values():
         _lang = _pd.get("lang", default_lang)
         _ptype = _pd.get("post_type", "")
-        if _ptype in ("homepage", "listing"):
+        if _ptype in ("homepage", "listing", "feed"):
             _served = _pd.get("section_url") or _pd["url_path"]
             if _lang != default_lang:
                 # Strip trailing "/" + lang_code to get the base

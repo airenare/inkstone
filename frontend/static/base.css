@@ -1198,6 +1198,62 @@ audio {
 }
 
 /* =========================================
+   FEED STREAM (type: feed listing pages)
+   ========================================= */
+
+.feed-stream {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+}
+
+.feed-entry {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.feed-entry:last-child {
+    border-bottom: none;
+}
+
+.feed-entry-title {
+    margin: 0 0 0.3rem 0;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.feed-entry-title a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.feed-entry-title a:hover {
+    color: var(--accent);
+}
+
+.feed-entry-body {
+    margin: 0.75rem 0 1rem 0;
+    color: var(--text-muted);
+    line-height: 1.65;
+}
+
+.feed-entry-body p:first-child { margin-top: 0; }
+.feed-entry-body p:last-child  { margin-bottom: 0; }
+
+.feed-read-more {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.01em;
+}
+
+.feed-read-more:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
    BREADCRUMBS
    ========================================= */
 
@@ -1412,6 +1468,11 @@ audio {
 
 [data-theme="light"] .featured-post h3 a { color: #1a1a2a; }
 [data-theme="light"] .featured-post h3 a:hover { color: #000; }
+
+/* --- Feed stream --- */
+[data-theme="light"] .feed-entry { border-bottom-color: #d0d0da; }
+[data-theme="light"] .feed-entry-title a { color: #1a1a2a; }
+[data-theme="light"] .feed-entry-title a:hover { color: #000; }
 
 /* --- Post entries + search results --- */
 [data-theme="light"] .post-entry { border-bottom-color: #d0d0da; }

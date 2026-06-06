@@ -2,7 +2,7 @@
 website: true
 title: Page Types
 date: 2026-05-21
-summary: homepage, listing, book, and translations — what each type does.
+summary: "homepage, listing, feed, book, and translations — what each type does."
 featured: true
 priority: 1
 ---
@@ -40,6 +40,39 @@ summary: "All posts about programming and ideas."
 ```
 
 The file's markdown content (if any) is shown above the generated list as an intro. Only one `listing` per section.
+
+## feed
+
+Renders an inline post stream — like a traditional blog feed. Each post shows its title, date, an excerpt of the content, and a "Read more" link. Posts are sorted newest-first.
+
+```yaml
+---
+website: true
+type: feed
+title: Blog
+---
+Optional intro text shown above the stream.
+```
+
+The file's own markdown content (if any) is shown above the stream as an intro.
+
+**Controlling the excerpt cut point** — add `<!-- more -->` anywhere in a post's body. Everything before the marker becomes the feed excerpt; everything after it only appears on the full post page:
+
+```markdown
+This paragraph and the next will appear in the feed preview.
+
+More context here, still visible in the feed.
+
+<!-- more -->
+
+This paragraph only appears when a reader opens the full post.
+```
+
+If a post has no `<!-- more -->` marker, InkStone automatically excerpts the first paragraph(s) up to roughly 500 characters of readable text.
+
+**Posts without a date** appear at the bottom of the feed. Add a `date:` field to every post in a feed section to get predictable ordering.
+
+Only one `feed` (or `listing`) per section.
 
 ## book
 

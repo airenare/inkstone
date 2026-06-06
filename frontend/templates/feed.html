@@ -1,0 +1,49 @@
+
+{% extends "base.html" %}
+
+{% block meta %}
+{% set og_image = listing.banner or (posts[0].banner if posts and posts[0].banner else None) %}
+<meta property="og:title" content="{{ listing.title }} — {{ website_name }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ canonical_url }}">
+{% if listing.summary %}<meta property="og:description" content="{{ listing.summary }}">{% endif %}
+{% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+<meta name="twitter:card" content="{{ 'summary_large_image' if og_image else 'summary' }}">
+<meta name="twitter:title" content="{{ listing.title }} — {{ website_name }}">
+{% if listing.summary %}<meta name="twitter:description" content="{{ listing.summary }}">{% endif %}
+{% if og_image %}<meta name="twitter:image" content="{{ og_image }}">{% endif %}
+{% endblock %}
+
+{% block content %}
+
+<h2>{{ listing.title }}</h2>
+
+{% if listing.html %}
+<div class="listing-intro">{{ listing.html | safe }}</div>
+{% endif %}
+
+{% if posts %}
+<div class="feed-stream">
+{% for post in posts %}
+<article class="feed-entry">
+    <h3 class="feed-entry-title"><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
+    <div class="post-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
+    <div class="feed-entry-body">{{ post.excerpt_html | safe }}</div>
+    <a href="{{ post.url_path }}" class="feed-read-more">{{ ui_strings.get('Read more', 'Read more') }} →</a>
+</article>
+{% endfor %}
+</div>
+
+{% if total_pages > 1 %}
+<div class="pagination">
+{% if page > 1 %}<a href="?page={{ page - 1 }}">← {{ ui_strings.get('Previous', 'Previous') }}</a>{% endif %}
+<span class="pagination-info">{{ page }} / {{ total_pages }}</span>
+{% if page < total_pages %}<a href="?page={{ page + 1 }}">{{ ui_strings.get('Next', 'Next') }} →</a>{% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<p>{{ ui_strings.get('No posts yet.', 'No posts yet.') }}</p>
+{% endif %}
+
+{% endblock %}
