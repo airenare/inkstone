@@ -27,7 +27,7 @@
 {% for post in posts %}
 <article class="feed-entry">
     <h3 class="feed-entry-title"><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
-    <div class="post-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
+    <div class="post-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}</div>
     <div class="feed-entry-body">{{ post.excerpt_html | safe }}</div>
     <a href="{{ post.url_path }}" class="feed-read-more">{{ ui_strings.get('Read more', 'Read more') }} →</a>
 </article>
