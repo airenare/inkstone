@@ -457,13 +457,17 @@ def _render_feed_block_html(posts, ui_strings):
     if not posts:
         return '<p class="feed-block-empty">No posts found.</p>'
     read_more = ui_strings.get("Read more", "Read more")
+    min_read_label = ui_strings.get("min read", "min read")
     parts = ['<div class="feed-stream feed-block">']
     for post in posts:
         date_str = ""
         if post.get("date"):
             d = post["date"]
             date_str = f"{d.strftime('%B')} {d.day}, {d.year}"
-        meta = date_str
+        meta_parts = [date_str] if date_str else []
+        if post.get("reading_time"):
+            meta_parts.append(f"{post['reading_time']} {min_read_label}")
+        meta = " · ".join(meta_parts)
         parts.append('<article class="feed-entry">')
         parts.append(
             f'<h3 class="feed-entry-title">'
