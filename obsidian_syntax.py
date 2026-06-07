@@ -749,7 +749,7 @@ _FEED_BLOCK_RE = re.compile(
     r"^(`{3,}|~{3,})feed(?:\s+(\d+))?(?:\s+(/\S+))?\s*$"
 )
 _NOTE_BLOCK_RE = re.compile(
-    r"^(`{3,}|~{3,})note\s+(/\S+)(?:\s+(full))?\s*$"
+    r"^(`{3,}|~{3,})note\s+(/\S+)((?:\s+(?:full|nodate))*)\s*$"
 )
 _FENCE_OPEN_RE = re.compile(r"^(`{3,}|~{3,})")
 
@@ -824,14 +824,17 @@ def convert_note_blocks(md):
             if m:
                 marker = m.group(1)
                 url_path = m.group(2)
-                mode = m.group(3) or "excerpt"
+                flags = set((m.group(3) or "").split())
+                mode = "full" if "full" in flags else "excerpt"
+                nodate = "1" if "nodate" in flags else "0"
                 i += 1
                 while i < len(lines) and not lines[i].startswith(marker):
                     i += 1
                 output.append("")
                 output.append(
                     f'<div class="note-block-placeholder"'
-                    f' data-url="{url_path}" data-mode="{mode}"></div>'
+                    f' data-url="{url_path}" data-mode="{mode}"'
+                    f' data-nodate="{nodate}"></div>'
                 )
                 output.append("")
             else:

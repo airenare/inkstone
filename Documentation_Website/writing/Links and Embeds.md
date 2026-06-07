@@ -106,7 +106,19 @@ The `note` fenced block embeds a specific published post inline — as a styled 
 ```
 ````
 
-The path is the post's URL path, not its filename — the same URL you'd visit in a browser (e.g. `/blog/my-post`, not `My Post.md`). Works in any published note, including the homepage.
+**Without date and reading time** — add `nodate` to suppress the meta line:
+
+````markdown
+```note /blog/my-post nodate
+```
+````
+
+````markdown
+```note /blog/my-post full nodate
+```
+````
+
+Flags can be combined in any order. The path is the post's URL path, not its filename — the same URL you'd visit in a browser (e.g. `/blog/my-post`, not `My Post.md`). Works in any published note, including the homepage.
 
 If the path doesn't resolve to a published note, InkStone renders a "Note not found" message in place of the block.
 

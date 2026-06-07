@@ -543,16 +543,16 @@ def _resolve_feed_blocks(all_posts, section_routes, ui_translations, default_lan
 
 _NOTE_PLACEHOLDER_RE = re.compile(
     r'<div class="note-block-placeholder"'
-    r' data-url="([^"]*)" data-mode="([^"]*)"></div>'
+    r' data-url="([^"]*)" data-mode="([^"]*)" data-nodate="([^"]*)"></div>'
 )
 
 
-def _render_note_block_html(post, mode, ui_strings):
+def _render_note_block_html(post, mode, ui_strings, nodate=False):
     """Build HTML for a single embedded note card."""
     read_more = ui_strings.get("Read more", "Read more")
     min_read_label = ui_strings.get("min read", "min read")
     date_str = ""
-    if post.get("date"):
+    if post.get("date") and not nodate:
         d = post["date"]
         date_str = f"{d.strftime('%B')} {d.day}, {d.year}"
     parts = ['<article class="feed-entry note-embed">']
@@ -562,7 +562,7 @@ def _render_note_block_html(post, mode, ui_strings):
         f'<h3 class="feed-entry-title">'
         f'<a href="{post["url_path"]}">{post["title"]}</a></h3>'
     )
-    if post.get("reading_time"):
+    if post.get("reading_time") and not nodate:
         parts.append(
             f'<div class="post-meta">'
             f'{post["reading_time"]} {min_read_label}</div>'
@@ -602,13 +602,14 @@ def _resolve_note_blocks(all_posts, section_routes, ui_translations, default_lan
         def _replace(m, _ui=ui_strings):
             url_path = m.group(1)
             mode = m.group(2)
+            nodate = m.group(3) == "1"
             target = all_posts.get(url_path)
             if target is None:
                 return (
                     f'<p class="feed-block-empty">'
                     f"Note not found: {url_path}</p>"
                 )
-            return _render_note_block_html(target, mode, _ui)
+            return _render_note_block_html(target, mode, _ui, nodate=nodate)
 
         post["html"] = _NOTE_PLACEHOLDER_RE.sub(_replace, html)
         if "note-block-placeholder" in post.get("excerpt_html", ""):
