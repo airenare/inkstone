@@ -1208,8 +1208,8 @@ audio {
 }
 
 .feed-entry {
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--border-subtle);
+    padding: 2.5rem 0;
+    border-bottom: 2px solid var(--border);
 }
 
 .feed-entry:last-child {
@@ -1471,7 +1471,6 @@ audio {
 [data-theme="light"] .featured-post h3 a:hover { color: #000; }
 
 /* --- Feed stream --- */
-[data-theme="light"] .feed-entry { border-bottom-color: #d0d0da; }
 
 /* --- Post entries + search results --- */
 [data-theme="light"] .post-entry { border-bottom-color: #d0d0da; }
