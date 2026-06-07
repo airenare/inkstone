@@ -285,3 +285,19 @@ sequenceDiagram
 ```
 
 All standard Mermaid diagram types are supported: `graph`, `sequenceDiagram`, `flowchart`, `classDiagram`, `gantt`, `pie`, `erDiagram`, and more.
+
+---
+
+## Feed excerpt marker
+
+Place `<!-- more -->` anywhere in a post's body to mark where the feed preview cuts off. Everything before the marker appears in feed listings; everything after only shows on the full post page.
+
+```markdown
+This intro paragraph is visible in the feed.
+
+<!-- more -->
+
+This section only appears when the reader opens the full post.
+```
+
+If no marker is present, InkStone automatically excerpts the opening block elements up to ~500 characters. See [Page Types](../site-structure/Page Types) for more on `type: feed` pages and feed code blocks.

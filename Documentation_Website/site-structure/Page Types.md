@@ -88,7 +88,7 @@ More context here, still visible in the feed.
 This paragraph only appears when a reader opens the full post.
 ```
 
-If a post has no `<!-- more -->` marker, InkStone automatically excerpts the first paragraph(s) up to roughly 500 characters of readable text.
+If a post has no `<!-- more -->` marker, InkStone automatically excerpts the opening block elements — paragraphs, headings, callouts, tables, lists, code blocks — up to roughly 500 characters of readable text.
 
 **Posts without a date** appear at the bottom of the feed. Add a `date:` field to every post in a feed section to get predictable ordering.
 

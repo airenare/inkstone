@@ -14,7 +14,7 @@ tags:
 | Field | Type | Description | Example |
 |---|---|---|---|
 | `website` | boolean | **Required to publish.** Set to `true`. | `website: true` |
-| `type` | string | Page type. One of: `homepage`, `listing`, `book`, `translations`. Omit for regular posts. | `type: listing` |
+| `type` | string | Page type. One of: `homepage`, `listing`, `feed`, `book`, `translations`. Omit for regular posts. | `type: listing` |
 | `title` | string | Overrides H1 and filename as the display title. Quote if it contains a colon. | `title: "From Vault to Web: A Guide"` |
 | `slug` | string | Manual URL slug. Overrides auto-generated slug. Used as-is, bypassing transliteration. | `slug: my-custom-url` |
 | `date` | date | Publication date. Used for listing sort order and RSS. | `date: 2026-03-21` |
