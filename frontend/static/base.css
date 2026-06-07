@@ -1,6 +1,6 @@
 
 /* =========================================
-   COLOUR TOKENS (dark default — Obsidian palette)
+   COLOR TOKENS (dark default — Obsidian palette)
    ========================================= */
 
 :root {
@@ -16,7 +16,7 @@
     --text-muted:      #a9a9b7;
     --text-dim:        #6e6e8e;
     --accent:          #8ab4f8;
-    /* --site-title controls the header site-name colour.
+    /* --site-title controls the header site-name color.
        Override this variable in your vault's custom CSS to change it. */
     --site-title:      #ffffff;
     --mark-bg:         #3d3520;
@@ -1209,7 +1209,7 @@ audio {
 
 .feed-entry {
     padding: 4rem 0 1rem;
-    border-bottom: 3px double var(--h1-color);
+    border-bottom: 3px double var(--border);
 }
 
 .feed-entry:last-child {
@@ -1226,12 +1226,26 @@ audio {
 /* On the feed page, date floats into the left margin beside the title */
 .feed-page .feed-entry {
     position: relative;
+    border-bottom: none;
+}
+
+.feed-page .feed-entry::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -10rem;
+    right: 0;
+    border-bottom: 3px double var(--border);
+}
+
+.feed-page .feed-entry:last-child::after {
+    display: none;
 }
 
 .feed-page .feed-entry-date {
     position: absolute;
     left: -10rem;
-    top: calc(4rem + 2.4em + 1.8rem);
+    top: calc(4rem + 2.4em + 0.98rem);
     width: 9rem;
     text-align: right;
     margin-bottom: 0;
