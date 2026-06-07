@@ -1209,7 +1209,7 @@ audio {
 
 .feed-entry {
     padding: 2.5rem 0;
-    border-bottom: 4px solid var(--border);
+    border-bottom: 3px double var(--h1-color);
 }
 
 .feed-entry:last-child {
