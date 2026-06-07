@@ -522,6 +522,11 @@ def _resolve_feed_blocks(all_posts, ui_translations, default_lang):
             )
             return _render_feed_block_html(candidates[:n], _ui)
 
+        # Count own words before substitution — placeholder has no text
+        own_words = len(re.sub(r"<[^>]+>", "", html).split())
+        if own_words == 0:
+            post["reading_time"] = 0
+
         post["html"] = _FEED_PLACEHOLDER_RE.sub(_replace, html)
         if "feed-block-placeholder" in post.get("excerpt_html", ""):
             post["excerpt_html"] = _FEED_PLACEHOLDER_RE.sub(
