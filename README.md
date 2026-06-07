@@ -71,6 +71,29 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 - **Visual boards** — publish a `.canvas` file by naming it `Your Title__website.canvas` (title is the part before `__website`; Obsidian won't strip this) or by legacy `"website": true` in the JSON. Interactive diagrams: pan by dragging, zoom with the scroll wheel (zoom-to-cursor), pinch-to-zoom on touch, fit-to-view button (⊡), and a wide-view button (⛶) that expands the canvas to nearly fill the browser window (press Esc to exit). Text nodes render the full markdown pipeline (callouts, tables, wiki-links, Dataview, etc.). File, link, and group node types supported; edges as directed SVG bezier curves with `fromEnd`/`toEnd` directionality per the jsoncanvas spec; file nodes link to published posts and embed a scrollable preview of the note body when the file resolves; file nodes that point at vault image/audio/video paths render that media in the card; link nodes show the domain and a ↗ icon; group nodes get a color tint; edge labels as HTML overlays; node borders follow Obsidian's 6 preset colors. If the site lives under a URL prefix (e.g. `/inkstone`), set `URL_PATH_PREFIX` in `.env` so `![[embeds]]` and canvas media use the correct `/inkstone/attachments/…` URLs.
 - **Inline canvas embeds** — use `![[CanvasName]]` or `![[CanvasName.canvas]]` anywhere in a note body to render that canvas as an interactive inline block (400 px tall, scrollable, full wide-mode support). Path-prefixed links that Obsidian generates (e.g. `![[blog/My Board__website.canvas]]`) resolve correctly. Unresolved names are left for transclusion.
 
+### Content embeds
+
+- **Feed block** — embed a stream of recent posts from any section inline, anywhere in a note (including the homepage):
+  ````
+  ```feed 5 /blog
+  ```
+  ````
+  Shows the 5 most recent posts as excerpt cards with title, date, reading time, and a "Read more" link. The section path is optional; omitting it defaults to the current page's section.
+
+- **Note block** — embed a single specific post by URL path:
+  ````
+  ```note /blog/my-post
+  ```
+  ````
+  Renders as an excerpt card. Add `full` for the complete post body; add `nodate` to suppress the date and reading time (useful when embedding a note as a plain content panel):
+  ````
+  ```note /blog/my-post full nodate
+  ```
+  ````
+  Flags are optional and order-independent. Both `feed` and `note` blocks work on any page type, including homepages and listing pages.
+
+- **Excerpt cut point** — authors mark where the preview ends with `<!-- more -->` in the post body. Everything before it appears in feed/note previews; everything after only shows on the full post page. Without the marker, InkStone auto-excerpts the first ~500 characters of readable text.
+
 ### Publishing & structure
 
 - **Private notes** — notes without `website: true` are invisible as web pages but fully queryable by Dataview; navigating to their URL shows a styled placeholder
