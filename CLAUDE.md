@@ -8,14 +8,17 @@ InkStone converts Obsidian vault markdown notes into a web-accessible blog. URL 
 
 ## Running the Server
 
-The project dependencies live in `/home/air/venv/3.14/`. Use that Python when running locally:
+The project has a `.venv/` in the repo root (Python 3.14). direnv activates it automatically via `.envrc`. Always use `.venv/bin/python3` — never hunt for other environments:
 
 ```bash
 # Development (hot-reload enabled)
-/home/air/venv/3.14/bin/python3 app.py
+VAULT_PATH=BlogPages .venv/bin/python3 app.py
+
+# Docs site
+VAULT_PATH=Documentation_Website .venv/bin/python3 app.py
 
 # Production
-/home/air/venv/3.14/bin/gunicorn -b 0.0.0.0:8000 app:app
+.venv/bin/gunicorn -b 0.0.0.0:8000 app:app
 
 # Docker
 docker build -t inkstone .
