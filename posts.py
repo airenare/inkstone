@@ -488,13 +488,15 @@ def _render_feed_block_html(posts, ui_strings):
     return "\n".join(parts)
 
 
-def _resolve_feed_blocks(all_posts, ui_translations, default_lang):
+def _resolve_feed_blocks(all_posts, section_routes, ui_translations, default_lang):
     """Replace feed-block-placeholder divs with real feed HTML.
 
     Called after all passes of load_posts() so every post's excerpt_html
-    is available.
+    is available. Processes both regular posts and homepage/listing/feed
+    section route posts, which are stored separately from all_posts.
     """
-    for post in all_posts.values():
+    route_posts = [r["post"] for r in section_routes.values()]
+    for post in list(all_posts.values()) + route_posts:
         html = post.get("html", "")
         if "feed-block-placeholder" not in html:
             continue
@@ -579,13 +581,15 @@ def _render_note_block_html(post, mode, ui_strings):
     return "\n".join(parts)
 
 
-def _resolve_note_blocks(all_posts, ui_translations, default_lang):
+def _resolve_note_blocks(all_posts, section_routes, ui_translations, default_lang):
     """Replace note-block-placeholder divs with embedded note HTML.
 
     Called after all passes of load_posts() so every post's html and
-    excerpt_html are available.
+    excerpt_html are available. Processes both regular posts and
+    homepage/listing/feed section route posts.
     """
-    for post in all_posts.values():
+    route_posts = [r["post"] for r in section_routes.values()]
+    for post in list(all_posts.values()) + route_posts:
         html = post.get("html", "")
         if "note-block-placeholder" not in html:
             continue
@@ -1451,8 +1455,8 @@ def load_posts():
                 "show_search": ss, "show_tags": stags,
             }
 
-    _resolve_feed_blocks(all_posts, ui_translations, default_lang)
-    _resolve_note_blocks(all_posts, ui_translations, default_lang)
+    _resolve_feed_blocks(all_posts, section_routes, ui_translations, default_lang)
+    _resolve_note_blocks(all_posts, section_routes, ui_translations, default_lang)
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, default_theme,
