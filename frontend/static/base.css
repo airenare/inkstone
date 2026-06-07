@@ -1233,7 +1233,7 @@ audio {
     content: '';
     position: absolute;
     bottom: 0;
-    left: -10rem;
+    left: -7rem;
     right: 0;
     border-bottom: 3px double var(--border);
 }
@@ -1254,6 +1254,27 @@ audio {
 
 @media (max-width: 700px) {
     .feed-page .feed-entry-date {
+        position: static;
+        margin-bottom: 0.35rem;
+    }
+}
+
+.note-embed {
+    position: relative;
+}
+
+.note-embed .feed-entry-date {
+    position: absolute;
+    left: -10rem;
+    top: calc(4rem + 2.4em + 0.98rem);
+    width: 9rem;
+    text-align: right;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+@media (max-width: 700px) {
+    .note-embed .feed-entry-date {
         position: static;
         margin-bottom: 0.35rem;
     }
