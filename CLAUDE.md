@@ -95,7 +95,9 @@ Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct childr
 4. `convert_callouts()` — `> [!type] Title` → `<div class="callout callout-{type}">`
 5. `convert_checkboxes()` — `- [ ]`/`- [x]` → HTML checkbox lists with nesting
 6. `convert_dataview()` — ` ```dataview ``` ` blocks executed server-side by `dataview.py`
-7. `markdown.markdown()` — standard extensions: `fenced_code`, `tables`, `toc`, `md_in_html`, `codehilite`
+7. `convert_feed_blocks()` — ` ```feed N [/section] ``` ` → placeholder div; resolved post-load by `_resolve_feed_blocks()`
+8. `convert_note_blocks()` — ` ```note /path [full] ``` ` → placeholder div; resolved post-load by `_resolve_note_blocks()`
+9. `markdown.markdown()` — standard extensions: `fenced_code`, `tables`, `toc`, `md_in_html`, `codehilite`
 
 ### Frontend
 

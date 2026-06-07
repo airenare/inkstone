@@ -748,6 +748,9 @@ def convert_math(md):
 _FEED_BLOCK_RE = re.compile(
     r"^(`{3,}|~{3,})feed(?:\s+(\d+))?(?:\s+(/\S+))?\s*$"
 )
+_NOTE_BLOCK_RE = re.compile(
+    r"^(`{3,}|~{3,})note\s+(/\S+)(?:\s+(full))?\s*$"
+)
 _FENCE_OPEN_RE = re.compile(r"^(`{3,}|~{3,})")
 
 
@@ -782,6 +785,53 @@ def convert_feed_blocks(md):
                 output.append(
                     f'<div class="feed-block-placeholder"'
                     f' data-n="{n}" data-section="{section}"></div>'
+                )
+                output.append("")
+            else:
+                fm = _FENCE_OPEN_RE.match(line)
+                if fm:
+                    fence_marker = fm.group(1)
+                output.append(line)
+        else:
+            output.append(line)
+            if re.match(r"^" + re.escape(fence_marker) + r"`*~*\s*$", line):
+                fence_marker = None
+
+        i += 1
+
+    return "\n".join(output)
+
+
+def convert_note_blocks(md):
+    """Replace ```note /path [full] blocks with placeholder divs.
+
+    The actual note HTML is injected by posts.py after all posts are loaded.
+
+    Syntax:
+        ```note /blog/my-post```       — excerpt + "Read more" card
+        ```note /blog/my-post full```  — full post HTML inline
+    """
+    lines = md.split("\n")
+    output = []
+    fence_marker = None
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+
+        if fence_marker is None:
+            m = _NOTE_BLOCK_RE.match(line)
+            if m:
+                marker = m.group(1)
+                url_path = m.group(2)
+                mode = m.group(3) or "excerpt"
+                i += 1
+                while i < len(lines) and not lines[i].startswith(marker):
+                    i += 1
+                output.append("")
+                output.append(
+                    f'<div class="note-block-placeholder"'
+                    f' data-url="{url_path}" data-mode="{mode}"></div>'
                 )
                 output.append("")
             else:

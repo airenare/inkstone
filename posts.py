@@ -538,6 +538,79 @@ def _resolve_feed_blocks(all_posts, ui_translations, default_lang):
             )
 
 
+_NOTE_PLACEHOLDER_RE = re.compile(
+    r'<div class="note-block-placeholder"'
+    r' data-url="([^"]*)" data-mode="([^"]*)"></div>'
+)
+
+
+def _render_note_block_html(post, mode, ui_strings):
+    """Build HTML for a single embedded note card."""
+    read_more = ui_strings.get("Read more", "Read more")
+    min_read_label = ui_strings.get("min read", "min read")
+    date_str = ""
+    if post.get("date"):
+        d = post["date"]
+        date_str = f"{d.strftime('%B')} {d.day}, {d.year}"
+    meta_parts = [date_str] if date_str else []
+    if post.get("reading_time"):
+        meta_parts.append(f"{post['reading_time']} {min_read_label}")
+    meta = " · ".join(meta_parts)
+    parts = ['<article class="feed-entry note-embed">']
+    parts.append(
+        f'<h3 class="feed-entry-title">'
+        f'<a href="{post["url_path"]}">{post["title"]}</a></h3>'
+    )
+    if meta:
+        parts.append(f'<div class="post-meta">{meta}</div>')
+    if mode == "full":
+        if post.get("html"):
+            parts.append(f'<div class="feed-entry-body">{post["html"]}</div>')
+    else:
+        if post.get("excerpt_html"):
+            parts.append(
+                f'<div class="feed-entry-body">{post["excerpt_html"]}</div>'
+            )
+        parts.append(
+            f'<a href="{post["url_path"]}" class="feed-read-more">'
+            f"{read_more} →</a>"
+        )
+    parts.append("</article>")
+    return "\n".join(parts)
+
+
+def _resolve_note_blocks(all_posts, ui_translations, default_lang):
+    """Replace note-block-placeholder divs with embedded note HTML.
+
+    Called after all passes of load_posts() so every post's html and
+    excerpt_html are available.
+    """
+    for post in all_posts.values():
+        html = post.get("html", "")
+        if "note-block-placeholder" not in html:
+            continue
+
+        lang = post.get("lang", default_lang)
+        ui_strings = ui_translations.get(lang, {})
+
+        def _replace(m, _ui=ui_strings):
+            url_path = m.group(1)
+            mode = m.group(2)
+            target = all_posts.get(url_path)
+            if target is None:
+                return (
+                    f'<p class="feed-block-empty">'
+                    f"Note not found: {url_path}</p>"
+                )
+            return _render_note_block_html(target, mode, _ui)
+
+        post["html"] = _NOTE_PLACEHOLDER_RE.sub(_replace, html)
+        if "note-block-placeholder" in post.get("excerpt_html", ""):
+            post["excerpt_html"] = _NOTE_PLACEHOLDER_RE.sub(
+                _replace, post["excerpt_html"]
+            )
+
+
 def _make_excerpt_html(md, filepath, url_index, dataview_index, metadata, full_html):
     """Return rendered HTML excerpt for feed pages.
 
@@ -1379,6 +1452,7 @@ def load_posts():
             }
 
     _resolve_feed_blocks(all_posts, ui_translations, default_lang)
+    _resolve_note_blocks(all_posts, ui_translations, default_lang)
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, default_theme,
