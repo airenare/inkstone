@@ -1216,6 +1216,35 @@ audio {
     border-bottom: none;
 }
 
+.feed-entry-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+/* On the feed page, date floats into the left margin beside the title */
+.feed-page .feed-entry {
+    position: relative;
+}
+
+.feed-page .feed-entry-date {
+    position: absolute;
+    left: -10rem;
+    top: 4rem;
+    width: 9rem;
+    text-align: right;
+    margin-bottom: 0;
+    line-height: 1.4;
+}
+
+@media (max-width: 700px) {
+    .feed-page .feed-entry-date {
+        position: static;
+        margin-bottom: 0.35rem;
+    }
+}
+
 .feed-entry-title {
     margin: 0 0 0.3rem 0;
     font-size: 2em;

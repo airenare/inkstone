@@ -464,17 +464,18 @@ def _render_feed_block_html(posts, ui_strings):
         if post.get("date"):
             d = post["date"]
             date_str = f"{d.strftime('%B')} {d.day}, {d.year}"
-        meta_parts = [date_str] if date_str else []
-        if post.get("reading_time"):
-            meta_parts.append(f"{post['reading_time']} {min_read_label}")
-        meta = " · ".join(meta_parts)
         parts.append('<article class="feed-entry">')
+        if date_str:
+            parts.append(f'<time class="feed-entry-date">{date_str}</time>')
         parts.append(
             f'<h3 class="feed-entry-title">'
             f'<a href="{post["url_path"]}">{post["title"]}</a></h3>'
         )
-        if meta:
-            parts.append(f'<div class="post-meta">{meta}</div>')
+        if post.get("reading_time"):
+            parts.append(
+                f'<div class="post-meta">'
+                f'{post["reading_time"]} {min_read_label}</div>'
+            )
         if post.get("excerpt_html"):
             parts.append(
                 f'<div class="feed-entry-body">{post["excerpt_html"]}</div>'
@@ -554,17 +555,18 @@ def _render_note_block_html(post, mode, ui_strings):
     if post.get("date"):
         d = post["date"]
         date_str = f"{d.strftime('%B')} {d.day}, {d.year}"
-    meta_parts = [date_str] if date_str else []
-    if post.get("reading_time"):
-        meta_parts.append(f"{post['reading_time']} {min_read_label}")
-    meta = " · ".join(meta_parts)
     parts = ['<article class="feed-entry note-embed">']
+    if date_str:
+        parts.append(f'<time class="feed-entry-date">{date_str}</time>')
     parts.append(
         f'<h3 class="feed-entry-title">'
         f'<a href="{post["url_path"]}">{post["title"]}</a></h3>'
     )
-    if meta:
-        parts.append(f'<div class="post-meta">{meta}</div>')
+    if post.get("reading_time"):
+        parts.append(
+            f'<div class="post-meta">'
+            f'{post["reading_time"]} {min_read_label}</div>'
+        )
     if mode == "full":
         if post.get("html"):
             parts.append(f'<div class="feed-entry-body">{post["html"]}</div>')
