@@ -391,21 +391,59 @@ def _make_summary(html):
     return plain[:SUMMARY_LENGTH].rsplit(" ", 1)[0] + "\u2026"
 
 
+_BLOCK_START_RE = re.compile(
+    r"<(p|div|table|ul|ol|h[1-6]|blockquote|pre)[\s>]",
+    re.IGNORECASE,
+)
+_TAG_RE = re.compile(r"<(/?)(\w+)[^>]*>", re.DOTALL)
+_VOID_TAGS = frozenset([
+    "area", "base", "br", "col", "embed", "hr", "img", "input",
+    "link", "meta", "param", "source", "track", "wbr",
+])
+
+
 def _auto_excerpt_html(html):
-    """Return HTML of the first paragraph(s) up to ~_AUTO_EXCERPT_CHARS of
-    plain text. Cuts at paragraph boundaries so no tags are broken. Falls back
-    to the full html if no <p> blocks are found."""
-    paras = re.findall(r"<p>.*?</p>", html, re.DOTALL)
-    if not paras:
-        return html
-    collected, plain_len = [], 0
-    for p in paras:
-        plain = re.sub(r"<[^>]+>", "", p)
-        collected.append(p)
-        plain_len += len(plain)
+    """Return HTML of the first block element(s) up to ~_AUTO_EXCERPT_CHARS of
+    plain text. Handles all block-level elements (divs/callouts, tables, lists,
+    headings, code blocks, etc.), not just <p> tags. Falls back to full html if
+    no block elements are found."""
+    blocks = []
+    plain_len = 0
+    pos = 0
+
+    while pos < len(html):
+        m = _BLOCK_START_RE.search(html, pos)
+        if not m:
+            break
+
+        block_start = m.start()
+        depth = 0
+        block_end = block_start
+
+        for tm in _TAG_RE.finditer(html, block_start):
+            tag = tm.group(2).lower()
+            closing = tm.group(1) == "/"
+            if tag in _VOID_TAGS:
+                continue
+            if not closing:
+                depth += 1
+            else:
+                depth -= 1
+            if depth == 0:
+                block_end = tm.end()
+                break
+        else:
+            block_end = len(html)
+
+        block_html = html[block_start:block_end]
+        blocks.append(block_html)
+        plain_len += len(re.sub(r"<[^>]+>", "", block_html))
+        pos = block_end
+
         if plain_len >= _AUTO_EXCERPT_CHARS:
             break
-    return "\n".join(collected)
+
+    return "\n".join(blocks) if blocks else html
 
 
 _FEED_PLACEHOLDER_RE = re.compile(
