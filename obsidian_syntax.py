@@ -743,3 +743,57 @@ def convert_math(md):
         return f'<span class="math-inline">{match.group(3)}</span>'
 
     return _combined.sub(repl, md)
+
+
+_FEED_BLOCK_RE = re.compile(
+    r"^(`{3,}|~{3,})feed(?:\s+(\d+))?(?:\s+(/\S+))?\s*$"
+)
+_FENCE_OPEN_RE = re.compile(r"^(`{3,}|~{3,})")
+
+
+def convert_feed_blocks(md):
+    """Replace ```feed N [/section] blocks with placeholder divs.
+
+    The actual feed HTML is injected by posts.py after all posts are loaded.
+    Blocks nested inside another fenced block are passed through unchanged.
+
+    Syntax:
+        ```feed 5```          — 5 most recent posts from the current section
+        ```feed 5 /blog```    — 5 most recent posts from /blog
+    """
+    lines = md.split("\n")
+    output = []
+    fence_marker = None
+
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+
+        if fence_marker is None:
+            m = _FEED_BLOCK_RE.match(line)
+            if m:
+                marker = m.group(1)
+                n = m.group(2) or "5"
+                section = m.group(3) or ""
+                i += 1
+                while i < len(lines) and not lines[i].startswith(marker):
+                    i += 1
+                output.append("")
+                output.append(
+                    f'<div class="feed-block-placeholder"'
+                    f' data-n="{n}" data-section="{section}"></div>'
+                )
+                output.append("")
+            else:
+                fm = _FENCE_OPEN_RE.match(line)
+                if fm:
+                    fence_marker = fm.group(1)
+                output.append(line)
+        else:
+            output.append(line)
+            if re.match(r"^" + re.escape(fence_marker) + r"`*~*\s*$", line):
+                fence_marker = None
+
+        i += 1
+
+    return "\n".join(output)

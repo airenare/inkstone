@@ -26,6 +26,7 @@ from obsidian_syntax import (
     convert_block_ids,
     convert_highlights,
     convert_math,
+    convert_feed_blocks,
 )
 from dataview import convert_dataview, convert_dataview_inline
 import config as _config
@@ -270,6 +271,7 @@ def render_markdown(md, path, url_index=None, dataview_index=None,
         md = convert_dataview_inline(md, note_ctx, dataview_index=dataview_index)
     if dataview_index is not None:
         md = convert_dataview(md, dataview_index)
+    md = convert_feed_blocks(md)
 
     md, mermaid_blocks = _extract_mermaid(md)
 

@@ -408,6 +408,93 @@ def _auto_excerpt_html(html):
     return "\n".join(collected)
 
 
+_FEED_PLACEHOLDER_RE = re.compile(
+    r'<div class="feed-block-placeholder"'
+    r' data-n="(\d+)" data-section="([^"]*)"></div>'
+)
+
+
+def _render_feed_block_html(posts, ui_strings):
+    """Build feed-stream HTML for a ```feed block from a list of post dicts."""
+    if not posts:
+        return '<p class="feed-block-empty">No posts found.</p>'
+    read_more = ui_strings.get("Read more", "Read more")
+    min_read_label = ui_strings.get("min read", "min read")
+    parts = ['<div class="feed-stream feed-block">']
+    for post in posts:
+        date_str = ""
+        if post.get("date"):
+            d = post["date"]
+            date_str = f"{d.strftime('%B')} {d.day}, {d.year}"
+        meta_parts = [date_str] if date_str else []
+        if post.get("reading_time"):
+            meta_parts.append(f"{post['reading_time']} {min_read_label}")
+        meta = " · ".join(meta_parts)
+        parts.append('<article class="feed-entry">')
+        parts.append(
+            f'<h3 class="feed-entry-title">'
+            f'<a href="{post["url_path"]}">{post["title"]}</a></h3>'
+        )
+        if meta:
+            parts.append(f'<div class="post-meta">{meta}</div>')
+        if post.get("excerpt_html"):
+            parts.append(
+                f'<div class="feed-entry-body">{post["excerpt_html"]}</div>'
+            )
+        parts.append(
+            f'<a href="{post["url_path"]}" class="feed-read-more">'
+            f"{read_more} →</a>"
+        )
+        parts.append("</article>")
+    parts.append("</div>")
+    return "\n".join(parts)
+
+
+def _resolve_feed_blocks(all_posts, ui_translations, default_lang):
+    """Replace feed-block-placeholder divs with real feed HTML.
+
+    Called after all passes of load_posts() so every post's excerpt_html
+    is available.
+    """
+    for post in all_posts.values():
+        html = post.get("html", "")
+        if "feed-block-placeholder" not in html:
+            continue
+
+        post_section_url = post.get("section_url", "/")
+        post_section = post.get("section", "")
+        lang = post.get("lang", default_lang)
+        ui_strings = ui_translations.get(lang, {})
+
+        def _replace(m, _post_section=post_section, _ui=ui_strings):
+            n = int(m.group(1))
+            section_arg = m.group(2).strip()
+
+            if section_arg:
+                target = section_arg.lstrip("/")
+            else:
+                target = _post_section
+
+            candidates = [
+                p for p in all_posts.values()
+                if (
+                    p["section"] == target
+                    or p["section"].startswith(target + "/")
+                )
+                and p["url_path"] != post["url_path"]
+            ]
+            candidates.sort(
+                key=lambda x: x["date"] or datetime.min, reverse=True
+            )
+            return _render_feed_block_html(candidates[:n], _ui)
+
+        post["html"] = _FEED_PLACEHOLDER_RE.sub(_replace, html)
+        if "feed-block-placeholder" in post.get("excerpt_html", ""):
+            post["excerpt_html"] = _FEED_PLACEHOLDER_RE.sub(
+                _replace, post["excerpt_html"]
+            )
+
+
 def _make_excerpt_html(md, filepath, url_index, dataview_index, metadata, full_html):
     """Return rendered HTML excerpt for feed pages.
 
@@ -1247,6 +1334,8 @@ def load_posts():
                 "icon": icon, "site_title": st,
                 "show_search": ss, "show_tags": stags,
             }
+
+    _resolve_feed_blocks(all_posts, ui_translations, default_lang)
 
     menu_posts.sort(key=lambda x: x["menu_order"])
     return (all_posts, section_routes, website_name, site_theme, default_theme,

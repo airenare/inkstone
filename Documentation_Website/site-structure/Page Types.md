@@ -56,7 +56,27 @@ Optional intro text shown above the stream.
 
 The file's own markdown content (if any) is shown above the stream as an intro.
 
-**Controlling the excerpt cut point** — add `<!-- more -->` anywhere in a post's body. Everything before the marker becomes the feed excerpt; everything after it only appears on the full post page:
+### Embedding a feed anywhere with a feed block
+
+You can also embed a short post stream inline in any note — including the homepage — using a fenced `feed` code block:
+
+````markdown
+```feed 5
+```
+````
+
+Shows the 5 most recent posts from the **same section** as the page containing the block. To pull from a specific section:
+
+````markdown
+```feed 5 /blog
+```
+````
+
+The number is required; the section path is optional. Posts are sorted newest-first; undated posts fall to the bottom. This works in any note, not just `type: feed` pages.
+
+### Controlling the excerpt cut point
+
+Add `<!-- more -->` anywhere in a post's body. Everything before the marker becomes the feed excerpt; everything after it only appears on the full post page:
 
 ```markdown
 This paragraph and the next will appear in the feed preview.
