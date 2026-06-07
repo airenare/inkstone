@@ -1208,7 +1208,7 @@ audio {
 }
 
 .feed-entry {
-    padding: 3.5rem 0;
+    padding: 4rem 0 1rem;
     border-bottom: 3px double var(--h1-color);
 }
 
