@@ -1231,7 +1231,7 @@ audio {
 .feed-page .feed-entry-date {
     position: absolute;
     left: -10rem;
-    top: calc(4rem + 2.4em + 0.3rem);
+    top: calc(4rem + 2.4em + 1.8rem);
     width: 9rem;
     text-align: right;
     margin-bottom: 0;
