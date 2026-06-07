@@ -94,24 +94,6 @@ If a post has no `<!-- more -->` marker, InkStone automatically excerpts the ope
 
 Only one `feed` (or `listing`) per section.
 
-### Embedding a single note with a note block
-
-To embed one specific post — as a preview card or in full — use a fenced `note` code block anywhere in any note:
-
-````markdown
-```note /blog/my-post
-```
-````
-
-Shows the post as an excerpt card with title, date, reading time, and a "Read more" link — identical to a feed entry. To embed the full post content instead:
-
-````markdown
-```note /blog/my-post full
-```
-````
-
-The `full` variant renders the entire post body inline, still with the title and meta header. The path must be the post's URL path (e.g. `/blog/my-post`, not the filename). If the path doesn't resolve to a published note, a "Note not found" message is shown instead.
-
 ## book
 
 Renders with a special book template that includes a cover image, ISBN, rating, and genre metadata in the header.

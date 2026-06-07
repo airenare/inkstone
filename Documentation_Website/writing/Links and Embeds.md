@@ -2,7 +2,7 @@
 website: true
 title: Links and Embeds
 date: 2026-05-21
-summary: Wiki-links, aliases, anchors, block references, and note transclusion.
+summary: Wiki-links, aliases, anchors, block references, note transclusion, and note block embeds.
 featured: true
 priority: 3
 tags:
@@ -86,6 +86,33 @@ Embed a single section by adding a heading anchor:
 
 > [!warning] Published notes only
 > Transclusion only works for notes that have `website: true` and exist in the same vault. References to unpublished or missing notes render as a broken-link placeholder.
+---
+
+## Note block embeds
+
+The `note` fenced block embeds a specific published post inline — as a styled preview card or with its full content. Unlike transclusion (`![[]]`), it includes the post's title, date, and reading time as a header.
+
+**Preview card** (excerpt + "Read more" link):
+
+````markdown
+```note /blog/my-post
+```
+````
+
+**Full content** (entire post body, still with title and meta):
+
+````markdown
+```note /blog/my-post full
+```
+````
+
+The path is the post's URL path, not its filename — the same URL you'd visit in a browser (e.g. `/blog/my-post`, not `My Post.md`). Works in any published note, including the homepage.
+
+If the path doesn't resolve to a published note, InkStone renders a "Note not found" message in place of the block.
+
+> [!tip] Choosing between `![[]]` and `note` block
+> Use `![[Note Title]]` when you want seamless raw content merged into the current page with no visual separation. Use ` ```note ``` ` when you want the embedded post to stand out as its own card — with its title, date, and a link back to the original.
+
 ---
 
 ## Canvas and base embeds
