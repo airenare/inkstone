@@ -11,7 +11,8 @@
 <input type="text" name="q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…" autofocus>
 
 {% if all_tags %}
-<select name="tag">
+<label for="tag-filter" class="sr-only">{{ ui_strings.get('Tags', 'Tags') }}</label>
+<select name="tag" id="tag-filter">
 <option value="">{{ ui_strings.get('All tags', 'All tags') }}</option>
 {% for t in all_tags %}
 <option value="{{ t }}"{% if t == selected_tag %} selected{% endif %}>{{ t }}</option>

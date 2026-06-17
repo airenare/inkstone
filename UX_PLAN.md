@@ -14,9 +14,9 @@ Tracked in: `TODO.md` (UX sections)
 ## Group B — Accessibility Baseline
 **Files:** `base.html`, `base.css`
 **Why second:** Three items in two files. The focus-visible rule alone fixes every interactive element site-wide — highest return on effort.
-- [ ] Skip-to-content link
-- [ ] `:focus-visible` outlines on all interactive elements
-- [ ] `<label>` for tag filter `<select>` on search page
+- [x] Skip-to-content link
+- [x] `:focus-visible` outlines on all interactive elements
+- [x] `<label>` for tag filter `<select>` on search page
 
 ## Group M — Semantic `<time>` Markup
 **Files:** `feed.html`, `post.html`, and any note-embed templates
