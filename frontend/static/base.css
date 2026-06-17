@@ -1381,6 +1381,9 @@ audio {
         position: static;
         margin-bottom: 0.35rem;
     }
+    .feed-page .feed-entry::after {
+        left: 0;
+    }
 }
 
 .note-embed {
@@ -1476,7 +1479,7 @@ audio {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 240px;
+    max-width: min(50vw, 280px);
 }
 
 /* =========================================

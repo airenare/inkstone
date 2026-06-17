@@ -66,8 +66,11 @@ VAULT_PATH=Documentation_Website /home/air/venv/3.14/bin/python3 app.py
 
 ## Group L — Mobile / Responsive
 
-- [ ] At 650px viewport width — feed entry dates appear inline (not overlapping or in wrong margin)
-- [ ] At 320px viewport width — breadcrumb current page truncates gracefully without cutting off at a very short width
+- [ ] At 650px viewport width — feed entry dates appear inline and the separator line starts at the content left edge (not extending into the off-screen margin)
+- [ ] At > 700px viewport width — feed entry separator line still extends left to reach the date margin (regression check)
+- [ ] At 320px viewport width — breadcrumb current page gets ~160px max-width (50vw), not the old hard 240px; text still truncates with ellipsis
+- [ ] At 600px viewport width — breadcrumb gets ~280px, roughly matching the old cap
+- [ ] At wide viewport (900px+) — breadcrumb caps at 280px as before
 
 ---
 

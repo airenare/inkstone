@@ -39,8 +39,8 @@ Tracked in: `TODO.md` (UX sections)
 ## Group L — Mobile / Responsive CSS
 **Files:** `base.css`
 **Why sixth:** Two pure CSS tweaks. Quick and a good context-switch between heavier JS work.
-- [ ] Align feed date breakpoint with body padding breakpoint (600–700px gap)
-- [ ] Replace hard `max-width: 240px` on breadcrumb with `clamp`/`50vw`
+- [x] Align feed date breakpoint with body padding breakpoint (600–700px gap)
+- [x] Replace hard `max-width: 240px` on breadcrumb with `clamp`/`50vw`
 
 ## Standalone — 404 Template Fix
 **Files:** `404.html`, `base.css`
