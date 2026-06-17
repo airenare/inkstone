@@ -637,7 +637,10 @@ def serve(path):
             )
         parent = url_path.rsplit("/", 1)[0]
         back_url = parent if parent else "/"
-        return render_template("private.html", entry=entry, back_url=back_url)
+        return render_template(
+            "private.html", entry=entry, back_url=back_url,
+            is_owner=bool(session.get("inkstone_access")),
+        )
 
     # 4. Multilingual fallbacks (only when multiple languages are configured)
     if len(post_store.AVAILABLE_LANGS) > 1:

@@ -15,9 +15,14 @@
 </div>
 
 <p class="private-message">
+{% if is_owner %}
 This note exists in the vault but hasn't been published yet.
+{% else %}
+This page is not available.
+{% endif %}
 </p>
 
+{% if is_owner %}
 <details class="private-hint">
 <summary>How to publish this note</summary>
 <p>Add <code>website</code> to the note's frontmatter tags:</p>
@@ -30,6 +35,7 @@ Then push your vault — the page will appear at
 <code>{{ entry.url_path }}</code>.
 </p>
 </details>
+{% endif %}
 
 </article>
 
