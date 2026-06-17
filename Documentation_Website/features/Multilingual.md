@@ -105,6 +105,8 @@ Keys are the English UI strings exactly as shown in the reference below — spel
 | `Read more` | Feed page: link to full post |
 | `Previous` | Feed/listing pagination: previous page |
 | `Next` | Feed/listing pagination: next page |
+| `Previous post` | Post nav: directional label above previous post title |
+| `Next post` | Post nav: directional label above next post title |
 | `See also` | Related posts heading |
 | `Contents` | Table of contents heading |
 | `Updated` | Post meta: "**Updated** Jan 1, 2026" |

@@ -77,8 +77,8 @@
 
 {% if prev_post or next_post %}
 <nav class="post-nav">
-{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev">← {{ prev_post.title }}</a>{% endif %}
-{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next">{{ next_post.title }} →</a>{% endif %}
+{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev"><span class="post-nav-label">← {{ ui_strings.get('Previous post', 'Previous post') }}</span><span class="post-nav-title">{{ prev_post.title }}</span></a>{% endif %}
+{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next"><span class="post-nav-label">{{ ui_strings.get('Next post', 'Next post') }} →</span><span class="post-nav-title">{{ next_post.title }}</span></a>{% endif %}
 </nav>
 {% endif %}
 

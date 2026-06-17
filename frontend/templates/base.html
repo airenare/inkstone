@@ -141,6 +141,8 @@ new MutationObserver(renderMermaid).observe(
 
 <body>
 
+<div id="reading-progress" aria-hidden="true"></div>
+
 <a href="#main-content" class="skip-to-content">Skip to content</a>
 
 <header>
@@ -679,6 +681,37 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         document.querySelectorAll(".canvas-view").forEach(initCanvas);
     });
 })();
+</script>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+(function() {
+    // Reading progress bar — only on post pages (article element present)
+    var progressBar = document.getElementById("reading-progress")
+    var article = document.querySelector("article")
+    if (article && progressBar) {
+        progressBar.style.display = "block"
+        function updateProgress() {
+            var rect = article.getBoundingClientRect()
+            var total = article.offsetHeight - window.innerHeight
+            if (total <= 0) { progressBar.style.width = "0"; return }
+            var scrolled = Math.max(0, -rect.top)
+            progressBar.style.width = Math.min(100, (scrolled / total) * 100) + "%"
+        }
+        window.addEventListener("scroll", updateProgress, { passive: true })
+        updateProgress()
+    }
+
+    // Back to top button
+    var topBtn = document.getElementById("back-to-top")
+    window.addEventListener("scroll", function() {
+        topBtn.classList.toggle("visible", window.scrollY > 400)
+    }, { passive: true })
+    topBtn.addEventListener("click", function() {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+    })
+})()
 </script>
 
 </body>

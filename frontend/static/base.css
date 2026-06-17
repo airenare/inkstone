@@ -1848,6 +1848,68 @@ audio {
 
 
 /* =========================================
+   READING PROGRESS BAR
+   ========================================= */
+
+#reading-progress {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--accent);
+    z-index: 1000;
+    transition: width 0.1s linear;
+}
+
+/* =========================================
+   BACK TO TOP BUTTON
+   ========================================= */
+
+#back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, color 0.2s;
+    z-index: 200;
+}
+
+#back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#back-to-top:hover {
+    color: var(--accent);
+}
+
+/* =========================================
+   POST NAV LABELS
+   ========================================= */
+
+.post-nav-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2em;
+}
+
+.post-nav-title {
+    display: block;
+}
+
+/* =========================================
    FIGURE / FIGCAPTION
    ========================================= */
 
