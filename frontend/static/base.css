@@ -2371,8 +2371,9 @@ details.callout[open] > summary::after {
 
 .labels-index-count {
     font-size: 0.78rem;
-    color: var(--text-dim);
-    background: var(--bg-raised);
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 0.1em 0.5em;
 }

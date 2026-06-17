@@ -371,7 +371,7 @@ def tags_index():
             continue
         for tag in p.get("tags", []):
             tag_counts[tag] = tag_counts.get(tag, 0) + 1
-    tags = sorted(tag_counts.items())
+    tags = sorted(tag_counts.items(), key=lambda x: x[0].lower())
     return render_template("labels.html", labels=tags, section=section)
 
 
