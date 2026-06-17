@@ -36,6 +36,14 @@ def test_unknown_route_404(client):
     assert resp.status_code == 404
 
 
+def test_404_uses_error_page_class(client):
+    """404 page must use class="error-page", not class="private-note"."""
+    resp = client.get("/this-does-not-exist")
+    html = resp.data.decode()
+    assert 'class="error-page"' in html
+    assert 'class="private-note"' not in html
+
+
 def test_search_returns_results(client):
     resp = client.get("/search?q=simple")
     assert resp.status_code == 200
@@ -121,6 +129,15 @@ def test_post_date_has_datetime_attribute(client):
     resp = client.get("/blog/simple-post")
     html = resp.data.decode()
     assert '<time datetime="2026-01-15"' in html
+
+
+def test_post_nav_has_directional_labels(client):
+    """Post prev/next nav must show 'Previous post' / 'Next post' directional labels."""
+    # Posts are reverse-chronological: simple-post (Jan 15) is older, so it gets
+    # a "Previous post" link pointing to the newer dataview-post (Jan 20).
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert "Previous post" in html
 
 
 def test_search_empty_state_shows_tag_suggestions(client):
