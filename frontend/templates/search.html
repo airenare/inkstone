@@ -4,14 +4,15 @@
 
 <h2>{{ ui_strings.get('Search', 'Search') }}</h2>
 
-<form class="search-form" action="/search">
+<form class="search-form" action="/search" id="search-form">
 {% if section %}<input type="hidden" name="section" value="{{ section }}">{% endif %}
 {% if current_lang != default_lang %}<input type="hidden" name="lang" value="{{ current_lang }}">{% endif %}
 
-<input type="text" name="q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…" autofocus>
+<input type="text" name="q" id="search-q" value="{{ query }}" placeholder="{{ ui_strings.get('Search', 'Search') }}…" autofocus autocomplete="off">
 
 {% if all_tags %}
-<select name="tag">
+<label for="tag-filter" class="sr-only">{{ ui_strings.get('Tags', 'Tags') }}</label>
+<select name="tag" id="tag-filter">
 <option value="">{{ ui_strings.get('All tags', 'All tags') }}</option>
 {% for t in all_tags %}
 <option value="{{ t }}"{% if t == selected_tag %} selected{% endif %}>{{ t }}</option>
@@ -19,12 +20,25 @@
 </select>
 {% endif %}
 
-<button type="submit">{{ ui_strings.get('Search', 'Search') }}</button>
+<button type="submit" id="search-submit">{{ ui_strings.get('Search', 'Search') }}</button>
 
 </form>
 
+<p class="search-hint" id="search-hint" aria-live="polite"></p>
+
 {% if (query or selected_tag) and not posts %}
-<p class="search-empty">{{ ui_strings.get('No results', 'No results') }}{% if query %} {{ ui_strings.get('for', 'for') }} <strong>{{ query }}</strong>{% endif %}{% if selected_tag %} {{ ui_strings.get('tagged', 'tagged') }} <span class="tag-badge">{{ selected_tag }}</span>{% endif %}.</p>
+<div class="search-empty">
+  <p>{{ ui_strings.get('No results', 'No results') }}{% if query %} {{ ui_strings.get('for', 'for') }} <strong>{{ query }}</strong>{% endif %}{% if selected_tag %} {{ ui_strings.get('tagged', 'tagged') }} <span class="tag-badge">{{ selected_tag }}</span>{% endif %}.</p>
+  {% if top_tags %}
+  <div class="search-suggestions">
+    <span class="search-suggestions-label">{{ ui_strings.get('Browse by tag', 'Browse by tag') }}:</span>
+    {% for tag in top_tags %}
+    <a href="/tag/{{ tag }}{% if section %}?section={{ section }}{% endif %}" class="tag-badge">{{ tag }}</a>
+    {% endfor %}
+    <a href="/tags{% if section %}?section={{ section }}{% endif %}" class="search-suggestions-all">{{ ui_strings.get('All tags', 'All tags') }} →</a>
+  </div>
+  {% endif %}
+</div>
 {% endif %}
 
 {% if posts %}
@@ -39,7 +53,7 @@
 <li class="search-result">
 <h4><a href="{{ post.url_path }}">{{ post.highlighted_title | safe }}</a></h4>
 <div class="post-meta">
-{% if post.date %}{{ localize_date(post.date) }}{% endif %}
+{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}
 {% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}
 </div>
 <p class="post-summary">{{ post.highlighted_summary | safe }}</p>
@@ -50,5 +64,34 @@
 </ul>
 
 {% endif %}
+
+<script>
+(function () {
+    const input = document.getElementById("search-q")
+    const btn = document.getElementById("search-submit")
+    const hint = document.getElementById("search-hint")
+    const hintText = "{{ ui_strings.get('Type to search', 'Type to search') }}…"
+
+    function update() {
+        const empty = input.value.trim() === ""
+        btn.disabled = empty
+        btn.style.opacity = empty ? "0.5" : ""
+        btn.style.cursor = empty ? "default" : ""
+    }
+
+    input.addEventListener("focus", function () {
+        if (input.value.trim() === "") hint.textContent = hintText
+    })
+    input.addEventListener("blur", function () {
+        hint.textContent = ""
+    })
+    input.addEventListener("input", function () {
+        update()
+        hint.textContent = input.value.trim() === "" ? hintText : ""
+    })
+
+    update()
+})()
+</script>
 
 {% endblock %}

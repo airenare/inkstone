@@ -10,7 +10,7 @@
 {% for post in featured %}
 <article class="featured-post">
     <h3><a href="/blog/{{ post.slug }}">{{ post.title }}</a></h3>
-    <div class="post-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}</div>
+    <div class="post-meta">{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}</div>
     <p class="post-summary">{{ post.summary }}</p>
 </article>
 {% endfor %}
@@ -25,7 +25,7 @@
 {% for post in regular %}
 <article class="post-entry">
     <h3><a href="/blog/{{ post.slug }}">{{ post.title }}</a></h3>
-    <div class="post-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}</div>
+    <div class="post-meta">{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}</div>
     <p class="post-summary">{{ post.summary }}</p>
 </article>
 {% endfor %}

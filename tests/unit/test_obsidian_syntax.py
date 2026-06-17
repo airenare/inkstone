@@ -79,5 +79,29 @@ def test_float_left_figure_html():
     assert 'class="figure-left"' in result
     assert 'style="max-width:300px"' in result
     assert '<figcaption>My Alt</figcaption>' in result
-    assert 'data-gallery="gallery"' in result
+    assert 'data-gallery="g1"' in result
     assert 'data-type="image"' in result
+
+
+def test_gallery_ids_are_unique_across_groups():
+    """Two image groups separated by text must get different gallery IDs."""
+    from pathlib import Path
+    fixture_post = str(
+        Path(__file__).parent.parent / "fixtures" / "vault" / "blog" / "simple_post.md"
+    )
+    md = "![[test.jpg]]\n\nSome text between.\n\n![[test.jpg]]"
+    result = convert_media(md, fixture_post)
+    assert 'data-gallery="g1"' in result
+    assert 'data-gallery="g2"' in result
+
+
+def test_consecutive_images_share_gallery_id():
+    """Consecutive image lines (a gallery block) must share one gallery ID."""
+    from pathlib import Path
+    fixture_post = str(
+        Path(__file__).parent.parent / "fixtures" / "vault" / "blog" / "simple_post.md"
+    )
+    md = "![[test.jpg]]\n![[test.jpg]]"
+    result = convert_media(md, fixture_post)
+    assert result.count('data-gallery="g1"') == 2
+    assert 'data-gallery="g2"' not in result

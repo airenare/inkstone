@@ -41,7 +41,7 @@
 <div class="page-banner" style="background-image: url('{{ post.banner }}'); background-position: {{ ((post.banner_x or 0.5) * 100)|int }}% {{ ((post.banner_y or 0.5) * 100)|int }}%;">
 <div class="page-banner-body">
 <h1 class="banner-title">{{ post.title }}</h1>
-<div class="post-meta banner-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}{% if post.updated and post.updated != post.date %} · {{ ui_strings.get('Updated', 'Updated') }} {{ localize_date(post.updated) }}{% endif %}{% if post.author %} · {{ ui_strings.get('by', 'by') }} {{ post.author | join(", ") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
+<div class="post-meta banner-meta">{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}{% if post.updated and post.updated != post.date %} · {{ ui_strings.get('Updated', 'Updated') }} <time datetime="{{ post.updated.strftime('%Y-%m-%d') }}">{{ localize_date(post.updated) }}</time>{% endif %}{% if post.author %} · {{ ui_strings.get('by', 'by') }} {{ post.author | join(", ") }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
 </div>
 </div>
 {% endif %}
@@ -51,8 +51,8 @@
 {% if not post.banner %}
 <h1>{{ post.title }}</h1>
 <div class="post-meta">
-{% if post.date %}{{ localize_date(post.date) }}{% endif %}
-{% if post.updated and post.updated != post.date %} · {{ ui_strings.get('Updated', 'Updated') }} {{ localize_date(post.updated) }}{% endif %}
+{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}
+{% if post.updated and post.updated != post.date %} · {{ ui_strings.get('Updated', 'Updated') }} <time datetime="{{ post.updated.strftime('%Y-%m-%d') }}">{{ localize_date(post.updated) }}</time>{% endif %}
 {% if post.author %} · {{ ui_strings.get('by', 'by') }} {{ post.author | join(", ") }}{% endif %}
 {% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}
 </div>
@@ -77,8 +77,8 @@
 
 {% if prev_post or next_post %}
 <nav class="post-nav">
-{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev">← {{ prev_post.title }}</a>{% endif %}
-{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next">{{ next_post.title }} →</a>{% endif %}
+{% if prev_post %}<a href="{{ prev_post.url_path }}" class="post-nav-prev"><span class="post-nav-label">← {{ ui_strings.get('Previous post', 'Previous post') }}</span><span class="post-nav-title">{{ prev_post.title }}</span></a>{% endif %}
+{% if next_post %}<a href="{{ next_post.url_path }}" class="post-nav-next"><span class="post-nav-label">{{ ui_strings.get('Next post', 'Next post') }} →</span><span class="post-nav-title">{{ next_post.title }}</span></a>{% endif %}
 </nav>
 {% endif %}
 
@@ -89,7 +89,7 @@
 {% for p in related %}
 <a href="{{ p.url_path }}" class="related-card">
 <div class="related-card-title">{{ p.title }}</div>
-{% if p.date %}<div class="related-card-meta">{{ localize_date(p.date) }}</div>{% endif %}
+{% if p.date %}<div class="related-card-meta"><time datetime="{{ p.date.strftime('%Y-%m-%d') }}">{{ localize_date(p.date) }}</time></div>{% endif %}
 <div class="related-card-summary">{{ p.summary }}</div>
 </a>
 {% endfor %}
@@ -109,7 +109,7 @@
     data-emit-metadata="0"
     data-input-position="bottom"
     data-theme="dark"
-    data-lang="en"
+    data-lang="{{ current_lang }}"
     crossorigin="anonymous"
     async>
 </script>

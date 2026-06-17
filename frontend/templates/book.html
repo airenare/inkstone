@@ -126,7 +126,7 @@
 {% for p in related %}
 <a href="{{ p.url_path }}" class="related-card">
 <div class="related-card-title">{{ p.title }}</div>
-{% if p.date %}<div class="related-card-meta">{{ localize_date(p.date) }}</div>{% endif %}
+{% if p.date %}<div class="related-card-meta"><time datetime="{{ p.date.strftime('%Y-%m-%d') }}">{{ localize_date(p.date) }}</time></div>{% endif %}
 <div class="related-card-summary">{{ p.summary }}</div>
 </a>
 {% endfor %}

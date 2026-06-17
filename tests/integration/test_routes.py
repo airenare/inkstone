@@ -36,6 +36,14 @@ def test_unknown_route_404(client):
     assert resp.status_code == 404
 
 
+def test_404_uses_error_page_class(client):
+    """404 page must use class="error-page", not class="private-note"."""
+    resp = client.get("/this-does-not-exist")
+    html = resp.data.decode()
+    assert 'class="error-page"' in html
+    assert 'class="private-note"' not in html
+
+
 def test_search_returns_results(client):
     resp = client.get("/search?q=simple")
     assert resp.status_code == 200
@@ -98,3 +106,44 @@ def test_canvas_embed_renders_in_post(client):
     html = resp.data.decode()
     assert 'class="canvas-embed"' in html
     assert "![[embed_canvas]]" not in html
+
+
+def test_skip_to_content_link_present(client):
+    """Every page must include a skip-to-content link and a matching main landmark."""
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert 'class="skip-to-content"' in html
+    assert 'id="main-content"' in html
+
+
+def test_search_tag_filter_has_label(client):
+    """The tag filter <select> on the search page must have an associated <label>."""
+    resp = client.get("/search")
+    html = resp.data.decode()
+    assert 'for="tag-filter"' in html
+    assert 'id="tag-filter"' in html
+
+
+def test_post_date_has_datetime_attribute(client):
+    """Post meta dates must be wrapped in <time datetime='YYYY-MM-DD'>."""
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert '<time datetime="2026-01-15"' in html
+
+
+def test_post_nav_has_directional_labels(client):
+    """Post prev/next nav must show 'Previous post' / 'Next post' directional labels."""
+    # Posts are reverse-chronological: simple-post (Jan 15) is older, so it gets
+    # a "Previous post" link pointing to the newer dataview-post (Jan 20).
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert "Previous post" in html
+
+
+def test_search_empty_state_shows_tag_suggestions(client):
+    """A search with no results must show the tag suggestions block."""
+    resp = client.get("/search?q=zzznomatchxxx")
+    html = resp.data.decode()
+    assert 'class="search-suggestions"' in html
+    # Fixture post has tags [test, python] so at least one must appear
+    assert 'href="/tag/test"' in html or 'href="/tag/python"' in html

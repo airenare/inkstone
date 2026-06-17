@@ -29,7 +29,7 @@
 {% for post in featured %}
 <article class="featured-post">
     <h3><a href="{{ post.url_path }}">{{ post.title }}</a></h3>
-    <div class="post-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
+    <div class="post-meta">{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
     <p class="post-summary">{{ post.summary }}</p>
 </article>
 {% endfor %}
@@ -45,7 +45,7 @@
 {% for post in regular %}
 <a href="{{ post.url_path }}" class="related-card">
     <div class="related-card-title">{{ post.title }}</div>
-    <div class="related-card-meta">{% if post.date %}{{ localize_date(post.date) }}{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
+    <div class="related-card-meta">{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}{% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}</div>
     <div class="related-card-summary">{{ post.summary }}</div>
 </a>
 {% endfor %}
@@ -53,9 +53,9 @@
 
 {% if total_pages > 1 %}
 <div class="pagination">
-{% if page > 1 %}<a href="?page={{ page - 1 }}">← Previous</a>{% endif %}
+{% if page > 1 %}<a href="?page={{ page - 1 }}">← {{ ui_strings.get('Previous', 'Previous') }}</a>{% endif %}
 <span class="pagination-info">{{ page }} / {{ total_pages }}</span>
-{% if page < total_pages %}<a href="?page={{ page + 1 }}">Next →</a>{% endif %}
+{% if page < total_pages %}<a href="?page={{ page + 1 }}">{{ ui_strings.get('Next', 'Next') }} →</a>{% endif %}
 </div>
 {% endif %}
 

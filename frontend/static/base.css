@@ -97,6 +97,44 @@ a:hover {
     text-decoration: underline;
 }
 
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+}
+
+.skip-to-content {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    background: var(--bg-card);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    padding: 0.5em 1em;
+    font-size: 0.9rem;
+    font-weight: 600;
+    z-index: 9999;
+    text-decoration: none;
+    transition: top 0.1s;
+}
+
+.skip-to-content:focus {
+    top: 1rem;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 h1 { color: var(--h1-color); }
 h2 { color: var(--h2-color); }
 h3 { color: var(--h3-color); }
@@ -267,6 +305,59 @@ img[data-gallery]:hover {
     margin-top:12px;
     color:#ccc;
     text-align:center;
+}
+
+.lightbox-close {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 1.75rem;
+    line-height: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: background 0.15s;
+}
+
+.lightbox-close:hover {
+    background: rgba(0,0,0,0.85);
+}
+
+.lightbox-prev,
+.lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 2.5rem;
+    line-height: 1;
+    width: 2.75rem;
+    height: 4rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: background 0.15s;
+}
+
+.lightbox-prev { left: 1rem; }
+.lightbox-next { right: 1rem; }
+
+.lightbox-prev:hover,
+.lightbox-next:hover {
+    background: rgba(0,0,0,0.85);
 }
 
 .slider-gallery {
@@ -482,17 +573,13 @@ nav a.nav-home {
     }
 
     .post-nav {
-        flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.5rem;
     }
 
+    .post-nav-prev,
     .post-nav-next {
-        margin-left: 0;
-        text-align: left;
+        min-width: 0;
     }
-
-    .post-nav-prev::before { content: "← "; }
-    .post-nav-next::after  { content: " →"; }
 }
 
 /* =========================================
@@ -667,6 +754,19 @@ nav a.nav-home {
     padding: 0.5em;
     border-left: 3px solid #f38ba8;
     margin: 1em 0;
+}
+
+/* =========================================
+   ERROR PAGE (404, etc.)
+   ========================================= */
+
+.error-page {
+    max-width: 560px;
+}
+
+.error-message {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
 }
 
 /* =========================================
@@ -1042,7 +1142,40 @@ details[open].toc-block summary::before {
 }
 
 .search-empty {
+    margin: 0.5rem 0 1.5rem;
+}
+
+.search-empty > p {
     color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+.search-hint {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin: -0.75rem 0 1rem;
+    min-height: 1.2em;
+}
+
+.search-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+}
+
+.search-suggestions-label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-right: 0.1rem;
+}
+
+.search-suggestions-all {
+    font-size: 0.82rem;
+    color: var(--accent);
+    margin-left: 0.25rem;
+    white-space: nowrap;
 }
 
 mark {
@@ -1257,6 +1390,9 @@ audio {
         position: static;
         margin-bottom: 0.35rem;
     }
+    .feed-page .feed-entry::after {
+        left: 0;
+    }
 }
 
 .note-embed {
@@ -1352,7 +1488,7 @@ audio {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 240px;
+    max-width: min(50vw, 280px);
 }
 
 /* =========================================
@@ -1617,6 +1753,8 @@ audio {
 
 [data-theme="light"] .search-form button:hover { background: #d4d4cc; }
 
+[data-theme="light"] .search-suggestions-all { color: #1a1a2a; font-weight: 600; text-decoration: underline; }
+
 /* --- Misc structural --- */
 [data-theme="light"] hr { border-top-color: #c8c8d0; }
 
@@ -1708,6 +1846,68 @@ audio {
     text-decoration: underline;
 }
 
+
+/* =========================================
+   READING PROGRESS BAR
+   ========================================= */
+
+#reading-progress {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: var(--accent);
+    z-index: 1000;
+    transition: width 0.1s linear;
+}
+
+/* =========================================
+   BACK TO TOP BUTTON
+   ========================================= */
+
+#back-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, color 0.2s;
+    z-index: 200;
+}
+
+#back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#back-to-top:hover {
+    color: var(--accent);
+}
+
+/* =========================================
+   POST NAV LABELS
+   ========================================= */
+
+.post-nav-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2em;
+}
+
+.post-nav-title {
+    display: block;
+}
 
 /* =========================================
    FIGURE / FIGCAPTION
@@ -1857,6 +2057,28 @@ figure.figure-right img {
 .canvas-fit-btn:hover {
     opacity: 1;
     color: var(--text);
+}
+
+.canvas-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3em 0.9em;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.8s ease;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.canvas-hint-hide {
+    opacity: 0;
 }
 
 .canvas-wide-btn {
@@ -2171,8 +2393,9 @@ details.callout[open] > summary::after {
 
 .labels-index-count {
     font-size: 0.78rem;
-    color: var(--text-dim);
-    background: var(--bg-raised);
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 0.1em 0.5em;
 }

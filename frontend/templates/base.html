@@ -141,6 +141,10 @@ new MutationObserver(renderMermaid).observe(
 
 <body>
 
+<div id="reading-progress" aria-hidden="true"></div>
+
+<a href="#main-content" class="skip-to-content">Skip to content</a>
+
 <header>
 <div class="header-inner">
 <h1><a href="{{ header_home_url or '/' }}">{% if header_icon %}<img src="{{ header_icon }}" alt="" class="site-icon" aria-hidden="true">{% endif %}{{ header_site_title or website_name }}</a></h1>
@@ -154,7 +158,7 @@ new MutationObserver(renderMermaid).observe(
 </div>
 </header>
 
-<main>
+<main id="main-content">
 {% block content %}{% endblock %}
 </main>
 
@@ -200,9 +204,35 @@ function openLightbox(items,startIndex){
     inner.appendChild(mediaContainer)
     inner.appendChild(caption)
 
+    // Close button
+    const closeBtn = document.createElement("button")
+    closeBtn.className = "lightbox-close"
+    closeBtn.innerHTML = "&times;"
+    closeBtn.setAttribute("aria-label", "Close")
+    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); close() })
+
+    overlay.appendChild(closeBtn)
     overlay.appendChild(inner)
 
+    // Prev / next arrows — only for multi-item galleries
+    if(galleryItems.length > 1){
 
+        const prevBtn = document.createElement("button")
+        prevBtn.className = "lightbox-prev"
+        prevBtn.innerHTML = "&#8249;"
+        prevBtn.setAttribute("aria-label", "Previous")
+        prevBtn.addEventListener("click", (e) => { e.stopPropagation(); prev() })
+
+        const nextBtn = document.createElement("button")
+        nextBtn.className = "lightbox-next"
+        nextBtn.innerHTML = "&#8250;"
+        nextBtn.setAttribute("aria-label", "Next")
+        nextBtn.addEventListener("click", (e) => { e.stopPropagation(); next() })
+
+        overlay.appendChild(prevBtn)
+        overlay.appendChild(nextBtn)
+
+    }
 
     function render(){
 
@@ -263,7 +293,8 @@ function openLightbox(items,startIndex){
 
     }
 
-    overlay.addEventListener("click", () => close())
+    // Only close when clicking the dark backdrop, not the image or inner content
+    overlay.addEventListener("click", (e) => { if(e.target===overlay) close() })
 
     document.addEventListener("keydown",keyHandler)
 
@@ -352,6 +383,11 @@ right.onclick = () => goToSlide(index + 1)
 
 left.onclick = () => goToSlide(index - 1)
 
+gallery.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") { e.preventDefault(); goToSlide(index + 1) }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); goToSlide(index - 1) }
+})
+
 
 slides.addEventListener("scroll", () => {
 
@@ -404,8 +440,12 @@ document.querySelectorAll("pre code:not(.language-mermaid)").forEach(block => {
 
     btn.onclick = () => {
         navigator.clipboard.writeText(block.innerText)
-        btn.textContent = "copied"
-        setTimeout(()=>btn.textContent="copy",1500)
+        btn.textContent = "✓ copied"
+        btn.classList.add("copy-btn-flash")
+        setTimeout(() => {
+            btn.textContent = "copy"
+            btn.classList.remove("copy-btn-flash")
+        }, 1500)
     }
 
     wrapper.appendChild(btn)
@@ -452,6 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!saved) {
             btn.textContent = "🖥️"
             btn.setAttribute("aria-label", "Theme: Auto")
+            btn.setAttribute("title", "Switch to light")
             // Only listen to OS changes when the site default is system/OS
             if (def !== "dark" && def !== "light") {
                 if (!mqListener) {
@@ -470,9 +511,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (saved === "light") {
                 btn.textContent = "☀"
                 btn.setAttribute("aria-label", "Theme: Light")
+                btn.setAttribute("title", "Switch to dark")
             } else {
                 btn.textContent = "☾"
                 btn.setAttribute("aria-label", "Theme: Dark")
+                btn.setAttribute("title", "Switch to auto")
             }
         }
     }
@@ -514,6 +557,12 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         var fitBtn = view.querySelector(".canvas-fit-btn");
         var wideBtn = view.querySelector(".canvas-wide-btn");
         if (!stage) return;
+
+        var hint = document.createElement("div");
+        hint.className = "canvas-hint";
+        hint.textContent = "drag to pan · scroll to zoom";
+        view.appendChild(hint);
+        setTimeout(function() { hint.classList.add("canvas-hint-hide"); }, 2000);
 
         var tx = 0, ty = 0, scale = 1;
         var dragging = false, lastX = 0, lastY = 0;
@@ -650,6 +699,37 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         document.querySelectorAll(".canvas-view").forEach(initCanvas);
     });
 })();
+</script>
+
+<button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
+
+<script>
+(function() {
+    // Reading progress bar — only on post pages (article element present)
+    var progressBar = document.getElementById("reading-progress")
+    var article = document.querySelector("article")
+    if (article && progressBar) {
+        progressBar.style.display = "block"
+        function updateProgress() {
+            var rect = article.getBoundingClientRect()
+            var total = article.offsetHeight - window.innerHeight
+            if (total <= 0) { progressBar.style.width = "0"; return }
+            var scrolled = Math.max(0, -rect.top)
+            progressBar.style.width = Math.min(100, (scrolled / total) * 100) + "%"
+        }
+        window.addEventListener("scroll", updateProgress, { passive: true })
+        updateProgress()
+    }
+
+    // Back to top button
+    var topBtn = document.getElementById("back-to-top")
+    window.addEventListener("scroll", function() {
+        topBtn.classList.toggle("visible", window.scrollY > 400)
+    }, { passive: true })
+    topBtn.addEventListener("click", function() {
+        window.scrollTo({ top: 0, behavior: "smooth" })
+    })
+})()
 </script>
 
 </body>

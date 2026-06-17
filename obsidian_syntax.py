@@ -380,21 +380,32 @@ def convert_media(md, md_path):
     gallery = []
     slider = []
     fence_marker = None
+    gallery_counter = 0
+
+    def next_gid():
+        nonlocal gallery_counter
+        gallery_counter += 1
+        return f"g{gallery_counter}"
 
     def flush_gallery():
         if not gallery:
             return ""
-        if len(gallery) == 1:
-            html = gallery[0]
+        gid = next_gid()
+        items = [
+            item.replace('data-gallery="gallery"', f'data-gallery="{gid}"')
+            for item in gallery
+        ]
+        if len(items) == 1:
+            html = items[0]
         else:
-            html = '<div class="thumb-gallery">' + "".join(gallery) + "</div>"
+            html = '<div class="thumb-gallery">' + "".join(items) + "</div>"
         gallery.clear()
         return html
 
     def flush_slider():
         if not slider:
             return ""
-        html = '<div class="slider-gallery">'
+        html = '<div class="slider-gallery" tabindex="0">'
         html += '<button class="slider-arrow left">&#8249;</button>'
         html += '<div class="slides">'
         for item in slider:
@@ -502,7 +513,7 @@ def convert_media(md, md_path):
                     img_tag = (
                         f'<img src="{href}" alt="{img_caption}"'
                         f'{width_attr}'
-                        f' data-gallery="gallery" data-src="{href}"'
+                        f' data-gallery="{next_gid()}" data-src="{href}"'
                         f' data-type="image" data-caption="{img_caption}"'
                         f' loading="lazy">'
                     )
@@ -521,7 +532,7 @@ def convert_media(md, md_path):
                         output.append(flush_gallery())
                     img_tag = (
                         f'<img src="{href}"{width_attr}'
-                        f' data-gallery="gallery" data-src="{href}"'
+                        f' data-gallery="{next_gid()}" data-src="{href}"'
                         f' data-type="image" data-caption="{img_caption}"'
                         f' loading="lazy">'
                     )

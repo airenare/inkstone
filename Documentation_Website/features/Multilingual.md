@@ -98,11 +98,15 @@ Keys are the English UI strings exactly as shown in the reference below — spel
 | `result` | Search result count (singular) |
 | `for` | Search: "No results **for** …" |
 | `tagged` | Search: "results **tagged** …" |
+| `Browse by tag` | Search empty state: "**Browse by tag**: …" |
+| `Type to search` | Search input hint shown when field is empty and focused |
 | `Featured` | Listing page section heading |
 | `All Posts` | Listing page section heading |
 | `Read more` | Feed page: link to full post |
 | `Previous` | Feed/listing pagination: previous page |
 | `Next` | Feed/listing pagination: next page |
+| `Previous post` | Post nav: directional label above previous post title |
+| `Next post` | Post nav: directional label above next post title |
 | `See also` | Related posts heading |
 | `Contents` | Table of contents heading |
 | `Updated` | Post meta: "**Updated** Jan 1, 2026" |
