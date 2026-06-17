@@ -26,8 +26,8 @@ Tracked in: `TODO.md` (UX sections)
 ## Group A — Lightbox Polish
 **Files:** `base.html` (JS)
 **Why fourth:** Both items live in the same ~90-line JS function block. Natural to tackle together.
-- [ ] Add visible × close button and ‹ › navigation arrows
-- [ ] Fix lightbox closing when clicking the image itself
+- [x] Add visible × close button and ‹ › navigation arrows
+- [x] Fix lightbox closing when clicking the image itself
 
 ## Group C — Search UX
 **Files:** `search.html`, `app.py`
