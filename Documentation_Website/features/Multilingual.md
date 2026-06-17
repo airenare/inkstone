@@ -98,6 +98,8 @@ Keys are the English UI strings exactly as shown in the reference below — spel
 | `result` | Search result count (singular) |
 | `for` | Search: "No results **for** …" |
 | `tagged` | Search: "results **tagged** …" |
+| `Browse by tag` | Search empty state: "**Browse by tag**: …" |
+| `Type to search` | Search input hint shown when field is empty and focused |
 | `Featured` | Listing page section heading |
 | `All Posts` | Listing page section heading |
 | `Read more` | Feed page: link to full post |

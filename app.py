@@ -3,6 +3,7 @@ import hmac
 import html
 import os
 import subprocess
+from collections import Counter
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
@@ -449,12 +450,18 @@ def search():
                 "highlighted_summary": highlight(p["summary"], q),
             })
 
+    tag_counts = Counter(
+        tag for p in candidate_posts for tag in p.get("tags", [])
+    )
+    top_tags = [tag for tag, _ in tag_counts.most_common(8)]
+
     return render_template(
         "search.html",
         posts=results,
         query=q,
         selected_tag=label_filter,
         all_tags=all_tags,
+        top_tags=top_tags,
         section=section,
     )
 

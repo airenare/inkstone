@@ -1133,7 +1133,40 @@ details[open].toc-block summary::before {
 }
 
 .search-empty {
+    margin: 0.5rem 0 1.5rem;
+}
+
+.search-empty > p {
     color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+.search-hint {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin: -0.75rem 0 1rem;
+    min-height: 1.2em;
+}
+
+.search-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+}
+
+.search-suggestions-label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-right: 0.1rem;
+}
+
+.search-suggestions-all {
+    font-size: 0.82rem;
+    color: var(--accent);
+    margin-left: 0.25rem;
+    white-space: nowrap;
 }
 
 mark {
@@ -1707,6 +1740,8 @@ audio {
 }
 
 [data-theme="light"] .search-form button:hover { background: #d4d4cc; }
+
+[data-theme="light"] .search-suggestions-all { color: #1a1a2a; font-weight: 600; text-decoration: underline; }
 
 /* --- Misc structural --- */
 [data-theme="light"] hr { border-top-color: #c8c8d0; }

@@ -53,12 +53,14 @@ VAULT_PATH=Documentation_Website /home/air/venv/3.14/bin/python3 app.py
 
 ---
 
-## Group C — Search UX *(implement before checking)*
+## Group C — Search UX
 
-- [ ] Search with no results — empty state shows top tags as badges + link to Tags page
-- [ ] Search input focused and empty — helper hint visible
-- [ ] Submit button is disabled when input is empty
-- [ ] Tag filter dropdown has a visible label for screen readers
+- [ ] Search with no results — empty state shows top tags as badges + "All tags →" link
+- [ ] Search input focused and empty — "Type to search…" hint appears below the input
+- [ ] Hint disappears once the user starts typing
+- [ ] Submit button is visually dimmed and disabled when input is empty
+- [ ] Submit button becomes active as soon as a character is typed
+- [ ] Tag filter dropdown has a visible label for screen readers (inspect element)
 
 ---
 

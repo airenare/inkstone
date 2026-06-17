@@ -32,9 +32,9 @@ Tracked in: `TODO.md` (UX sections)
 ## Group C — Search UX
 **Files:** `search.html`, `app.py`
 **Why fifth:** Small backend change (top tags for empty-state suggestions) plus template work. `<select>` label is trivially added in the same pass.
-- [ ] Empty state: suggest top tags + link to Tags page
-- [ ] Input hint ("type at least 2 characters") + disable submit when empty
-- [ ] Add `<label>` to tag filter `<select>`
+- [x] Empty state: suggest top tags + link to Tags page
+- [x] Input hint ("type at least 2 characters") + disable submit when empty
+- [x] Add `<label>` to tag filter `<select>`
 
 ## Group L — Mobile / Responsive CSS
 **Files:** `base.css`
