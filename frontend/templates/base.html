@@ -383,6 +383,11 @@ right.onclick = () => goToSlide(index + 1)
 
 left.onclick = () => goToSlide(index - 1)
 
+gallery.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") { e.preventDefault(); goToSlide(index + 1) }
+    if (e.key === "ArrowLeft")  { e.preventDefault(); goToSlide(index - 1) }
+})
+
 
 slides.addEventListener("scroll", () => {
 

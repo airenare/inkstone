@@ -405,7 +405,7 @@ def convert_media(md, md_path):
     def flush_slider():
         if not slider:
             return ""
-        html = '<div class="slider-gallery">'
+        html = '<div class="slider-gallery" tabindex="0">'
         html += '<button class="slider-arrow left">&#8249;</button>'
         html += '<div class="slides">'
         for item in slider:
