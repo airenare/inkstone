@@ -98,3 +98,35 @@ def test_canvas_embed_renders_in_post(client):
     html = resp.data.decode()
     assert 'class="canvas-embed"' in html
     assert "![[embed_canvas]]" not in html
+
+
+def test_skip_to_content_link_present(client):
+    """Every page must include a skip-to-content link and a matching main landmark."""
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert 'class="skip-to-content"' in html
+    assert 'id="main-content"' in html
+
+
+def test_search_tag_filter_has_label(client):
+    """The tag filter <select> on the search page must have an associated <label>."""
+    resp = client.get("/search")
+    html = resp.data.decode()
+    assert 'for="tag-filter"' in html
+    assert 'id="tag-filter"' in html
+
+
+def test_post_date_has_datetime_attribute(client):
+    """Post meta dates must be wrapped in <time datetime='YYYY-MM-DD'>."""
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert '<time datetime="2026-01-15"' in html
+
+
+def test_search_empty_state_shows_tag_suggestions(client):
+    """A search with no results must show the tag suggestions block."""
+    resp = client.get("/search?q=zzznomatchxxx")
+    html = resp.data.decode()
+    assert 'class="search-suggestions"' in html
+    # Fixture post has tags [test, python] so at least one must appear
+    assert 'href="/tag/test"' in html or 'href="/tag/python"' in html
