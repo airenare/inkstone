@@ -94,6 +94,14 @@ VAULT_PATH=Documentation_Website /home/air/venv/3.14/bin/python3 app.py
 
 ---
 
+## Post Navigation (mobile)
+
+- [ ] On a post with both prev and next links, at ≤ 600px: both links appear on the **same line**, prev on the left, next on the right
+- [ ] Prev link text is left-aligned, next link text is right-aligned
+- [ ] On a post with only a prev link: it sits on the left
+- [ ] On a post with only a next link: it sits on the right (pushed by `margin-left: auto`)
+- [ ] Long titles truncate rather than overlapping (each is max 48% wide)
+
 ## General Regression Checks
 
 Run these regardless of which group was just implemented:
