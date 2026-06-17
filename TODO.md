@@ -8,9 +8,9 @@
 
 These are correctness issues, not polish. Fix before any feature work.
 
-- [ ] **[UX][i18n][Group D] Fix hardcoded "← Previous" / "Next →" in listing pagination** — `listing.html` lines 56–58 use raw strings instead of `ui_strings.get('Previous', 'Previous')` / `ui_strings.get('Next', 'Next')`, meaning paginated listing pages are never translated. Fix by replacing with `ui_strings` lookups, matching the pattern already used in `feed.html`. *(Implement together with Giscus lang fix — Group D.)*
+- [x] **[UX][i18n][Group D] Fix hardcoded "← Previous" / "Next →" in listing pagination** — `listing.html` lines 56–58 use raw strings instead of `ui_strings.get('Previous', 'Previous')` / `ui_strings.get('Next', 'Next')`, meaning paginated listing pages are never translated. Fix by replacing with `ui_strings` lookups, matching the pattern already used in `feed.html`. *(Implement together with Giscus lang fix — Group D.)*
 
-- [ ] **[UX][i18n][Group D] Fix Giscus comment widget hardcoded to `data-lang="en"`** — `post.html` line 113 always sends `data-lang="en"` to the Giscus iframe. On multilingual sites, comments appear in English even on non-English pages. Fix: inject `current_lang` from Flask context into the `data-lang` attribute so it matches the page language. *(Implement together with listing pagination fix — Group D.)*
+- [x] **[UX][i18n][Group D] Fix Giscus comment widget hardcoded to `data-lang="en"`** — `post.html` line 113 always sends `data-lang="en"` to the Giscus iframe. On multilingual sites, comments appear in English even on non-English pages. Fix: inject `current_lang` from Flask context into the `data-lang` attribute so it matches the page language. *(Implement together with listing pagination fix — Group D.)*
 
 - [ ] **[UX][a11y][Group B] Add skip-to-content link at top of `<body>`** — Keyboard-only users must tab through the full header/nav on every page load before reaching the main content. Add a visually hidden `<a href="#main-content">Skip to content</a>` as the first element in `<body>`, and add `id="main-content"` to `<main>`. Style it to appear on focus only. *(Implement together with focus rings and form label — Group B.)*
 

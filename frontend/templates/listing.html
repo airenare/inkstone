@@ -53,9 +53,9 @@
 
 {% if total_pages > 1 %}
 <div class="pagination">
-{% if page > 1 %}<a href="?page={{ page - 1 }}">← Previous</a>{% endif %}
+{% if page > 1 %}<a href="?page={{ page - 1 }}">← {{ ui_strings.get('Previous', 'Previous') }}</a>{% endif %}
 <span class="pagination-info">{{ page }} / {{ total_pages }}</span>
-{% if page < total_pages %}<a href="?page={{ page + 1 }}">Next →</a>{% endif %}
+{% if page < total_pages %}<a href="?page={{ page + 1 }}">{{ ui_strings.get('Next', 'Next') }} →</a>{% endif %}
 </div>
 {% endif %}
 
