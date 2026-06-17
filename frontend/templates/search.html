@@ -40,7 +40,7 @@
 <li class="search-result">
 <h4><a href="{{ post.url_path }}">{{ post.highlighted_title | safe }}</a></h4>
 <div class="post-meta">
-{% if post.date %}{{ localize_date(post.date) }}{% endif %}
+{% if post.date %}<time datetime="{{ post.date.strftime('%Y-%m-%d') }}">{{ localize_date(post.date) }}</time>{% endif %}
 {% if post.reading_time %} · {{ post.reading_time }} {{ ui_strings.get('min read', 'min read') }}{% endif %}
 </div>
 <p class="post-summary">{{ post.highlighted_summary | safe }}</p>

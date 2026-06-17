@@ -21,7 +21,7 @@ Tracked in: `TODO.md` (UX sections)
 ## Group M — Semantic `<time>` Markup
 **Files:** `feed.html`, `post.html`, and any note-embed templates
 **Why third:** Mechanical sweep, no logic changes. Clears the last P0 item.
-- [ ] Add `datetime="YYYY-MM-DD"` attribute to all `<time>` elements
+- [x] Add `datetime="YYYY-MM-DD"` attribute to all `<time>` elements
 
 ## Group A — Lightbox Polish
 **Files:** `base.html` (JS)
