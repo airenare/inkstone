@@ -73,6 +73,16 @@ pre code {
     opacity: 1;
 }
 
+.copy-btn-flash {
+    animation: copy-flash 0.25s ease-out;
+}
+
+@keyframes copy-flash {
+    0%   { opacity: 0.7; }
+    40%  { opacity: 0.2; }
+    100% { opacity: 0.7; }
+}
+
 /* Line numbers */
 
 .hljs-ln-numbers {

@@ -440,8 +440,12 @@ document.querySelectorAll("pre code:not(.language-mermaid)").forEach(block => {
 
     btn.onclick = () => {
         navigator.clipboard.writeText(block.innerText)
-        btn.textContent = "copied"
-        setTimeout(()=>btn.textContent="copy",1500)
+        btn.textContent = "✓ copied"
+        btn.classList.add("copy-btn-flash")
+        setTimeout(() => {
+            btn.textContent = "copy"
+            btn.classList.remove("copy-btn-flash")
+        }, 1500)
     }
 
     wrapper.appendChild(btn)
@@ -488,6 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!saved) {
             btn.textContent = "🖥️"
             btn.setAttribute("aria-label", "Theme: Auto")
+            btn.setAttribute("title", "Switch to light")
             // Only listen to OS changes when the site default is system/OS
             if (def !== "dark" && def !== "light") {
                 if (!mqListener) {
@@ -506,9 +511,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (saved === "light") {
                 btn.textContent = "☀"
                 btn.setAttribute("aria-label", "Theme: Light")
+                btn.setAttribute("title", "Switch to dark")
             } else {
                 btn.textContent = "☾"
                 btn.setAttribute("aria-label", "Theme: Dark")
+                btn.setAttribute("title", "Switch to auto")
             }
         }
     }
@@ -550,6 +557,12 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         var fitBtn = view.querySelector(".canvas-fit-btn");
         var wideBtn = view.querySelector(".canvas-wide-btn");
         if (!stage) return;
+
+        var hint = document.createElement("div");
+        hint.className = "canvas-hint";
+        hint.textContent = "drag to pan · scroll to zoom";
+        view.appendChild(hint);
+        setTimeout(function() { hint.classList.add("canvas-hint-hide"); }, 2000);
 
         var tx = 0, ty = 0, scale = 1;
         var dragging = false, lastX = 0, lastY = 0;
