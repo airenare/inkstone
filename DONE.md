@@ -2,6 +2,33 @@
 
 ---
 
+## v1.54.15–v1.54.30 — UX Sprint (`ux-improvements` branch)
+
+- ✅ **[UX][i18n] Fix hardcoded pagination labels in listing pages** — `listing.html` pagination now uses `ui_strings` for "Previous" / "Next" so multilingual sites translate correctly. (v1.54.15)
+- ✅ **[UX][i18n] Fix Giscus `data-lang` hardcoded to `"en"`** — `post.html` now injects `current_lang` into `data-lang` so comment widget language matches the page. (v1.54.15)
+- ✅ **[UX][a11y] Skip-to-content link and main landmark** — visually hidden `<a href="#main-content">` added as first body element; `<main id="main-content">` added to `base.html`. (v1.54.16)
+- ✅ **[UX][a11y] Global `:focus-visible` outlines** — accent-colored 2px outline on all interactive elements; suppressed for mouse clicks via `:focus:not(:focus-visible)`. (v1.54.16)
+- ✅ **[UX][a11y] `<label>` for tag filter `<select>` on search page** — visually hidden label with `for="tag-filter"` added to `search.html`. (v1.54.16)
+- ✅ **[UX][a11y] Semantic `<time datetime>` sweep** — all date occurrences across `feed.html`, `post.html`, `blog.html`, `book.html`, `listing.html`, `tag.html` now use `datetime="YYYY-MM-DD"`. (v1.54.17)
+- ✅ **[UX][lightbox] Visible close button and prev/next arrows** — × button (top-right) and ‹ › arrows (only when gallery has >1 item) added to lightbox JS in `base.html`. (v1.54.18–19)
+- ✅ **[UX][lightbox] Fix lightbox closing on image click** — `stopPropagation()` on inner click so only backdrop clicks close the overlay. (v1.54.18–19)
+- ✅ **[UX][lightbox] Fix whole-page gallery bug** — gallery IDs changed from hardcoded `"gallery"` to incremental `g1`, `g2`, … per image group so lightbox navigation is scoped correctly. (v1.54.23)
+- ✅ **[UX][search] Empty state tag suggestions** — no-results page shows top 8 tags as badges and a link to `/tags`; backend computes `top_tags` via `Counter.most_common(8)`. (v1.54.20)
+- ✅ **[UX][search] Input hint and disabled submit** — hint text appears on focus when field is empty; submit button disabled until a character is typed. (v1.54.20)
+- ✅ **[UX][mobile] Feed date breakpoint alignment** — feed separator `left: 0` reset at ≤ 700px so date and separator align correctly between 600–700px viewports. (v1.54.21)
+- ✅ **[UX][mobile] Breadcrumb responsive truncation** — replaced hard `max-width: 240px` with `max-width: min(50vw, 280px)` on `.breadcrumb-current`. (v1.54.21)
+- ✅ **[UX][mobile] Post-nav mobile layout fix** — removed `flex-direction: column` and redundant `::before`/`::after` pseudo-elements; prev/next now sit side-by-side on mobile. (v1.54.22)
+- ✅ **[UX][template] Fix 404 page using `.private-note` CSS class** — 404 now uses `.error-page` / `.error-message`; new CSS block added; no bleed from private-note styles. (v1.54.25)
+- ✅ **[UX][messaging] Private page visitor messaging** — `private.html` shows visitor-appropriate "not available" message; vault frontmatter hint gated on `is_owner` (master `ACCESS_TOKEN` session). (v1.54.25)
+- ✅ **[UX][reading] Back to top button** — fixed bottom-right button appears after 400px scroll, smooth-scrolls to top; styled with card/border variables. (v1.54.26)
+- ✅ **[UX][reading] Post-nav directional labels** — "← Previous post" / "Next post →" labels above each adjacent post title in `post.html`; translatable via `ui_strings`. (v1.54.26)
+- ✅ **[UX][reading] Reading progress bar** — 3px accent-colored bar fixed at top of viewport, visible only on post pages (article element present), tracks scroll through article body. (v1.54.26)
+- ✅ **[UX][tags] Case-insensitive alphabetical tag sort** — `/tags` route now sorts via `key=lambda x: x[0].lower()`; count badge made more prominent with border and higher-contrast text. (v1.54.28)
+- ✅ **[UX][a11y] Slider keyboard navigation** — `tabindex="0"` on `.slider-gallery`; `ArrowLeft`/`ArrowRight` keydown handler calls `goToSlide()`. (v1.54.29)
+- ✅ **[UX][theme] Theme toggle `title` tooltip** — button `title` attribute describes next state: "Switch to light" / "Switch to dark" / "Switch to auto". (v1.54.30)
+- ✅ **[UX][canvas] Fading pan/zoom hint** — "drag to pan · scroll to zoom" pill injected into `.canvas-view` on init, fades out after 2s via CSS transition. (v1.54.30)
+- ✅ **[UX][copy] Copy button checkmark flash** — copy button shows "✓ copied" with a brief opacity-dip animation on click, resets after 1.5s. (v1.54.30)
+
 ## v1.40.0
 
 - ✅ **[Design][Branding] Logo polish pass** — refined logo concept for geometry balance, contrast, and small-size legibility; shipped final web SVG plus favicon-ready variants. (v1.40.0)

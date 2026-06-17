@@ -45,34 +45,34 @@ Tracked in: `TODO.md` (UX sections)
 ## Standalone — 404 Template Fix
 **Files:** `404.html`, `base.css`
 **Why here:** One-liner class rename. Drop in between any of the above.
-- [ ] Replace `.private-note` class with `.error-page` on 404 page
+- [x] Replace `.private-note` class with `.error-page` on 404 page
 
 ## Standalone — Private Page Messaging
 **Files:** `private.html`
 **Why here:** Requires judgment call on owner-detection. Worth its own focused moment.
-- [ ] Rewrite messaging for public visitors; keep author hint conditional
+- [x] Rewrite messaging for public visitors; keep author hint conditional
 
 ## Group J — Reading Experience
 **Files:** `base.html` (JS), `base.css`, `post.html`
 **Why ninth:** Largest JS/CSS batch. Tackle after P0/P1 fixes are solid.
-- [ ] Back to top button (appears after 400px scroll)
-- [ ] Directional labels on post prev/next nav
-- [ ] Thin reading progress bar (scoped to long posts)
+- [x] Back to top button (appears after 400px scroll)
+- [x] Directional labels on post prev/next nav
+- [x] Thin reading progress bar (scoped to long posts)
 
 ## Tags Page Sort
 **Files:** `app.py`, `labels.html`
 **Why tenth:** Small backend sort + optional UI toggle. Better after nav/accessibility work is done.
-- [ ] Sort tags alphabetically (case-insensitive) in `app.py`
-- [ ] Make count badge more visually prominent
+- [x] Sort tags alphabetically (case-insensitive) in `app.py`
+- [x] Make count badge more visually prominent
 
 ## Group F — Slider Keyboard Support
 **Files:** `base.html` (JS)
-- [ ] `ArrowLeft`/`ArrowRight` keydown handler on focused slider
-- [ ] Add `tabindex="0"` to slider container
+- [x] `ArrowLeft`/`ArrowRight` keydown handler on focused slider
+- [x] Add `tabindex="0"` to slider container
 
 ## Polish Sprint (G + H + K — batch into one commit)
 **Files:** `base.html` (JS), `base.css`
 **Why last:** Each is a ~5-minute change. One tidy "polish" commit at the end.
-- [ ] Theme toggle: set `title` attribute to describe next state (G)
-- [ ] Canvas view: fading "drag to pan · scroll to zoom" hint on load (H)
-- [ ] Copy button: opacity dip + "✓ copied" checkmark on state change (K)
+- [x] Theme toggle: set `title` attribute to describe next state (G)
+- [x] Canvas view: fading "drag to pan · scroll to zoom" hint on load (H)
+- [x] Copy button: opacity dip + "✓ copied" checkmark on state change (K)
