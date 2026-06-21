@@ -177,7 +177,12 @@
       "Bash(curl -s \"http://localhost:8000/inkstone_docs/writing/dataview-queries\")",
       "Bash(curl -s \"http://localhost:8000/blog/engine-features\")",
       "Bash(curl -s http://127.0.0.1:8000/transcluded-note)",
-      "Bash(curl -s http://127.0.0.1:8000/writing/links-and-embeds)"
+      "Bash(curl -s http://127.0.0.1:8000/writing/links-and-embeds)",
+      "Bash(omarchy menu *)",
+      "Bash(.venv/bin/python3 *)",
+      "Bash(VAULT_PATH=Documentation_Website /home/air/venv/3.14/bin/python3 *)",
+      "Bash(VAULT_PATH=tests/fixtures/vault /home/air/venv/3.14/bin/python3 *)",
+      "Bash(VAULT_PATH=/home/air/Documents/Obsidian/obsidian/antonbakulin.com /home/air/venv/3.14/bin/python3 *)"
     ]
   }
 }
