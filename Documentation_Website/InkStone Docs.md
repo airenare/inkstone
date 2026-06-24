@@ -8,6 +8,7 @@ default_theme: dark
 icon: _attachments/InkStoneLogo.png
 summary: Homepage of the InkStone documentation website.
 social_links:
+  - https://github.com/airenare
 ---
 # InkStone
 
