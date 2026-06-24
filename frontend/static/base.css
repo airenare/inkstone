@@ -440,7 +440,8 @@ header {
 .header-inner h1 {
     grid-column: 1;
     margin: 0;
-    line-height: 1;
+    display: flex;
+    align-items: center;
     /* Prevent heading color tokens from bleeding into the site title */
     color: var(--site-title) !important;
 }
@@ -449,7 +450,7 @@ header {
     color: var(--site-title);
     text-decoration: none;
     font-weight: 700;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 0.45em;
 }
@@ -471,7 +472,7 @@ nav {
     gap: 0.2rem 0.1rem;
     align-items: center;
     align-self: center;
-    transform: translateY(2px);
+    transform: translateY(5px);
 }
 
 nav a {

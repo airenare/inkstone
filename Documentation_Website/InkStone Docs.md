@@ -8,8 +8,6 @@ default_theme: dark
 icon: _attachments/InkStoneLogo.png
 summary: Homepage of the InkStone documentation website.
 social_links:
-  - https://t.me/nexagenom
-  - https://t.me/snachala_zhivesh_potom_umiraesh
 ---
 # InkStone
 
