@@ -440,6 +440,7 @@ header {
 .header-inner h1 {
     grid-column: 1;
     margin: 0;
+    line-height: 1;
     /* Prevent heading color tokens from bleeding into the site title */
     color: var(--site-title) !important;
 }
