@@ -11,7 +11,7 @@ tags:
 
 ## RSS
 
-A global RSS feed is available at `/feed.xml` — the latest 20 posts across all sections, sorted by date.
+A global RSS feed is available at `/feed.xml`, covering the latest 20 posts across all sections, sorted by date.
 
 Per-section feeds are available at `/{section}/feed.xml`:
 
@@ -29,7 +29,7 @@ An XML sitemap is auto-generated at `/sitemap.xml`. It includes all published po
 Every post page includes `<meta>` tags for social sharing:
 
 - `og:title`, `og:description`, `og:url`
-- `og:image` — the post's banner image, or the first embedded image found in the body
+- `og:image`: the post's banner image, or the first embedded image found in the body
 - `twitter:card`, `twitter:title`, `twitter:description`
 
 These are generated from `title:`, `summary:`, `banner:`, and the post URL. No manual configuration required.

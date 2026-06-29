@@ -16,7 +16,7 @@ Every page includes a theme toggle in the header with three states:
 
 | Symbol | Mode                                         |
 | ------ | -------------------------------------------- |
-| 🖥️    | System — follows the visitor's OS preference |
+| 🖥️    | System: follows the visitor's OS preference |
 | ☀      | Light                                        |
 | ☾      | Dark                                         |
 

@@ -2,7 +2,7 @@
 website: true
 title: Social Links
 date: 2026-05-21
-summary: Add social profile links to the site footer — icon + handle, detected automatically from the URL.
+summary: Add social profile links to the site footer. Icons and handles are detected automatically from the URL.
 featured: true
 priority: 6
 tags:
@@ -30,7 +30,7 @@ youtube: https://youtube.com/@yourname
 
 ## Multiple accounts on the same platform
 
-If you have more than one profile on the same network, use the `social_links` list. Each entry is a plain URL — InkStone detects the network automatically from the domain.
+If you have more than one profile on the same network, use the `social_links` list. Each entry is a plain URL; InkStone detects the network automatically from the domain.
 
 ```yaml
 ---
@@ -63,7 +63,7 @@ social_links:
 | `youtube` | YouTube | |
 | `telegram` | Telegram | |
 
-`rel="me"` is set on GitHub, Mastodon, and Bluesky — the platforms used for identity verification.
+`rel="me"` is set on GitHub, Mastodon, and Bluesky, the platforms used for identity verification.
 
 URL-based detection in `social_links` works for all platforms above. Mastodon detection covers the most common hosted instances; self-hosted instances that aren't recognised fall back to the per-key `mastodon:` key instead.
 

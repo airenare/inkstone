@@ -20,7 +20,7 @@ Read more in [[Frontmatter Reference]].
 ```
 Read more in [[Frontmatter Reference]].
 
-> InkStone matches by slugified title, slugified filename, or the note's explicit `slug:` frontmatter — whichever matches first.
+> InkStone matches by slugified title, slugified filename, or the note's explicit `slug:` frontmatter, whichever matches first.
 
 ---
 
@@ -90,7 +90,7 @@ Embed a single section by adding a heading anchor:
 
 ## Note block embeds
 
-The `note` fenced block embeds a specific published post inline — as a styled preview card or with its full content. Unlike transclusion (`![[]]`), it includes the post's title, date, and reading time as a header.
+The `note` fenced block embeds a specific published post inline, as a styled preview card or with its full content. Unlike transclusion (`![[]]`), it includes the post's title, date, and reading time as a header.
 
 **Preview card** (excerpt + "Read more" link):
 
@@ -106,7 +106,7 @@ The `note` fenced block embeds a specific published post inline — as a styled 
 ```
 ````
 
-**Without date and reading time** — add `nodate` to suppress the meta line:
+**Without date and reading time:** add `nodate` to suppress the meta line:
 
 ````markdown
 ```note /blog/my-post nodate
@@ -118,12 +118,12 @@ The `note` fenced block embeds a specific published post inline — as a styled 
 ```
 ````
 
-Flags can be combined in any order. The path is the post's URL path, not its filename — the same URL you'd visit in a browser (e.g. `/blog/my-post`, not `My Post.md`). Works in any published note, including the homepage.
+Flags can be combined in any order. The path is the post's URL path, not its filename. It's the same URL you'd visit in a browser (e.g. `/blog/my-post`, not `My Post.md`). Works in any published note, including the homepage.
 
 If the path doesn't resolve to a published note, InkStone renders a "Note not found" message in place of the block.
 
 > [!tip] Choosing between `![[]]` and `note` block
-> Use `![[Note Title]]` when you want seamless raw content merged into the current page with no visual separation. Use ` ```note ``` ` when you want the embedded post to stand out as its own card — with its title, date, and a link back to the original.
+> Use `![[Note Title]]` when you want raw content merged directly into the page with no visual break. Use ` ```note ``` ` when you want the embedded post to stand out as its own card, with its title, date, and a link back to the original.
 
 ---
 
@@ -131,4 +131,4 @@ If the path doesn't resolve to a published note, InkStone renders a "Note not fo
 
 `![[BoardName.canvas]]` and `![[QueryName.base]]` embed interactive canvas boards and base table views inline. See [[Canvas Boards]] and [[Obsidian Bases]] for details.
 
-InkStone also handles path-prefixed links that Obsidian's link picker generates, and strips `__website` / `__featured` markers and file extensions from both URLs and display text automatically — so `[[blog/My Board__website.canvas|My Board__website]]` renders as a clean link titled "My Board".
+InkStone also handles path-prefixed links that Obsidian's link picker generates, and strips `__website` / `__featured` markers and file extensions from both URLs and display text automatically, so `[[blog/My Board__website.canvas|My Board__website]]` renders as a clean link titled "My Board".

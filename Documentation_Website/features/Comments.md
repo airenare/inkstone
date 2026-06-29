@@ -9,7 +9,7 @@ tags:
   - features
 ---
 
-InkStone supports opt-in comments via **Giscus** — a lightweight system backed by GitHub Discussions. When the three env vars are set, a comment section appears at the bottom of every post and book page.
+InkStone supports opt-in comments via Giscus, a comment system backed by GitHub Discussions. When the three env vars are set, a comment section appears at the bottom of every post and book page.
 
 ---
 
@@ -27,9 +27,9 @@ You can use your site's source repo or a dedicated discussions repo.
 
 Go to **[giscus.app](https://giscus.app)**, enter your repo, choose **Pathname** mapping, select a discussion category. The page gives you three values:
 
-- `GISCUS_REPO` — e.g. `you/your-site`
-- `GISCUS_REPO_ID` — a base64 string starting with `R_`
-- `GISCUS_CATEGORY_ID` — a base64 string starting with `DIC_`
+- `GISCUS_REPO`: e.g. `you/your-site`
+- `GISCUS_REPO_ID`: a base64 string starting with `R_`
+- `GISCUS_CATEGORY_ID`: a base64 string starting with `DIC_`
 
 ### 3. Set environment variables
 
@@ -45,7 +45,7 @@ Add these to your `.env` (local) or deployment environment. When all three are p
 
 ## Theme sync
 
-Giscus automatically follows InkStone's dark/light toggle — no page reload needed.
+Giscus automatically follows InkStone's dark/light toggle. No page reload needed.
 
 ---
 
@@ -56,5 +56,5 @@ Giscus automatically follows InkStone's dark/light toggle — no page reload nee
 
 ## See also
 
-- [[Configuration Reference]] — full env var reference
-- [[Page Types]] — which templates render the comment section
+- [[Configuration Reference]]: full env var reference
+- [[Page Types]]: which templates render the comment section

@@ -22,7 +22,7 @@ priority: 5
 
 
 > [!note] No plugin required
-> Queries run server-side at page load — no JavaScript Dataview plugin required in Obsidian.
+> Queries run server-side at page load. No JavaScript Dataview plugin required in Obsidian.
 
 ## TABLE
 
@@ -72,7 +72,7 @@ WHERE type = listing
 
 ## WHERE
 
-Filter rows by a condition. Both  ` = ` /  ` != ` comparison syntax and `contains()` / `!contains()` syntax work — stick to `contains()` for compatibility with the Obsidian editor (but it can still be inverted in Obsidian):
+Filter rows by a condition. Both  ` = ` /  ` != ` comparison syntax and `contains()` / `!contains()` syntax work; stick to `contains()` for compatibility with the Obsidian editor (but it can still be inverted in Obsidian):
 
 ```dataview
 TABLE summary
@@ -109,7 +109,7 @@ LIMIT 5
 
 
 > [!NOTE] Note
-> This one is pretty neat — it renders a separate table for each group (folders, in this case). Unfortunately, Obsidian doesn’t display it correctly, so you’ll need to view it on the website to see the intended result.
+> This one is pretty neat: it renders a separate table for each group (folders, in this case). Unfortunately, Obsidian doesn’t display it correctly, so you’ll need to view it on the website to see the intended result.
 
 Group results under a heading per unique value:
 
@@ -128,16 +128,16 @@ Inline queries use the `"= expression"` syntax inside backticks.
 Use backtick expressions in running text for single-value outputs:
 
 ```markdown
-Live example — This note is called `= this.title`.
+Live example: This note is called `= this.title`.
 
 There are `$= dv.pages("#database").length` Python posts in the vault.
 ```
 
 
-Live example — This page is called `= this.title` and the vault currently has `= dv.pages("#database").length` Python-tagged posts.
+Live example: This page is called `= this.title` and the vault currently has `= dv.pages("#database").length` Python-tagged posts.
 
 
-Both syntaxes work — use `$=` for compatibility with the Obsidian editor (JS queries need to be turned on in settings):
+Both syntaxes work; use `$=` for compatibility with the Obsidian editor (JS queries need to be turned on in settings):
 
 1. Using `$=`: `$= dv.pages("#database").length`
 2. Using `=`: `= dv.pages("#database").length`

@@ -18,7 +18,7 @@ tags:
 > [!Tip] Disclaimer
 > Some media placement variants may not render correctly inside Obsidian, but they will appear as intended on the website. If needed, run InkStone locally to preview the final result.
 
-## Single image — lightbox
+## Single image (lightbox)
 
 ```markdown
 ![[terminal.jpg]]

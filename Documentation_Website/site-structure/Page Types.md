@@ -2,7 +2,7 @@
 website: true
 title: Page Types
 date: 2026-05-21
-summary: "homepage, listing, feed, book, and translations — what each type does."
+summary: "homepage, listing, feed, book, and translations: what each type does."
 featured: true
 priority: 1
 ---
@@ -24,7 +24,7 @@ show_search: true
 ---
 ```
 
-Only one `homepage` per section. If multiple exist, the last one loaded wins (undefined behaviour — avoid).
+Only one `homepage` per section. If multiple exist, the last one loaded wins (undefined behaviour; avoid this).
 
 ## listing
 
@@ -43,7 +43,7 @@ The file's markdown content (if any) is shown above the generated list as an int
 
 ## feed
 
-Renders an inline post stream — like a traditional blog feed. Each post shows its title, date, an excerpt of the content, and a "Read more" link. Posts are sorted newest-first.
+Renders an inline post stream, like a traditional blog feed. Each post shows its title, date, an excerpt of the content, and a "Read more" link. Posts are sorted newest-first.
 
 ```yaml
 ---
@@ -58,7 +58,7 @@ The file's own markdown content (if any) is shown above the stream as an intro.
 
 ### Embedding a feed anywhere with a feed block
 
-You can also embed a short post stream inline in any note — including the homepage — using a fenced `feed` code block:
+You can also embed a short post stream inline in any note (including the homepage) using a fenced `feed` code block:
 
 ````markdown
 ```feed 5
@@ -88,7 +88,7 @@ More context here, still visible in the feed.
 This paragraph only appears when a reader opens the full post.
 ```
 
-If a post has no `<!-- more -->` marker, InkStone automatically excerpts the opening block elements — paragraphs, headings, callouts, tables, lists, code blocks — up to roughly 500 characters of readable text.
+If a post has no `<!-- more -->` marker, InkStone automatically excerpts the opening block elements (paragraphs, headings, callouts, tables, lists, code blocks) up to roughly 500 characters of readable text.
 
 **Posts without a date** appear at the bottom of the feed. Add a `date:` field to every post in a feed section to get predictable ordering.
 

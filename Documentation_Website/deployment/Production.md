@@ -10,13 +10,13 @@ tags:
 ---
 
 > [!warning] Use gunicorn in production
-> Never run `python3 app.py` in production — it starts Flask's development server which is single-threaded and not safe for public traffic. Always use gunicorn.
+> Never run `python3 app.py` in production. It starts Flask's development server which is single-threaded and not safe for public traffic. Always use gunicorn.
 
 ## Coolify (recommended)
 
 [Coolify](https://coolify.io) is a self-hosted PaaS that handles Docker deployments, SSL, and reverse proxying.
 
-The easiest setup uses the pre-built image from GHCR — Coolify pulls it directly without building anything on your server:
+The easiest setup uses the pre-built image from GHCR. Coolify pulls it directly without building anything on your server:
 
 1. Add a new resource → **Docker Image**
 2. Set image to `ghcr.io/airenare/inkstone:latest`
@@ -34,10 +34,10 @@ The container entrypoint clones your vault on first start and pulls it on subseq
 
 When a new InkStone version is released, a fresh image is pushed to GHCR automatically. To pick it up:
 
-- **Manual** — click Redeploy in Coolify. Since the image is already built, it takes a few seconds.
-- **Scheduled** — in your Coolify app, enable **Scheduled Deployments** and set a cron expression (e.g. `0 3 * * *` for nightly at 3 AM). Coolify will pull `:latest` and redeploy on that schedule.
+- Manual: click Redeploy in Coolify. Since the image is already built, it takes a few seconds.
+- Scheduled: in your Coolify app, enable **Scheduled Deployments** and set a cron expression (e.g. `0 3 * * *` for nightly at 3 AM). Coolify will pull `:latest` and redeploy on that schedule.
 
-There is no mechanism for instant push-triggered updates to third-party deployments — that would require adding a secret to the InkStone repo itself, which only the maintainer can do. Scheduled redeployment is the practical alternative.
+There's no mechanism for instant push-triggered updates to third-party deployments. It would require adding a secret to the InkStone repo itself, which only the maintainer can do. Scheduled redeployment is the practical alternative.
 
 ## Webhook for live updates
 
@@ -53,7 +53,7 @@ To update the site content without redeploying:
    - **Secret**: same value as `WEBHOOK_SECRET`
    - **Events**: Just the push event
 
-On every push to the vault repo, GitHub sends a POST to `/webhook`. InkStone validates the signature with `WEBHOOK_SECRET`, then pulls the latest vault content and reloads — no container restart needed.
+On every push to the vault repo, GitHub sends a POST to `/webhook`. InkStone validates the signature with `WEBHOOK_SECRET`, then pulls the latest vault content and reloads. No container restart needed.
 
 ## Subpath hosting
 
@@ -69,9 +69,9 @@ All generated attachment URLs, nav links, and feeds will include the prefix.
 
 InkStone itself is HTTP only. SSL termination should be handled by a reverse proxy:
 
-- **Coolify** — built-in Let's Encrypt
-- **Caddy** — automatic HTTPS with a `Caddyfile`
-- **Nginx** — configure as a proxy pass to `localhost:8000` with Certbot
+- Coolify: built-in Let's Encrypt
+- Caddy: automatic HTTPS with a `Caddyfile`
+- Nginx: proxy pass to `localhost:8000` with Certbot
 
 ## SECRET_KEY
 

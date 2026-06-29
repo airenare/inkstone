@@ -2,7 +2,7 @@
 website: true
 title: Docker
 date: 2026-05-21
-summary: Run InkStone in a container — pull the pre-built image or build from source.
+summary: "Run InkStone in a container: pull the pre-built image or build from source."
 featured: true
 priority: 1
 tags:
@@ -11,7 +11,7 @@ tags:
 
 ## Pre-built image (recommended)
 
-Every push to the InkStone `main` branch automatically builds and publishes a fresh image to GitHub Container Registry. Pull it directly — no build step, no cloning the repo, no compiler on your VPS:
+Every push to the InkStone `main` branch automatically builds and publishes a fresh image to GitHub Container Registry. Pull it directly. No build step, no cloning, no Python on your VPS:
 
 ```bash
 docker pull ghcr.io/airenare/inkstone:latest
@@ -22,7 +22,7 @@ docker run -p 8000:8000 \
 
 To pin to a specific release instead of `latest`, use the commit SHA tag (e.g. `ghcr.io/airenare/inkstone:abc1234`). Available tags are listed on the [package page](https://github.com/airenare/inkstone/pkgs/container/inkstone).
 
-To update InkStone, run `docker pull ghcr.io/airenare/inkstone:latest` and restart the container. If you use Coolify or another PaaS, you can schedule periodic redeployments to pick up new images automatically — see [[Production Deployment]].
+To update InkStone, run `docker pull ghcr.io/airenare/inkstone:latest` and restart the container. If you use Coolify or another PaaS, you can schedule periodic redeployments to pick up new images automatically. See [[Production Deployment]].
 
 ## Quick start with docker compose
 
@@ -42,7 +42,7 @@ docker compose up -d
 On first start the entrypoint clones the vault into the container. On subsequent starts it does a `git pull` to fetch the latest notes. The site is served at `http://localhost:8000`.
 
 > [!tip] Automatic updates
-> Set up a GitHub webhook pointing at `http://yourhost:8000/webhook` with the same `WEBHOOK_SECRET` to trigger a vault pull on every push — no restart needed.
+> Set up a GitHub webhook pointing at `http://yourhost:8000/webhook` with the same `WEBHOOK_SECRET` to trigger a vault pull on every push. No restart needed.
 
 ## Build and run manually
 
@@ -63,7 +63,7 @@ docker run -p 8000:8000 \
   inkstone
 ```
 
-Or with compose — replace the contents of `docker-compose.yml` with:
+Or with compose: replace the contents of `docker-compose.yml` with:
 
 ```yaml
 services:

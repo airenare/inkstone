@@ -11,7 +11,7 @@ tags:
 
 ## Full-text search
 
-Available at `/search`. Searches across all published posts — titles, summaries, and body content. Results are highlighted.
+Available at `/search`. Searches across all published posts: titles, summaries, and body content. Results are highlighted.
 
 Enable the search link in the top nav by adding `show_search: true` to the root homepage:
 

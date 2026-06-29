@@ -20,7 +20,7 @@ vault/
 
 Produces nav links: **Blog · Gallery · Projects** (in filesystem order).
 
-No configuration required. Add a `type: listing` file to a folder — it appears in the nav.
+No configuration required. Add a `type: listing` file to a folder and it appears in the nav.
 
 ## Hiding sections from the nav
 
@@ -35,7 +35,7 @@ nav_hidden: true
 ---
 ```
 
-The section is still fully routable — visitors can reach it via direct links or wiki-links. It simply won't appear as a nav item.
+The section is still fully routable. Visitors can reach it via direct links or wiki-links. It simply won't appear as a nav item.
 
 ## Pinning pages with menu_order
 
@@ -73,7 +73,7 @@ Every post page shows a breadcrumb trail:
 Home › Blog › My Post Title
 ```
 
-Each segment is a clickable link. The breadcrumb reflects the URL structure — nesting matches folder depth.
+Each segment is a clickable link. The breadcrumb reflects the URL structure. Nesting matches folder depth.
 
 ## Next / Previous navigation
 

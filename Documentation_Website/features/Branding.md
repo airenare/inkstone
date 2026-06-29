@@ -2,7 +2,7 @@
 website: true
 title: Branding
 date: 2026-05-21
-summary: Favicon override, site icon beside the title, and per-section header title — all via frontmatter.
+summary: Favicon override, site icon beside the title, and per-section header title, all via frontmatter.
 featured: true
 priority: 1
 tags:
@@ -24,7 +24,7 @@ your-vault/
   blog/
 ```
 
-No config needed — hot-reload picks it up automatically.
+No config needed. Hot-reload picks it up automatically.
 
 ---
 
@@ -45,7 +45,7 @@ icon: _attachments/logo.png
 
 | Value | How it resolves |
 |---|---|
-| `_attachments/logo.png` | Vault-relative — served via `/attachments/` |
+| `_attachments/logo.png` | Vault-relative, served via `/attachments/` |
 | `/static/logo.svg` | Engine static file |
 | `https://example.com/logo.svg` | External URL, used as-is |
 
@@ -64,7 +64,7 @@ First ancestor with `icon:` set wins.
 
 ## Site title override
 
-`site_title:` replaces the displayed header title for a page and all its children — without changing the page's own `title:` (which drives the URL and `<title>` tag).
+`site_title:` replaces the displayed header title for a page and all its children, without changing the page's own `title:` (which drives the URL and `<title>` tag).
 
 ```yaml
 ---
@@ -81,7 +81,7 @@ Useful when a section has a distinct brand from the root. Cascade rules are iden
 
 ## Full example
 
-Root homepage — default icon and title for the whole site:
+Root homepage: default icon and title for the whole site:
 
 ```yaml
 ---
@@ -92,7 +92,7 @@ icon: _attachments/avatar.jpg
 ---
 ```
 
-Sub-section homepage — overrides both for everything under `/inkstone`:
+Sub-section homepage: overrides both for everything under `/inkstone`:
 
 ```yaml
 ---
@@ -108,5 +108,5 @@ site_title: "InkStone"
 
 ## See also
 
-- [[Frontmatter Reference]] — complete field list
-- [[Theming]] — dark/light mode and CSS themes
+- [[Frontmatter Reference]]: complete field list
+- [[Theming]]: dark/light mode and CSS themes

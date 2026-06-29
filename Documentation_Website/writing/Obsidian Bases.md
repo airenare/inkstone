@@ -20,7 +20,7 @@ Posts__website.base
 Posts__website__featured.base   ← also marks it as featured in its parent listing
 ```
 
-**Legacy YAML** (Obsidian may overwrite on save — prefer the filename marker):
+**Legacy YAML** (Obsidian may overwrite on save; prefer the filename marker):
 
 ```yaml
 website: true
@@ -57,7 +57,7 @@ limit: 10
 | Filter expression | Matches |
 |---|---|
 | `file.hasTag("python")` | Notes tagged `#python` |
-| `file.tags.contains("python")` | Same — alternative syntax |
+| `file.tags.contains("python")` | Same, alternative syntax |
 | `file.inFolder("blog")` | Notes inside the `blog/` folder (path relative to vault root) |
 | `date > 2025-01-01` | Notes published after Jan 1 2025 |
 | `featured = true` | Featured notes |
@@ -68,7 +68,7 @@ limit: 10
 ## Behaviour
 
 - Column order, sort direction, and limit from the base YAML are respected.
-- The engine executes the filter against the live post index — the table updates automatically when notes change (no restart needed).
+- The engine executes the filter against the live post index. The table updates automatically when notes change (no restart needed).
 - The rendered table links each title to the post's URL.
 
 ## Embedding a base in a note
@@ -80,7 +80,7 @@ Embed a published base table inline inside any markdown note:
 ![[Posts__website]]
 ```
 
-Obsidian's link picker may insert a full vault-relative path — that works too:
+Obsidian's link picker may insert a full vault-relative path, and that works too:
 
 ```
 ![[writing/Posts__website.base|Posts__website]]

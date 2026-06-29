@@ -140,13 +140,13 @@ Indent continuation lines with `>` to include multiple paragraphs:
 > [!note] Multi-paragraph
 > First paragraph.
 >
-> Second paragraph — still inside the callout.
+> Second paragraph, still inside the callout.
 ```
 
 > [!note] Multi-paragraph 
 > First paragraph. 
 > 
-> Second paragraph — still inside the callout.
+> Second paragraph, still inside the callout.
 
 ---
 

@@ -41,7 +41,7 @@ If `VAULT_PATH` is unset, InkStone falls back to `./BlogPages` (the demo vault i
 
 ## Hot-reload
 
-Edit any vault file and refresh the browser — no restart needed. InkStone watches modification times on every request and reloads automatically when anything changes.
+Edit any vault file and refresh the browser. No restart needed. InkStone watches modification times on every request and reloads automatically when anything changes.
 
 ## Production mode locally
 

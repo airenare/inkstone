@@ -35,7 +35,7 @@ slug: my-post
 
 When language variants exist for a post, InkStone shows a language toggle in the post header. Clicking a language code switches to that variant.
 
-`hreflang` meta tags are automatically added for SEO — search engines understand which pages are translations of each other.
+`hreflang` meta tags are automatically added for SEO. Search engines can tell which pages are translations of each other.
 
 ## Auto-redirect
 
@@ -82,7 +82,7 @@ Next: Следующий пост
 ```
 ````
 
-Keys are the English UI strings exactly as shown in the reference below — spelling and punctuation must match precisely.
+Keys are the English UI strings exactly as shown in the reference below. Spelling and punctuation must match precisely.
 
 ## Full string reference
 

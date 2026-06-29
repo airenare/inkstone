@@ -33,7 +33,7 @@ QuickAdd prompts you for values when creating a note, then fills frontmatter aut
 **Usage:**
 1. Press `Ctrl+P` → type the command (e.g. **New Post**)
 2. QuickAdd prompts for title, summary, etc.
-3. Choose a folder — the note opens with frontmatter ready
+3. Choose a folder. The note opens with frontmatter ready.
 
 `{{VALUE:Label}}` prompts for user input. `{{DATE:YYYY-MM-DD}}` inserts today's date.
 
@@ -105,7 +105,7 @@ lang: {{VALUE:Language code (e.g. ru, fr, de)}}
 ---
 ```
 
-Body (a fenced `yaml` block — add your translated strings):
+Body (a fenced `yaml` block; add your translated strings):
 ```yaml
 Search: 
 Tags: 

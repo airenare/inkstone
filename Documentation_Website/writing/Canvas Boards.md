@@ -32,7 +32,7 @@ The title is the filename with `__website` stripped: `My Board__website.canvas` 
 | Link node | Clickable card with the domain and an ↗ external link icon |
 | Group node | Color-tinted background region grouping other nodes |
 
-File nodes show the post's title and full body HTML. The linked vault file must be a published note — unpublished files render as an empty card.
+File nodes show the post's title and full body HTML. The linked vault file must be a published note. Unpublished files render as an empty card.
 
 ## Edge directionality
 
@@ -47,15 +47,15 @@ Embed a published canvas inline inside any markdown note:
 ![[My Board__website.canvas]]
 ```
 
-Obsidian sometimes inserts the full vault-relative path when you use its link picker — that works too:
+Obsidian sometimes inserts the full vault-relative path when you use its link picker, and that works too:
 
 ```
 ![[blog/My Board__website.canvas|My Board__website]]
 ```
 
-The canvas renders as a fully interactive block — pan, zoom, wide mode, and all — right inside the note body. The canvas must be published (via the `__website` filename suffix) for the embed to resolve; if it isn't, the syntax is left as-is in the output.
+The canvas renders as a fully interactive block (pan, zoom, wide mode, and all) right inside the note body. The canvas must be published (via the `__website` filename suffix) for the embed to resolve; if it isn't, the syntax is left as-is in the output.
 
-Regular wiki-links (`[[My Board__website.canvas]]`) also resolve correctly — InkStone strips the path prefix, `.canvas` extension, and `__website` marker from both the URL and the displayed link text automatically.
+Regular wiki-links (`[[My Board__website.canvas]]`) also resolve correctly. InkStone strips the path prefix, `.canvas` extension, and `__website` marker from both the URL and the displayed link text automatically.
 ## Controls
 
 | Action | How |
@@ -63,7 +63,7 @@ Regular wiki-links (`[[My Board__website.canvas]]`) also resolve correctly — I
 | Pan | Click and drag on the canvas background |
 | Zoom | Scroll wheel |
 | Fit to view | Click the fit button (⛶) in the toolbar |
-| Wide mode | Click the wide-view button (⛶) — canvas fills the window; press Esc to exit |
+| Wide mode | Click the wide-view button (⛶). The canvas fills the window; press Esc to exit |
 
 ---
 

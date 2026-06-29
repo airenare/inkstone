@@ -48,7 +48,7 @@ date: 2026-01-01
 This is my first published note.
 ```
 
-> [!note] The server hot-reloads — save your note and refresh the browser. No restart needed.
+> [!note] The server hot-reloads. Save your note and refresh the browser. No restart needed.
 
 The note is now live at `/hello-world`. That's it.
 
