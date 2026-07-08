@@ -53,8 +53,10 @@ def get_adjacent_posts(post, all_posts):
     )
     if idx is None:
         return None, None
-    prev_post = ordered[idx - 1] if idx > 0 else None
-    next_post = ordered[idx + 1] if idx < len(ordered) - 1 else None
+    # "Previous" = chronologically older (later in date-desc list)
+    # "Next" = chronologically newer (earlier in date-desc list)
+    prev_post = ordered[idx + 1] if idx < len(ordered) - 1 else None
+    next_post = ordered[idx - 1] if idx > 0 else None
     return prev_post, next_post
 
 
