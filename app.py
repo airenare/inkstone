@@ -300,6 +300,16 @@ def favicon():
     return _serve_favicon(filename, filename, mime)
 
 
+@app.route("/favicon.svg")
+def favicon_svg():
+    for base in [os.path.join(VAULT_PATH, "_favicons"), VAULT_PATH]:
+        path = os.path.join(base, "favicon.svg")
+        if os.path.isfile(path):
+            return send_from_directory(os.path.dirname(path), "favicon.svg",
+                                       mimetype="image/svg+xml")
+    return not_found(None)
+
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template("404.html"), 404
