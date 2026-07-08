@@ -132,12 +132,13 @@ def test_post_date_has_datetime_attribute(client):
 
 
 def test_post_nav_has_directional_labels(client):
-    """Post prev/next nav must show 'Previous post' / 'Next post' directional labels."""
-    # Posts are reverse-chronological: simple-post (Jan 15) is older, so it gets
-    # a "Previous post" link pointing to the newer dataview-post (Jan 20).
+    """Post prev/next nav uses chronological convention: Previous=older, Next=newer."""
+    # simple-post (Jan 15) is the oldest post — it has no previous but has a
+    # "Next post" link pointing to the newer dataview-post (Jan 20).
     resp = client.get("/blog/simple-post")
     html = resp.data.decode()
-    assert "Previous post" in html
+    assert "Next post" in html
+    assert "Previous post" not in html
 
 
 def test_search_empty_state_shows_tag_suggestions(client):
