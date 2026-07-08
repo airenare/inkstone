@@ -266,27 +266,38 @@ def attachments(path):
     return send_from_directory(VAULT_PATH, path)
 
 
-# Favicon: vault root overrides (favicon.ico / favicon.png),
-# falling back to the built-in InkStone defaults in frontend/static/.
-_FAVICON_CANDIDATES = ["favicon.ico", "favicon.png"]
-
-# Map each route to the static fallback filename and MIME type
-_FAVICON_DEFAULTS = {
-    "/favicon.ico": ("favicon.ico", "image/x-icon"),
-    "/favicon.png": ("favicon-32.png", "image/png"),
+# Favicon: _favicons/ subfolder in vault root overrides built-in defaults.
+# Legacy vault-root favicon.ico / favicon.png also honoured for compat.
+_FAVICON_ROUTES = {
+    "/favicon.ico":                ("favicon.ico",                "image/x-icon"),
+    "/favicon-16x16.png":         ("favicon-16x16.png",          "image/png"),
+    "/favicon-32x32.png":         ("favicon-32x32.png",          "image/png"),
+    "/apple-touch-icon.png":      ("apple-touch-icon.png",       "image/png"),
+    "/android-chrome-192x192.png":("android-chrome-192x192.png", "image/png"),
+    "/android-chrome-512x512.png":("android-chrome-512x512.png", "image/png"),
+    "/site.webmanifest":          ("site.webmanifest",           "application/manifest+json"),
 }
 
 
+def _serve_favicon(filename, static_fallback, mime):
+    """Serve from _favicons/ in vault, then vault root (compat), then static."""
+    for base in [os.path.join(VAULT_PATH, "_favicons"), VAULT_PATH]:
+        path = os.path.join(base, filename)
+        if os.path.isfile(path):
+            return send_from_directory(os.path.dirname(path), filename)
+    return send_from_directory(app.static_folder, static_fallback, mimetype=mime)
+
+
 @app.route("/favicon.ico")
-@app.route("/favicon.png")
+@app.route("/favicon-16x16.png")
+@app.route("/favicon-32x32.png")
+@app.route("/apple-touch-icon.png")
+@app.route("/android-chrome-192x192.png")
+@app.route("/android-chrome-512x512.png")
+@app.route("/site.webmanifest")
 def favicon():
-    for name in _FAVICON_CANDIDATES:
-        vault_favicon = os.path.join(VAULT_PATH, name)
-        if os.path.isfile(vault_favicon):
-            return send_from_directory(VAULT_PATH, name)
-    # Default: serve the matching built-in asset with the correct MIME type
-    static_name, mime = _FAVICON_DEFAULTS[request.path]
-    return send_from_directory(app.static_folder, static_name, mimetype=mime)
+    filename, mime = _FAVICON_ROUTES[request.path]
+    return _serve_favicon(filename, filename, mime)
 
 
 @app.errorhandler(404)
