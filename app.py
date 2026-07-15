@@ -426,6 +426,61 @@ def robots_txt():
     return Response(content, mimetype="text/plain")
 
 
+@app.route("/llms.txt")
+def llms_txt():
+    post_store.maybe_reload()
+    base = request.url_root.rstrip("/")
+    name = post_store.WEBSITE_NAME or "This Site"
+
+    lines = [f"# {name}", ""]
+
+    homepage = post_store.SECTION_ROUTES.get("/")
+    if homepage and homepage.get("summary"):
+        lines += [f"> {homepage['summary']}", ""]
+
+    top_sections = [
+        (url, route)
+        for url, route in sorted(post_store.SECTION_ROUTES.items())
+        if url != "/" and "/" not in url.lstrip("/")
+    ]
+    if top_sections:
+        lines.append("## Sections")
+        for url, route in top_sections:
+            title = (
+                route.get("title")
+                or url.lstrip("/").replace("-", " ").title()
+            )
+            summary = route.get("summary") or ""
+            entry = f"- [{title}]({base}{url})"
+            if summary:
+                entry += f": {summary}"
+            lines.append(entry)
+        lines.append("")
+
+    posts = sorted(
+        post_store.ALL_POSTS.values(),
+        key=lambda p: p.get("date") or datetime.min,
+        reverse=True,
+    )[:20]
+    if posts:
+        lines.append("## Posts")
+        for p in posts:
+            title = p.get("title") or p["url_path"].split("/")[-1]
+            url_path = p["url_path"]
+            summary = p.get("summary") or ""
+            entry = f"- [{title}]({base}{url_path})"
+            if summary:
+                entry += f": {summary}"
+            lines.append(entry)
+        lines.append("")
+
+    lines.append("## Feeds")
+    lines.append(f"- [RSS Feed]({base}/feed.xml): Full site RSS feed")
+    lines.append("")
+
+    return Response("\n".join(lines), mimetype="text/plain")
+
+
 @app.route("/sitemap.xml")
 def sitemap():
     post_store.maybe_reload()

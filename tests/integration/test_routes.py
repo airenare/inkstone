@@ -180,3 +180,24 @@ def test_robots_txt_references_sitemap(client):
     text = client.get("/robots.txt").data.decode()
     assert "Sitemap:" in text
     assert "sitemap.xml" in text
+
+
+def test_llms_txt_returns_200(client):
+    resp = client.get("/llms.txt")
+    assert resp.status_code == 200
+    assert resp.content_type == "text/plain; charset=utf-8"
+
+
+def test_llms_txt_contains_site_name(client):
+    text = client.get("/llms.txt").data.decode()
+    assert text.startswith("# ")
+
+
+def test_llms_txt_contains_posts_section(client):
+    text = client.get("/llms.txt").data.decode()
+    assert "## Posts" in text
+
+
+def test_llms_txt_contains_feed_link(client):
+    text = client.get("/llms.txt").data.decode()
+    assert "/feed.xml" in text
