@@ -201,3 +201,10 @@ def test_llms_txt_contains_posts_section(client):
 def test_llms_txt_contains_feed_link(client):
     text = client.get("/llms.txt").data.decode()
     assert "/feed.xml" in text
+
+
+def test_homepage_has_rss_autodiscovery_link(client):
+    resp = client.get("/")
+    html = resp.data.decode()
+    assert 'type="application/rss+xml"' in html
+    assert 'href="/feed.xml"' in html
