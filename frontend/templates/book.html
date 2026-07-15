@@ -6,6 +6,7 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="{{ canonical_url }}">
 <meta property="og:description" content="{{ post.summary }}">
+<meta name="description" content="{{ post.summary }}">
 {% if post.metadata.cover %}<meta property="og:image" content="{{ post.metadata.cover }}">{% endif %}
 <meta name="twitter:card" content="{{ 'summary_large_image' if post.metadata.cover else 'summary' }}">
 <meta name="twitter:title" content="{{ post.title }}">

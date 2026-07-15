@@ -208,3 +208,21 @@ def test_homepage_has_rss_autodiscovery_link(client):
     html = resp.data.decode()
     assert 'type="application/rss+xml"' in html
     assert 'href="/feed.xml"' in html
+
+
+def test_post_has_meta_description(client):
+    resp = client.get("/blog/simple-post")
+    html = resp.data.decode()
+    assert '<meta name="description"' in html
+
+
+def test_homepage_has_meta_description(client):
+    resp = client.get("/")
+    html = resp.data.decode()
+    assert '<meta name="description"' in html
+
+
+def test_blog_listing_has_meta_description(client):
+    resp = client.get("/blog")
+    html = resp.data.decode()
+    assert '<meta name="description"' in html
