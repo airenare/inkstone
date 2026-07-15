@@ -20,6 +20,8 @@ Per-section feeds are available at `/{section}/feed.xml`:
 
 Feeds include title, date, summary, and full post URL.
 
+A `<link rel="alternate" type="application/rss+xml">` tag is included in every page's `<head>`, so browsers and feed readers auto-discover the feed without any manual wiring.
+
 ## Sitemap
 
 An XML sitemap is auto-generated at `/sitemap.xml`. It includes all published posts, listing pages, and the homepage. Updated automatically when notes change.
@@ -31,6 +33,7 @@ Every post page includes `<meta>` tags for social sharing:
 - `og:title`, `og:description`, `og:url`
 - `og:image`: the post's banner image, or the first embedded image found in the body
 - `twitter:card`, `twitter:title`, `twitter:description`
+- `<meta name="description">`: standard HTML description tag, mirrors `og:description`
 
 These are generated from `title:`, `summary:`, `banner:`, and the post URL. No manual configuration required.
 
@@ -47,6 +50,8 @@ InkStone injects JSON-LD `<script>` blocks for search engine understanding:
 `datePublished` comes from `date:`. `dateModified` comes from `updated:` (falls back to `date:` if absent). `author` comes from the `author:` frontmatter field.
 
 ## AI Discoverability
+
+AI search engines (ChatGPT, Perplexity, Google AIO, Claude) cite content they can crawl and understand. InkStone handles the technical side automatically — no configuration needed.
 
 ### robots.txt
 
