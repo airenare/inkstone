@@ -121,6 +121,8 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 - **RSS feed** — latest 20 posts at `/feed.xml`; per-section feeds at `/blog/feed.xml`, `/gallery/feed.xml`, etc.
 - **Sitemap** — auto-generated from all published routes at `/sitemap.xml`
+- **robots.txt** — auto-generated at `/robots.txt`; allows all major AI crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, CCBot) and references the sitemap
+- **llms.txt** — auto-generated at `/llms.txt` following the llmstxt.org standard; lists site sections and recent posts with summaries to help AI systems understand the site's content
 - **OpenGraph / Twitter Card** — per-page meta tags for rich link previews; uses banner image if set
 - **JSON-LD structured data** — Article, Book, and WebSite schemas for rich Google results
 

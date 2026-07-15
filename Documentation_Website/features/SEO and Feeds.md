@@ -46,6 +46,33 @@ InkStone injects JSON-LD `<script>` blocks for search engine understanding:
 
 `datePublished` comes from `date:`. `dateModified` comes from `updated:` (falls back to `date:` if absent). `author` comes from the `author:` frontmatter field.
 
+## AI Discoverability
+
+### robots.txt
+
+A `robots.txt` file is auto-generated at `/robots.txt`. It explicitly allows all major AI crawlers:
+
+- `GPTBot` (OpenAI)
+- `ClaudeBot` (Anthropic)
+- `PerplexityBot` (Perplexity AI)
+- `Google-Extended` (Google Gemini)
+- `CCBot` (Common Crawl)
+
+All crawlers receive `Allow: /`. The file also includes a `Sitemap:` reference pointing to `/sitemap.xml`. No configuration required.
+
+### llms.txt
+
+An `llms.txt` file is auto-generated at `/llms.txt` following the [llmstxt.org](https://llmstxt.org) standard. It helps AI systems understand the structure and content of your site.
+
+The file includes:
+
+- Site name and homepage description
+- Top-level sections with links
+- Up to 20 recent posts with titles, URLs, and summaries
+- A link to the RSS feed
+
+No configuration required — the file is built automatically from published posts and section routes.
+
 ## Print stylesheet
 
 InkStone includes a `@media print` stylesheet for clean PDF output and printing. Navigation, sidebars, and interactive elements are hidden; prose content is formatted for paper.
