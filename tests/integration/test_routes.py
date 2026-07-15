@@ -159,3 +159,24 @@ def test_https_canonical_url_behind_proxy(client):
     assert resp.status_code == 200
     html = resp.data.decode()
     assert 'href="https://antonbakulin.com/"' in html
+
+
+def test_robots_txt_returns_200(client):
+    resp = client.get("/robots.txt")
+    assert resp.status_code == 200
+    assert resp.content_type == "text/plain; charset=utf-8"
+
+
+def test_robots_txt_allows_ai_crawlers(client):
+    text = client.get("/robots.txt").data.decode()
+    for bot in ("GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"):
+        assert f"User-agent: {bot}" in text
+        idx = text.index(f"User-agent: {bot}")
+        snippet = text[idx: idx + 40]
+        assert "Disallow" not in snippet
+
+
+def test_robots_txt_references_sitemap(client):
+    text = client.get("/robots.txt").data.decode()
+    assert "Sitemap:" in text
+    assert "sitemap.xml" in text

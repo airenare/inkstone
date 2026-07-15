@@ -398,6 +398,34 @@ def tags_index():
     return render_template("labels.html", labels=tags, section=section)
 
 
+@app.route("/robots.txt")
+def robots_txt():
+    base = request.url_root.rstrip("/")
+    content = (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "\n"
+        "# AI crawlers explicitly welcome\n"
+        "User-agent: GPTBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: ClaudeBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: PerplexityBot\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: Google-Extended\n"
+        "Allow: /\n"
+        "\n"
+        "User-agent: CCBot\n"
+        "Allow: /\n"
+        "\n"
+        f"Sitemap: {base}/sitemap.xml\n"
+    )
+    return Response(content, mimetype="text/plain")
+
+
 @app.route("/sitemap.xml")
 def sitemap():
     post_store.maybe_reload()
