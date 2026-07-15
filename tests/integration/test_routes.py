@@ -169,7 +169,7 @@ def test_robots_txt_returns_200(client):
 
 def test_robots_txt_allows_ai_crawlers(client):
     text = client.get("/robots.txt").data.decode()
-    for bot in ("GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended"):
+    for bot in ("GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended", "CCBot"):
         assert f"User-agent: {bot}" in text
         idx = text.index(f"User-agent: {bot}")
         snippet = text[idx: idx + 40]
