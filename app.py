@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
     Response, redirect, session
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 import posts as post_store
 from config import (
@@ -29,6 +30,7 @@ app = Flask(
     template_folder="frontend/templates",
     static_folder="frontend/static",
 )
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 app.secret_key = SECRET_KEY
 
 

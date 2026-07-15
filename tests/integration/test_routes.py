@@ -148,3 +148,14 @@ def test_search_empty_state_shows_tag_suggestions(client):
     assert 'class="search-suggestions"' in html
     # Fixture post has tags [test, python] so at least one must appear
     assert 'href="/tag/test"' in html or 'href="/tag/python"' in html
+
+
+def test_https_canonical_url_behind_proxy(client):
+    """Canonical URL must use https:// when X-Forwarded-Proto is https."""
+    resp = client.get(
+        "/",
+        headers={"X-Forwarded-Proto": "https", "Host": "antonbakulin.com"},
+    )
+    assert resp.status_code == 200
+    html = resp.data.decode()
+    assert 'href="https://antonbakulin.com/"' in html
