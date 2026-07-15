@@ -182,7 +182,9 @@
       "Bash(.venv/bin/python3 *)",
       "Bash(VAULT_PATH=Documentation_Website /home/air/venv/3.14/bin/python3 *)",
       "Bash(VAULT_PATH=tests/fixtures/vault /home/air/venv/3.14/bin/python3 *)",
-      "Bash(VAULT_PATH=/home/air/Documents/Obsidian/obsidian/antonbakulin.com /home/air/venv/3.14/bin/python3 *)"
+      "Bash(VAULT_PATH=/home/air/Documents/Obsidian/obsidian/antonbakulin.com /home/air/venv/3.14/bin/python3 *)",
+      "Read(//home/air/Documents/GithubRepos/inkfolio/**)",
+      "Read(//home/air/Documents/GithubRepos/**)"
     ]
   }
 }
