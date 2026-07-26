@@ -1643,6 +1643,7 @@ audio {
 [data-theme="light"] .post-entry h3 a,
 [data-theme="light"] .search-result h4 a,
 [data-theme="light"] .transclusion-title a,
+[data-theme="light"] .feed-entry-title a,
 [data-theme="light"] .pagination a,
 [data-theme="light"] .footnote-ref a,
 [data-theme="light"] .footnote-backref {
