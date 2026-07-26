@@ -1794,6 +1794,9 @@ audio {
 [data-theme="light"] .transclusion-title a { color: #77778a; }
 [data-theme="light"] .transclusion-body    { color: #44445a; }
 
+[data-theme="light"] .feed-entry-title a { color: var(--h1-color); }
+[data-theme="light"] .feed-entry-title a:hover { color: var(--accent); }
+
 /* --- Math block & Mermaid --- */
 [data-theme="light"] .math-block {
     background: var(--bg-raised);
