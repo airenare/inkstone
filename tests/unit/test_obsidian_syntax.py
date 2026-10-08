@@ -105,3 +105,18 @@ def test_consecutive_images_share_gallery_id():
     result = convert_media(md, fixture_post)
     assert result.count('data-gallery="g1"') == 2
     assert 'data-gallery="g2"' not in result
+
+
+def test_convert_math_escaped_dollar_is_literal():
+    from obsidian_syntax import convert_math
+
+    out = convert_math(r"costs \$5 and \$10")
+    assert "math-inline" not in out
+    assert out == "costs &#36;5 and &#36;10"
+
+
+def test_convert_math_escaped_dollar_inside_math():
+    from obsidian_syntax import convert_math
+
+    out = convert_math(r"$a \$ b$")
+    assert out == '<span class="math-inline">a \\$ b</span>'

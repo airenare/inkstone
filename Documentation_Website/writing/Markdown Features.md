@@ -243,6 +243,14 @@ $$
 \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
 $$
 
+To write a literal dollar sign where it would otherwise start math (for example two prices in one paragraph), escape it with a backslash:
+
+```markdown
+The book costs \$5 and the case costs \$10.
+```
+
+The book costs \$5 and the case costs \$10.
+
 > [!note] Safe from markdown mangling
 > InkStone pre-processes math blocks before the markdown parser runs, preventing `_` and `*` characters inside formulas from being interpreted as emphasis.
 

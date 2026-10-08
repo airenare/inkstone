@@ -738,11 +738,13 @@ def convert_math(md):
     $...$ inline math  → <span class="math-inline">...</span>
 
     Skips content inside fenced code blocks and backtick code spans.
+    A backslash-escaped dollar (\\$) outside math is a literal "$".
     """
     _combined = re.compile(
         r"(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)"  # code span — skip
-        r"|\$\$(.+?)\$\$"  # block math
-        r"|\$([^\$\n]+)\$",  # inline math
+        r"|(\\\$)"  # escaped dollar
+        r"|\$\$((?:\\.|[^\\])+?)\$\$"  # block math
+        r"|\$((?:\\.|[^\$\\\n])+)\$",  # inline math
         re.DOTALL,
     )
 
@@ -750,8 +752,10 @@ def convert_math(md):
         if match.group(1) is not None:
             return match.group(0)
         if match.group(2) is not None:
-            return f'<div class="math-block">{match.group(2)}</div>'
-        return f'<span class="math-inline">{match.group(3)}</span>'
+            return "&#36;"
+        if match.group(3) is not None:
+            return f'<div class="math-block">{match.group(3)}</div>'
+        return f'<span class="math-inline">{match.group(4)}</span>'
 
     return _combined.sub(repl, md)
 

@@ -58,7 +58,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 ### Math & diagrams
 
 - **Mermaid** — fenced ` ```mermaid ``` ` blocks rendered client-side via Mermaid.js; adapts to dark and light theme automatically
-- **LaTeX / KaTeX** — `$inline$` and `$$block$$`; expressions protected from the markdown parser before rendering
+- **LaTeX / KaTeX** — `$inline$` and `$$block$$`; expressions protected from the markdown parser before rendering; escape a literal dollar with `\$`
 
 ### Dataview
 
