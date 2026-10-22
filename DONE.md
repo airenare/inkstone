@@ -2,6 +2,12 @@
 
 ---
 
+## Obsidian plugin — InkStone Preview 0.1.4 (`airenare/inkstone-obsidian-plugin`)
+
+- ✅ **[Obsidian plugin] Settings migrated to the declarative settings API** — `getSettingDefinitions()` replaces the imperative `display()`; settings show up in Obsidian's settings search and the three directory-review warnings are gone. (0.1.4)
+- ✅ **[Obsidian plugin] Pick the site folder from the vault tree** — new "Choose from vault" modal lists every vault folder in tree order (vault root stored as `.`); "Browse" for any disk folder, now with a native-dialog-first picker; Browse added for the InkStone folder too. (0.1.4)
+- ✅ **[Obsidian plugin] Settings row renamed to "InkStone folder"** with generic placeholder text instead of pre-filled paths. (0.1.4)
+
 ## v1.58.0 — Plugin server cleanup
 
 - ✅ **[Obsidian plugin] Stop the local server when its parent dies** — `INKSTONE_EXIT_ON_STDIN_EOF=1` starts a daemon thread (`stdin_watch.py`) that exits the process when stdin reaches EOF, covering the Flask reloader's worker too. The plugin keeps a pipe open on stdin, so a crashed or force-quit Obsidian no longer leaves a stray server. (v1.58.0)
