@@ -793,19 +793,20 @@ def build_source_map():
         metadata = entry.get("metadata") or {}
         published = bool(metadata.get("website"))
         url = entry.get("url_path") or None
-        # Unpublished notes with their own access_token are reachable by
-        # a share link, so they keep a URL; other unpublished notes don't.
+        # Unpublished notes with a URL are private routes: the master
+        # ACCESS_TOKEN (or the note's own access_token) unlocks them.
+        # Unpublished homepage/listing/feed notes have no private route.
         private = (
             not published
             and url is not None
             and url in post_store.PRIVATE_ROUTES
-            and bool(metadata.get("access_token"))
         )
         entries.append({
             "file": _vault_rel(entry["filepath"]),
             "url": url if (published or private) else None,
             "published": published,
             "private": private,
+            "has_own_token": bool(metadata.get("access_token")),
         })
     for post in post_store.ALL_POSTS.values():
         source = post.get("source_file")
@@ -815,6 +816,7 @@ def build_source_map():
                 "url": post["url_path"],
                 "published": True,
                 "private": False,
+                "has_own_token": False,
             })
     entries.sort(key=lambda e: e["file"])
     return entries

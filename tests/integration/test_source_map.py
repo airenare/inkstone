@@ -31,17 +31,36 @@ def test_source_map_has_version(dev_client):
     assert isinstance(data["version"], str) and data["version"]
 
 
-def test_source_map_unpublished_has_null_url(entries):
+def test_source_map_unpublished_note_is_private_with_url(entries):
     entry = entries["blog/draft_note.md"]
+    assert entry["published"] is False
+    assert entry["private"] is True
+    assert entry["has_own_token"] is False
+    assert entry["url"] == "/blog/draft-note"
+
+
+def test_source_map_unpublished_listing_has_null_url(entries):
+    entry = entries["blog/Draft Index.md"]
     assert entry["published"] is False
     assert entry["private"] is False
     assert entry["url"] is None
+
+
+def test_master_token_opens_unpublished_note(monkeypatch):
+    import app as inkstone_app
+    monkeypatch.setattr(inkstone_app, "ACCESS_TOKEN", "master-key")
+    c = inkstone_app.app.test_client()
+    resp = c.get("/blog/draft-note?token=master-key",
+                 follow_redirects=True)
+    assert resp.status_code == 200
+    assert b"Not published." in resp.data
 
 
 def test_source_map_private_note_flagged(entries):
     entry = entries["blog/secret_note.md"]
     assert entry["published"] is False
     assert entry["private"] is True
+    assert entry["has_own_token"] is True
     assert entry["url"] == "/blog/secret-note"
 
 

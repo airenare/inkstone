@@ -1220,7 +1220,8 @@ def load_posts():
             "banner": base_config.get("banner"),
             "banner_x": base_config.get("banner_x"),
             "banner_y": base_config.get("banner_y"),
-            "metadata": base_config,            "source_file": filepath,
+            "metadata": base_config,
+            "source_file": filepath,
         }
         all_posts[url_path] = post_data
         print(f"Loaded base: {title} | {url_path}")
@@ -1271,7 +1272,8 @@ def load_posts():
             "banner": data.get("banner"),
             "banner_x": data.get("banner_x"),
             "banner_y": data.get("banner_y"),
-            "metadata": data,            "source_file": filepath,
+            "metadata": data,
+            "source_file": filepath,
         }
         all_posts[url_path] = post_data
         print(f"Loaded canvas: {title} | {url_path}")

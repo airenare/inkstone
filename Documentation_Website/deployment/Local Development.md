@@ -56,10 +56,10 @@ PORT=8001 python3 app.py
 Set `INKSTONE_DEV_API=1` to enable a development-only endpoint, `GET /__inkstone/source-map`. It returns JSON listing every vault file (`.md`, `.base`, `.canvas`) with its served URL:
 
 ```json
-{"version": "1.57.0", "files": [{"file": "blog/post.md", "url": "/blog/post", "published": true, "private": false}]}
+{"version": "1.57.0", "files": [{"file": "blog/post.md", "url": "/blog/post", "published": true, "private": false, "has_own_token": false}]}
 ```
 
-`file` is relative to the vault with forward slashes. `url` is `null` for unpublished notes, unless the note has its own `access_token` (then `private` is `true` and the URL is the share-link path). Without the flag the route does not exist and returns 404. Don't enable it in production.
+`file` is relative to the vault with forward slashes. Unpublished notes are `private: true` and keep their real URL, because the master `ACCESS_TOKEN` (or the note's own `access_token`, flagged by `has_own_token`) unlocks them at that URL. `url` is `null` only for unpublished homepage, listing, and feed notes. Unpublished `.base` and `.canvas` files are absent from the map; treat a missing file as unpublished. Without the flag the route does not exist and returns 404. Don't enable it in production.
 
 ## Production mode locally
 
