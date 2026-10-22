@@ -47,6 +47,12 @@ SECRET_KEY = os.getenv("SECRET_KEY", "inkstone-dev-secret")
 # Set to "1", "true", or "yes" to remove the "built with InkStone" footer line.
 HIDE_ATTRIBUTION = os.getenv("HIDE_ATTRIBUTION", "").lower() in ("1", "true", "yes")
 
+# Dev-only JSON API (GET /__inkstone/source-map) used by editor integrations
+# such as the Obsidian plugin. Off unless set to "1", "true", or "yes".
+INKSTONE_DEV_API = os.getenv("INKSTONE_DEV_API", "").lower() in (
+    "1", "true", "yes",
+)
+
 # Giscus comment system — all three must be set to enable comments.
 # Get values from https://giscus.app after linking your GitHub repo.
 GISCUS_REPO = os.getenv("GISCUS_REPO") or None

@@ -7,7 +7,7 @@ from collections import Counter
 from datetime import datetime, timezone
 
 from flask import Flask, render_template, abort, request, send_from_directory, \
-    Response, redirect, session
+    Response, redirect, session, jsonify
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 import posts as post_store
@@ -15,7 +15,7 @@ from config import (
     VAULT_PATH, VERSION, WEBHOOK_SECRET,
     HIDE_ATTRIBUTION,
     GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID,
-    ACCESS_TOKEN, SECRET_KEY,
+    ACCESS_TOKEN, SECRET_KEY, INKSTONE_DEV_API,
     vault_attachment_href,
 )
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
@@ -775,6 +775,65 @@ def serve(path):
 
 
 # =========================================
+# DEV API
+# =========================================
+
+def _vault_rel(filepath):
+    """Vault-relative path with forward slashes."""
+    rel = os.path.relpath(
+        os.path.abspath(filepath), os.path.abspath(VAULT_PATH)
+    )
+    return rel.replace("\\", "/")
+
+
+def build_source_map():
+    """List every vault source file with its served URL (or None)."""
+    entries = []
+    for entry in post_store.DATAVIEW_INDEX.values():
+        metadata = entry.get("metadata") or {}
+        published = bool(metadata.get("website"))
+        url = entry.get("url_path") or None
+        # Unpublished notes with their own access_token are reachable by
+        # a share link, so they keep a URL; other unpublished notes don't.
+        private = (
+            not published
+            and url is not None
+            and url in post_store.PRIVATE_ROUTES
+            and bool(metadata.get("access_token"))
+        )
+        entries.append({
+            "file": _vault_rel(entry["filepath"]),
+            "url": url if (published or private) else None,
+            "published": published,
+            "private": private,
+        })
+    for post in post_store.ALL_POSTS.values():
+        source = post.get("source_file")
+        if post.get("post_type") in ("base", "canvas") and source:
+            entries.append({
+                "file": _vault_rel(source),
+                "url": post["url_path"],
+                "published": True,
+                "private": False,
+            })
+    entries.sort(key=lambda e: e["file"])
+    return entries
+
+
+def register_dev_routes(flask_app):
+    """Register dev-only routes. Called only when INKSTONE_DEV_API is on."""
+
+    @flask_app.route("/__inkstone/source-map")
+    def inkstone_source_map():
+        post_store.maybe_reload()
+        return jsonify({"version": VERSION, "files": build_source_map()})
+
+
+if INKSTONE_DEV_API:
+    register_dev_routes(app)
+
+
+# =========================================
 # START
 # =========================================
 
@@ -800,4 +859,4 @@ if __name__ == "__main__":
         post_store.WEBSITE_NAMES,
         post_store.UI_TRANSLATIONS,
     ) = post_store.load_posts()
-    app.run("127.0.0.1", 8000, debug=True)
+    app.run("127.0.0.1", int(os.getenv("PORT", "8000")), debug=True)

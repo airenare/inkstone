@@ -216,7 +216,9 @@ echo "VAULT_PATH=/path/to/your/vault" > .env
 python3 app.py
 ```
 
-The server hot-reloads when vault files change.
+The server hot-reloads when vault files change. When run with `python3 app.py`, set `PORT` to change the listen port (default `8000`).
+
+**Dev source-map API (optional).** Set `INKSTONE_DEV_API=1` to enable `GET /__inkstone/source-map`, a JSON map of every vault file to its served URL (`{"version", "files": [{"file", "url", "published", "private"}]}`). Editor integrations such as the Obsidian plugin use it. The route is not registered (404) unless the flag is on; leave it off in production.
 
 ---
 

@@ -43,6 +43,24 @@ If `VAULT_PATH` is unset, InkStone falls back to `./BlogPages` (the demo vault i
 
 Edit any vault file and refresh the browser. No restart needed. InkStone watches modification times on every request and reloads automatically when anything changes.
 
+## Change the port
+
+`python3 app.py` listens on port 8000 by default. Set `PORT` to use another one:
+
+```bash
+PORT=8001 python3 app.py
+```
+
+## Dev source-map API
+
+Set `INKSTONE_DEV_API=1` to enable a development-only endpoint, `GET /__inkstone/source-map`. It returns JSON listing every vault file (`.md`, `.base`, `.canvas`) with its served URL:
+
+```json
+{"version": "1.57.0", "files": [{"file": "blog/post.md", "url": "/blog/post", "published": true, "private": false}]}
+```
+
+`file` is relative to the vault with forward slashes. `url` is `null` for unpublished notes, unless the note has its own `access_token` (then `private` is `true` and the URL is the share-link path). Without the flag the route does not exist and returns 404. Don't enable it in production.
+
 ## Production mode locally
 
 To test with gunicorn (closer to production behaviour):
