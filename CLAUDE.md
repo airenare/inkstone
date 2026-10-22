@@ -30,6 +30,7 @@ Configuration: set `VAULT_PATH` in `.env` to point at the Obsidian vault directo
 **Optional env vars:**
 - `ACCESS_TOKEN` — master key that unlocks ALL private notes. Per-note access is controlled by `access_token:` frontmatter instead (each note has its own token, session tracks unlocked URLs individually). Both can coexist.
 - `SECRET_KEY` — Flask session signing key. Set to a long random string in production. Defaults to `"inkstone-dev-secret"` (sessions invalidated on restart if not set).
+- `INKSTONE_EXIT_ON_STDIN_EOF` — set to `1` to make the dev server exit when its stdin closes (used by the Obsidian plugin so the server dies with its parent). Implemented in `stdin_watch.py`, which imports nothing else from InkStone.
 - `HIDE_ATTRIBUTION` — set to `"1"` or `"true"` to remove the "built with InkStone" footer line.
 - `GISCUS_REPO`, `GISCUS_REPO_ID`, `GISCUS_CATEGORY_ID` — all three required to enable Giscus comments.
 - `VAULT_REPO` — Git URL to clone a private vault at Docker build time.

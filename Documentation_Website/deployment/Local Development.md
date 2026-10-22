@@ -61,6 +61,10 @@ Set `INKSTONE_DEV_API=1` to enable a development-only endpoint, `GET /__inkstone
 
 `file` is relative to the vault with forward slashes. Unpublished notes are `private: true` and keep their real URL, because the master `ACCESS_TOKEN` (or the note's own `access_token`, flagged by `has_own_token`) unlocks them at that URL. `url` is `null` only for unpublished homepage, listing, and feed notes. Unpublished `.base` and `.canvas` files are absent from the map; treat a missing file as unpublished. Without the flag the route does not exist and returns 404. Don't enable it in production.
 
+## Exit when stdin closes
+
+Set `INKSTONE_EXIT_ON_STDIN_EOF=1` and the server exits as soon as its stdin reaches EOF, including the Flask reloader's worker process. An editor integration that starts InkStone with a pipe on stdin (the Obsidian plugin does) uses this, so the server dies with its parent even after a crash or force-quit. Leave it off when you run InkStone from a terminal or a service manager: with stdin closed or redirected from `/dev/null`, the server exits immediately.
+
 ## Production mode locally
 
 To test with gunicorn (closer to production behaviour):

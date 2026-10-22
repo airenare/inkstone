@@ -53,6 +53,13 @@ INKSTONE_DEV_API = os.getenv("INKSTONE_DEV_API", "").lower() in (
     "1", "true", "yes",
 )
 
+# Exit when stdin closes. Set by an editor integration (the Obsidian plugin)
+# that keeps a pipe open on stdin, so the server dies with its parent.
+# Off unless set to "1", "true", or "yes".
+EXIT_ON_STDIN_EOF = os.getenv("INKSTONE_EXIT_ON_STDIN_EOF", "").lower() in (
+    "1", "true", "yes",
+)
+
 # Giscus comment system — all three must be set to enable comments.
 # Get values from https://giscus.app after linking your GitHub repo.
 GISCUS_REPO = os.getenv("GISCUS_REPO") or None

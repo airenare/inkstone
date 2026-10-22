@@ -15,9 +15,10 @@ from config import (
     VAULT_PATH, VERSION, WEBHOOK_SECRET,
     HIDE_ATTRIBUTION,
     GISCUS_REPO, GISCUS_REPO_ID, GISCUS_CATEGORY_ID,
-    ACCESS_TOKEN, SECRET_KEY, INKSTONE_DEV_API,
+    ACCESS_TOKEN, SECRET_KEY, INKSTONE_DEV_API, EXIT_ON_STDIN_EOF,
     vault_attachment_href,
 )
+from stdin_watch import watch_stdin
 from view_helpers import build_breadcrumbs, get_adjacent_posts, get_related, highlight
 
 
@@ -861,4 +862,6 @@ if __name__ == "__main__":
         post_store.WEBSITE_NAMES,
         post_store.UI_TRANSLATIONS,
     ) = post_store.load_posts()
+    if EXIT_ON_STDIN_EOF:
+        watch_stdin()
     app.run("127.0.0.1", int(os.getenv("PORT", "8000")), debug=True)

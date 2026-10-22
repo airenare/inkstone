@@ -2,6 +2,10 @@
 
 ---
 
+## v1.58.0 — Plugin server cleanup
+
+- ✅ **[Obsidian plugin] Stop the local server when its parent dies** — `INKSTONE_EXIT_ON_STDIN_EOF=1` starts a daemon thread (`stdin_watch.py`) that exits the process when stdin reaches EOF, covering the Flask reloader's worker too. The plugin keeps a pipe open on stdin, so a crashed or force-quit Obsidian no longer leaves a stray server. (v1.58.0)
+
 ## v1.54.15–v1.54.30 — UX Sprint (`ux-improvements` branch)
 
 - ✅ **[UX][i18n] Fix hardcoded pagination labels in listing pages** — `listing.html` pagination now uses `ui_strings` for "Previous" / "Next" so multilingual sites translate correctly. (v1.54.15)
