@@ -80,7 +80,7 @@ New features should follow this chain — `app.py` imports from `posts.py` and `
 | `/search` | Full-text search across `ALL_POSTS` |
 | `/feed.xml` | RSS feed — latest 20 posts sorted by date |
 | `/sitemap.xml` | Auto-generated sitemap of all routes |
-| `/attachments/<path>` | Media served directly from vault: only non-hidden image, video, audio and PDF files (see `_ATTACHMENT_EXTS` in `app.py`); notes, `.git/`, `.obsidian/` and every other file return 404 |
+| `/attachments/<path>` | Media served directly from vault: only non-hidden image, video, audio and PDF files (see `_ATTACHMENT_EXTS` in `app.py`); everything else returns 404 |
 
 Nav links are auto-generated from top-level `SECTION_ROUTES` keys (direct children of `/`). Posts with `menu_order` in frontmatter are additionally pinned to the nav (sorted by value, appended after section links). This is the intended mechanism for standalone pages like About or Contact.
 

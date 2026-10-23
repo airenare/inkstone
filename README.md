@@ -220,7 +220,7 @@ The server hot-reloads when vault files change. When run with `python3 app.py`, 
 
 **Dev source-map API (optional).** Set `INKSTONE_DEV_API=1` to enable `GET /__inkstone/source-map`, a JSON map of every vault file to its served URL (`{"version", "files": [{"file", "url", "published", "private", "has_own_token"}]}`; unpublished notes are `private` and keep their URL since the master `ACCESS_TOKEN` unlocks them, `url` is `null` only for unpublished homepage/listing/feed notes, and unpublished `.base`/`.canvas` files are absent). Editor integrations such as the Obsidian plugin use it. The route is not registered (404) unless the flag is on; leave it off in production.
 
-**What the site serves from your vault.** Media only: `/attachments/...` serves non-hidden image, video, audio and PDF files. Notes (published or not), `.git/`, `.obsidian/`, `.env` and every other file are never served, and notes inside hidden folders such as `.claude/` are never loaded as pages.
+**What the site serves from your vault.** Media only: `/attachments/...` serves non-hidden image, video, audio and PDF files. Other files are never served, and notes inside hidden folders are never loaded as pages.
 
 **Exit when stdin closes (optional).** Set `INKSTONE_EXIT_ON_STDIN_EOF=1` and the server exits as soon as its stdin reaches EOF, including the Flask reloader's worker. An editor integration that starts InkStone with a pipe on stdin (the Obsidian plugin does) uses this so the server dies with its parent, even after a crash or force-quit. Leave it off when running from a terminal or a service manager: with stdin closed or redirected from `/dev/null`, the server exits immediately.
 

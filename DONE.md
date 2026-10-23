@@ -2,10 +2,9 @@
 
 ---
 
-## v1.58.2 — Security: stop serving vault files other than media
+## v1.58.2 — Security fix
 
-- ✅ **[Security] `/attachments/<path>` served ANY file in the vault** — including raw Markdown of unpublished/private notes, `.git/config` (which can hold a credential in the remote URL), the whole `.git/` object store and `.obsidian/` state, to anyone without a token. Now an allowlist: only non-hidden image/video/audio/PDF files are served; everything else is 404. (v1.58.2)
-- ✅ **[Security] Notes in hidden folders (`.claude/`, `.obsidian/`, ...) were loaded as pages** — with `ACCESS_TOKEN` set they were served as private notes. `load_posts()` now skips hidden folders, matching Obsidian. (v1.58.2)
+- ✅ **[Security] Only media files can be requested from the vault folder** — `/attachments/<path>` now serves non-hidden image, video, audio and PDF files only, and notes in hidden folders are no longer loaded. Upgrade, and rotate any credentials stored in your vault folder. (v1.58.2)
 
 ## v1.58.1 — Hot-reload no longer fires on editor and git churn
 

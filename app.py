@@ -264,9 +264,8 @@ def vault_webhook():
     return Response("ok", status=200)
 
 
-# Only media may be served from the vault. The vault folder also holds notes
-# (including unpublished and private ones), .git/, .obsidian/ and other files
-# that must never be reachable over HTTP.
+# Only media may be served from the vault; every other file in the vault
+# folder must stay unreachable over HTTP.
 _ATTACHMENT_EXTS = frozenset({
     "jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "avif", "ico",
     "tif", "tiff", "heic",
