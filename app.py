@@ -264,8 +264,31 @@ def vault_webhook():
     return Response("ok", status=200)
 
 
+# Only media may be served from the vault. The vault folder also holds notes
+# (including unpublished and private ones), .git/, .obsidian/ and other files
+# that must never be reachable over HTTP.
+_ATTACHMENT_EXTS = frozenset({
+    "jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "avif", "ico",
+    "tif", "tiff", "heic",
+    "mp4", "webm", "mov", "m4v", "ogv",
+    "mp3", "ogg", "wav", "flac", "m4a", "aac", "opus",
+    "pdf",
+})
+
+
+def _attachment_servable(path):
+    """True only for non-hidden media files (see _ATTACHMENT_EXTS)."""
+    parts = [p for p in path.replace("\\", "/").split("/") if p]
+    if not parts or any(p.startswith(".") for p in parts):
+        return False
+    ext = os.path.splitext(parts[-1])[1].lower().lstrip(".")
+    return ext in _ATTACHMENT_EXTS
+
+
 @app.route("/attachments/<path:path>")
 def attachments(path):
+    if not _attachment_servable(path):
+        abort(404)
     return send_from_directory(VAULT_PATH, path)
 
 

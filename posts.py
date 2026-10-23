@@ -720,7 +720,11 @@ def load_posts():
     dataview_index = {}  # filepath → dataview context (all vault notes)
 
     for root, dirs, files in os.walk(VAULT_PATH):
-        dirs[:] = [d for d in dirs if d.lower() != "templates"]
+        # Hidden folders (.obsidian, .git, .claude, ...) are never notes.
+        dirs[:] = [
+            d for d in dirs
+            if d.lower() != "templates" and not d.startswith(".")
+        ]
         for f in files:
             if f.endswith(".base"):
                 filepath = os.path.join(root, f)

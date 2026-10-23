@@ -2,6 +2,11 @@
 
 ---
 
+## v1.58.2 — Security: stop serving vault files other than media
+
+- ✅ **[Security] `/attachments/<path>` served ANY file in the vault** — including raw Markdown of unpublished/private notes, `.git/config` (which can hold a credential in the remote URL), the whole `.git/` object store and `.obsidian/` state, to anyone without a token. Now an allowlist: only non-hidden image/video/audio/PDF files are served; everything else is 404. (v1.58.2)
+- ✅ **[Security] Notes in hidden folders (`.claude/`, `.obsidian/`, ...) were loaded as pages** — with `ACCESS_TOKEN` set they were served as private notes. `load_posts()` now skips hidden folders, matching Obsidian. (v1.58.2)
+
 ## v1.58.1 — Hot-reload no longer fires on editor and git churn
 
 - ✅ **[Perf] Stop reloading the vault when `.obsidian/`, `.git/` or `.DS_Store` change** — the reload check fingerprinted every file in the folder, so Obsidian rewriting `.obsidian/workspace.json` (on every note open) or git touching `.git/index` forced a full vault reload, adding ~1.5 s to the next request. New `vault_signature()` covers only `.md`/`.base`/`.canvas` files (path, mtime, size), skips hidden folders and `templates/`, and also catches deletions and renames. `load_posts()` records the fingerprint it started from, which removes a redundant reload on the first request after startup. (v1.58.1)
