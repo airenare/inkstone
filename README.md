@@ -128,7 +128,7 @@ Notes placed in the **vault root** (no subfolder) are served at `/slug` with no 
 
 ### Developer experience
 
-- **Hot-reload** — the server watches file modification times and reloads the vault on any change; no restart needed
+- **Hot-reload** — the server watches your notes (`.md`, `.base`, `.canvas`) and reloads the vault when one is added, changed, renamed or deleted; no restart needed. Editor state (`.obsidian/`), git internals and other hidden files are ignored, so opening a note in Obsidian never triggers a reload
 - **Syntax highlighting** — fenced code blocks get language labels, a copy button, and Tokyo Night Dark theme via highlight.js
 - **Dark / light / system mode** — three-state toggle (☾ / ☀ / ⊙) in the header; System follows `prefers-color-scheme` and tracks OS changes live; preference persisted in `localStorage` (absent = System)
 - **Inline body tags** — `#hashtag` mentions in the note body are collected as tags; merged with frontmatter `tags:`

@@ -299,9 +299,14 @@ def _resolve_theme(value, context=""):
         )
         return "obsidian"
     return name
-LAST_SCAN_TIME = 0
+_last_signature = None  # fingerprint of the vault at the last load
 _reload_lock = threading.Lock()
 _last_check_time = 0.0
+
+# Only these files change what InkStone renders. Everything else in the
+# folder (editor state in .obsidian/, git internals, .DS_Store, images that
+# are served straight from disk) must not trigger a reload.
+_WATCHED_SUFFIXES = (".md", ".base", ".canvas")
 
 # Matches fenced code blocks (``` or ~~~, with optional language label)
 _FENCED_CODE_RE = re.compile(
@@ -669,6 +674,8 @@ def _parse_date(date, filepath):
 # =========================================
 
 def load_posts():
+    global _last_signature
+    scan_signature = vault_signature()
     all_posts = {}
     section_routes = {}
     website_name = "My Blog"
@@ -1464,6 +1471,7 @@ def load_posts():
     _resolve_note_blocks(all_posts, section_routes, ui_translations, default_lang)
 
     menu_posts.sort(key=lambda x: x["menu_order"])
+    _last_signature = scan_signature
     return (all_posts, section_routes, website_name, site_theme, default_theme,
             dataview_index, private_routes, private_rendered, menu_posts,
             show_search, show_tags, all_tags, icon_overrides, default_lang,
@@ -1475,10 +1483,40 @@ def load_posts():
 # AUTO RELOAD
 # =========================================
 
+def vault_signature(vault_path=None):
+    """Fingerprint of the vault files that affect rendered output.
+
+    Covers .md, .base and .canvas files by path, modification time and size,
+    so edits, additions, deletions and renames all change it. Hidden
+    folders (.obsidian, .git, ...), hidden files and templates/ are skipped:
+    editors and git rewrite those constantly without changing the site.
+    """
+    base = vault_path or VAULT_PATH
+    entries = []
+    for root, dirs, files in os.walk(base):
+        dirs[:] = [
+            d for d in dirs
+            if not d.startswith(".") and d.lower() != "templates"
+        ]
+        for f in files:
+            if f.startswith(".") or not f.endswith(_WATCHED_SUFFIXES):
+                continue
+            path = os.path.join(root, f)
+            try:
+                st = os.stat(path)
+            except OSError:
+                continue
+            entries.append(
+                (os.path.relpath(path, base), st.st_mtime_ns, st.st_size)
+            )
+    entries.sort()
+    return tuple(entries)
+
+
 def force_reload():
-    """Reset scan timestamps so maybe_reload() reloads on the next request."""
-    global LAST_SCAN_TIME, _last_check_time
-    LAST_SCAN_TIME = 0
+    """Make maybe_reload() reload on the next request."""
+    global _last_signature, _last_check_time
+    _last_signature = None
     _last_check_time = 0
 
 
@@ -1486,7 +1524,7 @@ def maybe_reload():
     global ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, WEBSITE_NAMES, SITE_THEME, \
         DEFAULT_THEME, DATAVIEW_INDEX, PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS, \
         SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES, DEFAULT_LANG, AVAILABLE_LANGS, \
-        LANG_GROUPS, SOCIAL_LINKS, UI_TRANSLATIONS, LAST_SCAN_TIME, _last_check_time
+        LANG_GROUPS, SOCIAL_LINKS, UI_TRANSLATIONS, _last_check_time
 
     if time.time() - _last_check_time < 2.0:
         return
@@ -1495,25 +1533,15 @@ def maybe_reload():
         return  # Another thread is already reloading
 
     try:
-        newest = 0
-        for root, _, files in os.walk(VAULT_PATH):
-            for f in files:
-                try:
-                    newest = max(newest, os.path.getmtime(
-                        os.path.join(root, f)
-                    ))
-                except OSError:
-                    pass
-
+        signature = vault_signature()
         _last_check_time = time.time()
-        if newest > LAST_SCAN_TIME:
+        if signature != _last_signature:
             print("Reloading vault...")
             (ALL_POSTS, SECTION_ROUTES, WEBSITE_NAME, SITE_THEME, DEFAULT_THEME,
              DATAVIEW_INDEX, PRIVATE_ROUTES, PRIVATE_RENDERED, MENU_POSTS,
              SHOW_SEARCH, SHOW_TAGS, ALL_TAGS, ICON_OVERRIDES,
              DEFAULT_LANG, AVAILABLE_LANGS, LANG_GROUPS,
              SOCIAL_LINKS, WEBSITE_NAMES, UI_TRANSLATIONS) = load_posts()
-            LAST_SCAN_TIME = newest
     except Exception as e:
         print(f"Reload error (serving stale data): {e}", file=sys.stderr)
     finally:

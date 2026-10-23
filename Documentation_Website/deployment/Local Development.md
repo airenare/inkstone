@@ -41,7 +41,7 @@ If `VAULT_PATH` is unset, InkStone falls back to `./BlogPages` (the demo vault i
 
 ## Hot-reload
 
-Edit any vault file and refresh the browser. No restart needed. InkStone watches modification times on every request and reloads automatically when anything changes.
+Edit any note and refresh the browser. No restart needed. On each request (at most every two seconds) InkStone checks your `.md`, `.base` and `.canvas` files and reloads the vault when one is added, changed, renamed or deleted. Hidden folders such as `.obsidian/` and `.git/`, hidden files like `.DS_Store`, `templates/`, and attachments are ignored, so opening a note in Obsidian or running `git status` doesn't trigger a reload. A reload of a large vault can take a second or two, and the next request after a real edit pays for it.
 
 ## Change the port
 

@@ -2,6 +2,10 @@
 
 ---
 
+## v1.58.1 — Hot-reload no longer fires on editor and git churn
+
+- ✅ **[Perf] Stop reloading the vault when `.obsidian/`, `.git/` or `.DS_Store` change** — the reload check fingerprinted every file in the folder, so Obsidian rewriting `.obsidian/workspace.json` (on every note open) or git touching `.git/index` forced a full vault reload, adding ~1.5 s to the next request. New `vault_signature()` covers only `.md`/`.base`/`.canvas` files (path, mtime, size), skips hidden folders and `templates/`, and also catches deletions and renames. `load_posts()` records the fingerprint it started from, which removes a redundant reload on the first request after startup. (v1.58.1)
+
 ## Obsidian plugin — InkStone Preview 0.1.4 (`airenare/inkstone-obsidian-plugin`)
 
 - ✅ **[Obsidian plugin] Settings migrated to the declarative settings API** — `getSettingDefinitions()` replaces the imperative `display()`; settings show up in Obsidian's settings search and the three directory-review warnings are gone. (0.1.4)
