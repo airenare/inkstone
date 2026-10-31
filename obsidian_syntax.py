@@ -136,6 +136,15 @@ def convert_links(md, url_index=None):
 # OBSIDIAN CHECKBOX PARSER
 # =========================================
 
+def _render_inline(text):
+    """Render inline markdown (code, bold, links) without a <p> wrapper."""
+    html = markdown.markdown(text, output_format="html5")
+    if html.count("<p>") == 1 and html.startswith("<p>") \
+            and html.endswith("</p>"):
+        return html[3:-4]
+    return html
+
+
 def convert_checkboxes(md):
     lines = md.split("\n")
     out = []
@@ -191,7 +200,8 @@ def convert_checkboxes(md):
             close_lists(level + 1)
 
             out.append(
-                f'<li><input type="checkbox" disabled {checked_attr}> {text}</li>'
+                f'<li><input type="checkbox" disabled {checked_attr}> '
+                f'{_render_inline(text)}</li>'
             )
         else:
             if stack:

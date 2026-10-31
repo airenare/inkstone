@@ -25,6 +25,13 @@ def test_checkbox_unchecked():
     assert "Do this" in result
 
 
+def test_checkbox_inline_markdown():
+    result = convert_checkboxes("- [ ] Run `pip install` and **go**")
+    assert "<code>pip install</code>" in result
+    assert "<strong>go</strong>" in result
+    assert "<p>" not in result
+
+
 def test_checkbox_checked():
     md = "- [x] Done"
     result = convert_checkboxes(md)
