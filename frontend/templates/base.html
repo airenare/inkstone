@@ -6,6 +6,7 @@
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 
 <title>{{ title if title else website_name }}</title>
 
@@ -194,8 +195,9 @@ function openLightbox(items,startIndex){
     galleryItems=items
     galleryIndex=startIndex
 
-    const overlay = document.createElement("div")
+    const overlay = document.createElement("dialog")
     overlay.className = "lightbox"
+    overlay.setAttribute("aria-label", "Media viewer")
 
     const inner = document.createElement("div")
     inner.className = "lightbox-inner"
@@ -270,8 +272,7 @@ function openLightbox(items,startIndex){
 
     function close(){
 
-        document.body.removeChild(overlay)
-        document.removeEventListener("keydown",keyHandler)
+        overlay.close()
 
     }
 
@@ -291,7 +292,6 @@ function openLightbox(items,startIndex){
 
     function keyHandler(e){
 
-        if(e.key==="Escape") close()
         if(e.key==="ArrowRight") next()
         if(e.key==="ArrowLeft") prev()
 
@@ -300,11 +300,18 @@ function openLightbox(items,startIndex){
     // Only close when clicking the dark backdrop, not the image or inner content
     overlay.addEventListener("click", (e) => { if(e.target===overlay) close() })
 
+    // Native Esc / close() ends up here: clean up listeners and node
+    overlay.addEventListener("close", () => {
+        document.removeEventListener("keydown",keyHandler)
+        overlay.remove()
+    })
+
     document.addEventListener("keydown",keyHandler)
 
     render()
 
     document.body.appendChild(overlay)
+    overlay.showModal()
 
 }
 
@@ -442,9 +449,14 @@ document.querySelectorAll("pre code:not(.language-mermaid)").forEach(block => {
     btn.className = "copy-btn"
     btn.textContent = "copy"
 
-    btn.onclick = () => {
-        navigator.clipboard.writeText(block.innerText)
-        btn.textContent = "✓ copied"
+    btn.onclick = async () => {
+        let ok = true
+        try {
+            await navigator.clipboard.writeText(block.innerText)
+        } catch {
+            ok = false
+        }
+        btn.textContent = ok ? "✓ copied" : "copy failed"
         btn.classList.add("copy-btn-flash")
         setTimeout(() => {
             btn.textContent = "copy"
