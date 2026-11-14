@@ -29,11 +29,11 @@
 {% if lang_variants and lang_variants|length > 1 %}
 <script>
 (function() {
-    var pref = sessionStorage.getItem("preferredLang");
+    let pref = sessionStorage.getItem("preferredLang");
     if (!pref) return;
-    var cur = {{ current_lang | tojson }};
+    let cur = {{ current_lang | tojson }};
     if (cur === pref) return;
-    var alt = document.querySelector("link[rel=\"alternate\"][hreflang=\"" + pref + "\"]");
+    let alt = document.querySelector("link[rel=\"alternate\"][hreflang=\"" + pref + "\"]");
     if (alt) window.location.replace(alt.href);
 })();
 </script>
@@ -569,19 +569,19 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
 <script>
 (function() {
     function initCanvas(view) {
-        var stage = view.querySelector(".canvas-stage");
-        var fitBtn = view.querySelector(".canvas-fit-btn");
-        var wideBtn = view.querySelector(".canvas-wide-btn");
+        let stage = view.querySelector(".canvas-stage");
+        let fitBtn = view.querySelector(".canvas-fit-btn");
+        let wideBtn = view.querySelector(".canvas-wide-btn");
         if (!stage) return;
 
-        var hint = document.createElement("div");
+        let hint = document.createElement("div");
         hint.className = "canvas-hint";
         hint.textContent = "drag to pan · scroll to zoom";
         view.appendChild(hint);
         setTimeout(function() { hint.classList.add("canvas-hint-hide"); }, 2000);
 
-        var tx = 0, ty = 0, scale = 1;
-        var dragging = false, lastX = 0, lastY = 0;
+        let tx = 0, ty = 0, scale = 1;
+        let dragging = false, lastX = 0, lastY = 0;
 
         function clampScale(s) {
             return Math.max(0.2, Math.min(4, s));
@@ -593,9 +593,9 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         }
 
         function fitToView() {
-            var vw = view.clientWidth, vh = view.clientHeight;
-            var sw = parseFloat(stage.style.width);
-            var sh = parseFloat(stage.style.height);
+            let vw = view.clientWidth, vh = view.clientHeight;
+            let sw = parseFloat(stage.style.width);
+            let sh = parseFloat(stage.style.height);
             scale = clampScale(Math.min(vw / sw, vh / sh) * 0.9);
             tx = (vw - sw * scale) / 2;
             ty = (vh - sh * scale) / 2;
@@ -604,11 +604,11 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
 
         view.addEventListener("wheel", function(e) {
             e.preventDefault();
-            var rect = view.getBoundingClientRect();
-            var cx = e.clientX - rect.left;
-            var cy = e.clientY - rect.top;
-            var factor = e.deltaY > 0 ? 0.9 : 1.1;
-            var newScale = clampScale(scale * factor);
+            let rect = view.getBoundingClientRect();
+            let cx = e.clientX - rect.left;
+            let cy = e.clientY - rect.top;
+            let factor = e.deltaY > 0 ? 0.9 : 1.1;
+            let newScale = clampScale(scale * factor);
             tx = cx - (cx - tx) * (newScale / scale);
             ty = cy - (cy - ty) * (newScale / scale);
             scale = newScale;
@@ -632,18 +632,18 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
             applyTransform();
         });
 
-        var activePointers = {};
-        var lastPinchDist = 0;
+        let activePointers = {};
+        let lastPinchDist = 0;
 
         view.addEventListener("pointerdown", function(e) {
             activePointers[e.pointerId] = { x: e.clientX, y: e.clientY };
-            var ids = Object.keys(activePointers);
+            let ids = Object.keys(activePointers);
             if (ids.length === 1) {
                 lastX = e.clientX;
                 lastY = e.clientY;
             }
             if (ids.length === 2) {
-                var a = activePointers[ids[0]], b = activePointers[ids[1]];
+                let a = activePointers[ids[0]], b = activePointers[ids[1]];
                 lastPinchDist = Math.hypot(a.x - b.x, a.y - b.y);
             }
         });
@@ -651,7 +651,7 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         view.addEventListener("pointermove", function(e) {
             if (!activePointers[e.pointerId]) return;
             activePointers[e.pointerId] = { x: e.clientX, y: e.clientY };
-            var ids = Object.keys(activePointers);
+            let ids = Object.keys(activePointers);
             if (ids.length === 1) {
                 tx += e.clientX - lastX;
                 ty += e.clientY - lastY;
@@ -659,13 +659,13 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
                 lastY = e.clientY;
                 applyTransform();
             } else if (ids.length === 2) {
-                var a = activePointers[ids[0]], b = activePointers[ids[1]];
-                var dist = Math.hypot(a.x - b.x, a.y - b.y);
+                let a = activePointers[ids[0]], b = activePointers[ids[1]];
+                let dist = Math.hypot(a.x - b.x, a.y - b.y);
                 if (lastPinchDist > 0) {
-                    var rect = view.getBoundingClientRect();
-                    var cx = (a.x + b.x) / 2 - rect.left;
-                    var cy = (a.y + b.y) / 2 - rect.top;
-                    var newScale = clampScale(scale * (dist / lastPinchDist));
+                    let rect = view.getBoundingClientRect();
+                    let cx = (a.x + b.x) / 2 - rect.left;
+                    let cy = (a.y + b.y) / 2 - rect.top;
+                    let newScale = clampScale(scale * (dist / lastPinchDist));
                     tx = cx - (cx - tx) * (newScale / scale);
                     ty = cy - (cy - ty) * (newScale / scale);
                     scale = newScale;
@@ -693,7 +693,7 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
         if (wideBtn) {
             wideBtn.addEventListener("click", function(e) {
                 e.stopPropagation();
-                var isWide = view.classList.toggle("canvas-wide");
+                let isWide = view.classList.toggle("canvas-wide");
                 wideBtn.innerHTML = isWide ? "&times;" : "&#9974;";
                 wideBtn.title = isWide ? "Exit wide view" : "Wide view";
                 requestAnimationFrame(fitToView);
@@ -722,23 +722,28 @@ document.querySelectorAll(".lang-option").forEach(function(a) {
 <script>
 (function() {
     // Reading progress bar — only on post pages (article element present)
-    var progressBar = document.getElementById("reading-progress")
-    var article = document.querySelector("article")
+    let progressBar = document.getElementById("reading-progress")
+    let article = document.querySelector("article")
     if (article && progressBar) {
         progressBar.style.display = "block"
         function updateProgress() {
-            var rect = article.getBoundingClientRect()
-            var total = article.offsetHeight - window.innerHeight
+            let rect = article.getBoundingClientRect()
+            let total = article.offsetHeight - window.innerHeight
             if (total <= 0) { progressBar.style.width = "0"; return }
-            var scrolled = Math.max(0, -rect.top)
+            let scrolled = Math.max(0, -rect.top)
             progressBar.style.width = Math.min(100, (scrolled / total) * 100) + "%"
         }
-        window.addEventListener("scroll", updateProgress, { passive: true })
-        updateProgress()
+        if (CSS.supports("animation-timeline: view()")) {
+            article.style.viewTimelineName = "--article"
+            progressBar.classList.add("scroll-driven")
+        } else {
+            window.addEventListener("scroll", updateProgress, { passive: true })
+            updateProgress()
+        }
     }
 
     // Back to top button
-    var topBtn = document.getElementById("back-to-top")
+    let topBtn = document.getElementById("back-to-top")
     window.addEventListener("scroll", function() {
         topBtn.classList.toggle("visible", window.scrollY > 400)
     }, { passive: true })

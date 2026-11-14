@@ -6,6 +6,7 @@
 
 ## P2 — Lower Priority
 
+- [ ] **[Frontend] Migrate theme colors to `light-dark()` tokens** — replace the duplicated `[data-theme="light"]` / dark blocks in `base.css` and the seven `theme-*.css` files with `light-dark()` custom properties, and have the theme toggle set `color-scheme` instead of toggling per-selector overrides. Large, visual-regression-prone refactor: needs its own spec and plan, and a screenshot comparison of every theme in light and dark. See `docs/superpowers/specs/2026-11-13-modern-web-review.md`.
 - [ ] **[Business][Analytics] Discover live InkStone sites** — two approaches:
   1. **Passive:** Search for `"built with InkStone"` attribution footer (e.g. via PublicWWW or Google); check GitHub fork count.
   2. **Active:** Add opt-out telemetry ping on server boot (version + Python version only, no PII); disclose in README; honor `INKSTONE_TELEMETRY=0` env var.

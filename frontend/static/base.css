@@ -79,6 +79,7 @@ body {
     max-width: 900px;
     margin: auto;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -313,11 +314,13 @@ dialog.lightbox[open] {
     align-items:center;
     max-width:95vw;
     max-height:95vh;
+    max-height:95dvh;
     }
 
 .lightbox-media {
     max-width:100%;
     max-height:85vh;
+    max-height:85dvh;
     border-radius:8px;
 }
 
@@ -411,6 +414,7 @@ dialog.lightbox[open] {
 .slide video {
     max-width: 100%;
     max-height: 80vh;
+    max-height: 80dvh;
     border-radius: 6px;
 }
 
@@ -1897,6 +1901,23 @@ audio {
     transition: width 0.1s linear;
 }
 
+/* Scroll-driven progress: JS names the first <article>'s view timeline
+   (--article) and adds .scroll-driven; JS width updates are skipped. */
+body { timeline-scope: --article; }
+
+@supports (animation-timeline: view()) {
+    #reading-progress.scroll-driven {
+        transition: none;
+        animation: reading-progress linear both;
+        animation-timeline: --article;
+        animation-range: cover 100dvh cover calc(100% - 100dvh);
+    }
+    @keyframes reading-progress {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+}
+
 /* =========================================
    BACK TO TOP BUTTON
    ========================================= */
@@ -2027,6 +2048,7 @@ figure.figure-right img {
     position: relative;
     width: 100%;
     height: min(80vh, 600px);
+    height: min(80dvh, 600px);
     margin: 2em 0;
     border: 1px solid var(--border);
     border-radius: 8px;
